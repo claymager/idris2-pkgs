@@ -79,7 +79,7 @@ stdenv.mkDerivation rec {
     description = "A purely functional programming language with first class types";
     homepage = "https://github.com/idris-lang/Idris2";
     license = lib.licenses.bsd3;
-    maintainers = with lib.maintainers; [ wchresta claymager ];
+    maintainers = with lib.maintainers; [ claymager ];
     inherit (chez.meta) platforms;
   };
 }
