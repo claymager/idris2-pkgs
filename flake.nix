@@ -14,6 +14,7 @@
           idris2 = pkgs.callPackage ./idris2 { };
       in
       {
+        packages.idris2 = idris2;
 
         devShell = pkgs.mkShell {
           buildInputs = [
@@ -23,5 +24,7 @@
         };
 
       }
-    );
+      ) // {
+        overlay = import ./overlay.nix;
+    };
 }
