@@ -20,7 +20,7 @@
 
           devShell = pkgs.mkShell {
             buildInputs = [
-              (idris2.withPkgs (ps: [ ps.comonad ]))
+              (idris2.withPackages (ps: [ ps.comonad ]))
               pkgs.nixpkgs-fmt
             ];
           };

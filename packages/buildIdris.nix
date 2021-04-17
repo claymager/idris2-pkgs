@@ -5,7 +5,7 @@
 , idris2
 , symlinkJoin
 , makeWrapper
-, withPackages
+, with-packages
 , idrisLibraries ? [ ]
 , extraBuildInputs ? [ ]
 , ipkgName ? name + ".ipkg"
@@ -15,7 +15,7 @@ let
 
     inherit name src;
 
-    buildInputs = [ (withPackages idrisLibraries) ] ++ extraBuildInputs;
+    buildInputs = [ (with-packages idrisLibraries) ] ++ extraBuildInputs;
 
     buildPhase = ''
       idris2 --build ${ipkgName}
