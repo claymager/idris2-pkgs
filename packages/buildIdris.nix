@@ -6,8 +6,8 @@
 , symlinkJoin
 , makeWrapper
 , withPackages
-, idrisLibraries ? []
-, extraBuildInputs ? []
+, idrisLibraries ? [ ]
+, extraBuildInputs ? [ ]
 , ipkgName ? name + ".ipkg"
 }:
 let

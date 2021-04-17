@@ -9,22 +9,24 @@
   inputs.flake-utils.url = github:numtide/flake-utils;
 
   outputs = { self, nixpkgs, idris2-src, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
-      let pkgs = import nixpkgs {inherit system;};
+    flake-utils.lib.eachSystem [ "x86_64-linux" ]
+      (system:
+        let
+          pkgs = import nixpkgs { inherit system; };
           idris2 = pkgs.callPackage ./idris2 { };
-      in
-      {
-        packages.idris2 = idris2;
+        in
+        {
+          packages.idris2 = idris2;
 
-        devShell = pkgs.mkShell {
-          buildInputs = [
-            (idris2.withPkgs (ps: [ ps.comonad ]) )
-            pkgs.nixpkgs-fmt
-          ];
-        };
+          devShell = pkgs.mkShell {
+            buildInputs = [
+              (idris2.withPkgs (ps: [ ps.comonad ]))
+              pkgs.nixpkgs-fmt
+            ];
+          };
 
-      }
+        }
       ) // {
-        overlay = import ./overlay.nix;
+      overlay = import ./overlay.nix;
     };
 }
