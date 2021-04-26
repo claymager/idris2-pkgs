@@ -15,17 +15,17 @@
             comonad
             elab-util
             sop
-          ])
-          in
-          rec {
+          ]);
+      in
+      rec {
 
-          devShell = pkgs.mkShell {
+        devShell = pkgs.mkShell {
           buildInputs = [ idris2 pkgs.rlwrap ];
-        shellHook = ''
-          alias idris2="rlwrap -s 1000 idris2 --no-banner"
-        '';
+          shellHook = ''
+            alias idris2="rlwrap -s 1000 idris2 --no-banner"
+          '';
         };
 
-        }
-        );
-        }
+      }
+    );
+}
