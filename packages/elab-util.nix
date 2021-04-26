@@ -4,6 +4,11 @@ buildIdris {
 
   name = "elab-util";
 
-  src = /home/john/lab/reference/idris2-elab-util;
+  src = fetchFromGitHub {
+    owner = "stefan-hoeck";
+    repo = "idris2-elab-util";
+    rev = "f3f1ff2a2d5558ee8217732e06b0e20a10fb7b3a";
+    sha256 = "i+Bhw6GR1HDZ9imp8eNTGvBuNsIiKX+ZQu3apUqXxsw=";
+  };
 
 }

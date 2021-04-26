@@ -14,11 +14,9 @@ rec {
     comonad = callPackage ./comonad.nix { };
     elab-util = callPackage ./elab-util.nix { };
     sop = callPackage ./sop.nix { inherit elab-util; };
-
-    readline = callPackage ./readline.nix { };
-    with-ffi = callPackage ./with-ffi.nix { };
+    idris2api = callPackage ./idris2api.nix { }; # broken : needs IdrisPaths
+    readline-sample = callPackage ./readline-sample.nix { }; # broken : bad config
   };
-
 
   withPackages = fn: with-packages (fn packages);
 }

@@ -1,20 +1,12 @@
 { buildIdris, fetchFromGitHub, readline }:
-let
-  repo = fetchFromGitHub {
+buildIdris {
+
+  name = "idris2api";
+
+  src = fetchFromGitHub {
     owner = "idris-lang";
     repo = "Idris2";
     rev = "f255026d1b99934f4418993517eee11c8de8b678";
     sha256 = "h7CfQliuH9RnQZ3hrDta3thXqzCMapEIcuqUm4Xdzy8=";
   };
-  local = /home/john/lab/reference/Idris2;
-
-in
-buildIdris {
-
-  name = "readline";
-
-  extraBuildInputs = [ readline ];
-
-  src = "${local}/samples/FFI-readline";
-
 }
