@@ -28,5 +28,6 @@
         }
       ) // {
       overlay = import ./overlay.nix;
+      templates = import ./templates;
     };
 }
