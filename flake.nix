@@ -13,7 +13,7 @@
       (system:
         let
           pkgs = import nixpkgs { inherit system; };
-          idris2 = pkgs.callPackage ./idris2 { };
+          idris2 = pkgs.callPackage ./idris2 { inherit idris2-src; };
         in
         {
           defaultPackage = idris2;
@@ -27,7 +27,11 @@
 
         }
       ) // {
-      overlay = import ./overlay.nix;
+
+      overlay = final: prev: {
+        idris2 = prev.callPackage ./idris2 { inherit idris2-src; };
+      };
+
       templates = import ./templates;
     };
 }

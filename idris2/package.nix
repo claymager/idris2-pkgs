@@ -7,6 +7,7 @@
 , racket
 , gambit
 , nodejs
+, idris2-src
 }:
 
 # Uses scheme to bootstrap the build of idris2
@@ -14,12 +15,7 @@ stdenv.mkDerivation rec {
   pname = "idris2";
   version = "0.3.0";
 
-  src = fetchFromGitHub {
-    owner = "idris-lang";
-    repo = "Idris2";
-    rev = "881a5e7fbc523b005707fc1f096943f24da5f521";
-    sha256 = "QiZw0WTlIeC4K5qbibUIgjRVFFc257itnIfHBe+/hN8=";
-  };
+  src = idris2-src;
 
   strictDeps = true;
   nativeBuildInputs = [ makeWrapper clang chez ];
