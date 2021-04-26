@@ -16,7 +16,7 @@
           idris2 = pkgs.callPackage ./idris2 { };
         in
         {
-          packages.idris2 = idris2;
+          defaultPackage = idris2;
 
           devShell = pkgs.mkShell {
             buildInputs = [
