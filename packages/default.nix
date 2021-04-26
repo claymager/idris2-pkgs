@@ -15,7 +15,7 @@ rec {
     elab-util = callPackage ./elab-util.nix { };
     sop = callPackage ./sop.nix { inherit elab-util; };
     idris2api = callPackage ./idris2api.nix { };
-    readline-sample = callPackage ./readline-sample.nix { }; # broken : bad config
+    readline-sample = callPackage ./readline-sample.nix { };
   };
 
   withPackages = fn: with-packages (fn packages);
