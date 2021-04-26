@@ -14,6 +14,8 @@ rec {
     comonad = callPackage ./comonad.nix { };
     elab-util = callPackage ./elab-util.nix { };
     sop = callPackage ./sop.nix { inherit elab-util; };
+    pretty-show = callPackage ./pretty-show.nix { inherit elab-util sop; };
+    hedgehog = callPackage ./hedgehog.nix { inherit elab-util sop pretty-show; };
     idris2api = callPackage ./idris2api.nix { };
     readline-sample = callPackage ./readline-sample.nix { };
   };

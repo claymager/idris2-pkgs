@@ -20,6 +20,7 @@
 
           devShell = pkgs.mkShell {
             buildInputs = [
+              (idris2.withPackages (ps: [ ps.hedgehog ]))
               pkgs.nixpkgs-fmt
             ];
           };
