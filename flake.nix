@@ -9,7 +9,7 @@
   inputs.flake-utils.url = github:numtide/flake-utils;
 
   outputs = { self, nixpkgs, idris2-src, flake-utils }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ]
+    flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" "i686-linux" ]
       (system:
         let
           pkgs = import nixpkgs { inherit system; };
@@ -20,7 +20,6 @@
 
           devShell = pkgs.mkShell {
             buildInputs = [
-              (idris2.withPackages (ps: [ ps.comonad ]))
               pkgs.nixpkgs-fmt
             ];
           };
