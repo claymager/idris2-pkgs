@@ -12,9 +12,7 @@
         # Idris2, and the libraries you want available
         idris2 = pkgs.idris2.withPackages
           (ps: with ps; [
-            comonad
-            elab-util
-            sop
+            idris2api
           ]);
       in
       rec {

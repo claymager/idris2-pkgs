@@ -6,6 +6,7 @@
 , symlinkJoin
 , makeWrapper
 , with-packages
+, preBuild ? ""
 , idrisLibraries ? [ ]
 , extraBuildInputs ? [ ]
 , ipkgName ? name + ".ipkg"
@@ -18,6 +19,7 @@ let
     buildInputs = [ (with-packages idrisLibraries) ] ++ extraBuildInputs;
 
     buildPhase = ''
+      ${preBuild}
       idris2 --build ${ipkgName}
     '';
 
