@@ -3,13 +3,13 @@
 buildIdris {
 
   name = "sop";
-  version = "0.2.2";
+  version = "0.3.0";
 
   src = fetchFromGitHub {
     owner = "stefan-hoeck";
     repo = "idris2-sop";
-    rev = "469c7c584d4684d0059489ab2ac692904e9eb951";
-    sha256 = "ry2QlfFNII6n34/ZjdKIZtFti3PXnPdmsd5e/vUVyKY=";
+    rev = "c6ca335f7bd26c3c9c53ad0b34910a5a3152f058";
+    sha256 = "lD7XBlVGTTrUYuW2i2In1xkE1PAxKC9NnR3+2by1zAU=";
   };
 
   idrisLibraries = [ elab-util ];
