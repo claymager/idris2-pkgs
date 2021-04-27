@@ -1,18 +1,12 @@
-{ pkgs, lib, fetchFromGitHub, stdenv, idris2 }:
+{ utils }:
 let
-  with-packages = pkgs.callPackage ./with-packages.nix { inherit idris2; };
-
-  buildIdris = args: pkgs.callPackage ./buildIdris.nix ({ inherit idris2 with-packages; } // args);
-
-  callPackage = file: args: pkgs.callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
-
-  callTOML = pkgs.callPackage ./callToml.nix { inherit buildIdris packages; };
+  inherit (utils.builders packages) withPackages callTOML callNix;
 
   packages = rec {
 
-    idris2api = callPackage ./idris2api.nix { inherit idris2; };
+    idris2api = callNix ./idris2api.nix { };
 
-    readline-sample = callPackage ./readline-sample.nix { };
+    readline-sample = callNix ./readline-sample.nix { };
 
     comonad = callTOML ./comonad.toml;
 
@@ -29,7 +23,5 @@ let
 
 in
 {
-  inherit callPackage packages;
-
-  withPackages = fn: with-packages (fn packages);
+  inherit withPackages packages;
 }

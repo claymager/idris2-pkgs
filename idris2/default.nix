@@ -1,6 +1,7 @@
 { lib, pkgs, idris2-src }:
 let
   idris2 = pkgs.callPackage ./package.nix { inherit idris2-src; };
-  utils = pkgs.callPackage ./../packages { inherit idris2; };
+  utils = pkgs.callPackage ./../utils { inherit idris2; };
+  packages = pkgs.callPackage ./../packages { inherit utils; };
 in
-lib.recursiveUpdate idris2 utils
+lib.recursiveUpdate idris2 packages
