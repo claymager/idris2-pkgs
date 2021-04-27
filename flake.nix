@@ -30,6 +30,16 @@
             buildInputs = [ pkgs.nixpkgs-fmt ];
           };
 
+          checks =
+            let
+              names = builtins.attrNames pkgs.idris2.packages;
+              mkCheck = nm: {
+                name = nm;
+                value = pkgs.idris2.packages.${nm}.asLib;
+              };
+            in
+            builtins.listToAttrs (builtins.map mkCheck names);
+
         }
       );
 
