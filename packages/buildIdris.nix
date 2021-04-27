@@ -4,7 +4,6 @@
 , src
 , idris2
 , symlinkJoin
-, makeWrapper
 , with-packages
 , preBuild ? ""
 , idrisLibraries ? [ ]
