@@ -11,6 +11,7 @@ in
 buildIdris {
 
   name = "readline";
+  version = "0.0";
 
   preBuild = ''
     # We don't have access to the greater repo

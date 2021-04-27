@@ -1,6 +1,7 @@
 { stdenv
 , lib
 , name
+, version
 , src
 , idris2
 , symlinkJoin
@@ -9,12 +10,13 @@
 , idrisLibraries ? [ ]
 , extraBuildInputs ? [ ]
 , ipkgName ? name + ".ipkg"
-, version ? "0.0"
 }:
 let
   build = stdenv.mkDerivation {
 
-    inherit name src version;
+    name = "${name}-${version}";
+
+    inherit src;
 
     buildInputs = [ (with-packages idrisLibraries) ] ++ extraBuildInputs;
 

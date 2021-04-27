@@ -2,7 +2,7 @@
 { lib, idris2, symlinkJoin, makeWrapper, writeScriptBin }: packages:
 
 let
-  idrisEnv = lib.appendToName "-with-packages" (symlinkJoin {
+  idrisEnv = lib.appendToName "with-packages" (symlinkJoin {
     inherit (idris2) name;
 
     paths = map (p: p.asLib) packages ++ [ idris2 ];
