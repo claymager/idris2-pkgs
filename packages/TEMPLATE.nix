@@ -1,29 +1,33 @@
 { buildIdris
 , fetchFromGitHub
+, lib
 , # Idris dependencies
-  #elab-util,
+  # elab-util,
 
-  # Outside dependencies
-  #clang
+  # Foreign dependencies
+  # clang,
 }:
 
 buildIdris {
 
   # package name
   name = "MYPACKAGE";
+  # version =  "0.0";
 
-  # commands to run before building
+  # Commands to run before building
   # preBuild = ''
   # '';
 
-  # Outside dependencies
+  # idrisLibraries = [ elab-util ];
+
+  # Foreign dependencies
   # extraBuildInputs = [ clang ];
 
   src = fetchFromGitHub {
-    # owner = "idris-lang";
-    # repo = "Idris2";
-    # rev = "";
-    # sha256 = "";
+    owner = "idris-lang";
+    repo = "Idris2";
+    rev = "";
+    sha256 = lib.fakeHash;
   };
 
 }

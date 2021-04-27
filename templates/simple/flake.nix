@@ -10,7 +10,7 @@
         pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
 
         # Idris2, and the libraries you want available
-        idris2 = pkgs.idris2.withPackages
+        idris2-with-pkgs = pkgs.idris2.withPackages
           (ps: with ps; [
             idris2api
           ]);
@@ -18,10 +18,7 @@
       rec {
 
         devShell = pkgs.mkShell {
-          buildInputs = [ idris2 pkgs.rlwrap ];
-          shellHook = ''
-            alias idris2="rlwrap -s 1000 idris2 --no-banner"
-          '';
+          buildInputs = [ idris2-with-pkgs ];
         };
 
       }
