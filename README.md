@@ -71,124 +71,58 @@ This says "include the idris2api package when installing Idris." You can add any
 At the moment, this is only documented for packages hosted on GitHub.
 
 After forking this repo, there are two primary steps. We need to:
- - Create a package file `packages/MYPKG.nix`
+ - Create a package file `packages/MYPKG.toml`
  - Register that file in `packages/default.nix`
 
 #### Creating the package file
 
-As an example, let's build [`idris2-lsp`](https://github.com/idris-community/idris2-lsp).
+Provided they exist on GitHub, most packages can be specified in [TOML](https://toml.io/en/).
 
-Copy `packages/TEMPLATE.nix` and open it:
+As an example, let's look the testing library [`hedgehog`](https://github.com/stefan-hoeck/idris2-hedgehog).
 
-```nix
-# packages/lsp.nix
-{ buildIdris
-, fetchFromGitHub
-  # Idris dependencies
-  #, elab-util
 
-  # Foreign dependencies
-  #, clang
-, lib
-}:
+```toml
+name = "hedgehog"
+version = "0.0.4"
 
-buildIdris {
+[ source ]
+owner = "stefan-hoeck"
+repo = "idris2-hedgehog"
+rev = "929b27c4a58111b4d1327abb18a2eee4ad304f48"
+# sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
 
-  # package name
-  name = "MYPACKAGE";
-  # version = "0.0";
-
-  # Commands to run before building
-  # preBuild = ''
-  # '';
-
-  # idrisLibraries = [ elab-util ];
-
-  # Foreign dependencies
-  # extraBuildInputs = [ clang ];
-
-  src = fetchFromGitHub {
-    owner = "idris-lang";
-    repo = "Idris2";
-    rev = "";
-    sha256 = lib.fakeHash;
-  };
-
-}
+[ depends ]
+idrisDeps = [ "elab-util", "sop", "pretty-show" ]
 ```
 
-We need to tell Nix what to call this package, and where to find it:
-
-```patch
-# package/lsp.nix
-  # package name
-+ name = "lsp";
-```
-
-```patch
-  src = fetchFromGitHub {
--   owner = "idris-lang";
--   repo = "Idris2";
--   rev = "";
-+   owner = "idris2-community";
-+   repo = "idris2-lsp";
-+   rev = "63e614776db3accebbcf4b64ac7a76e66e233e64";
-    sha256 = lib.fakeHash;
-  };
-```
-
-`rev` is the specific git commit to build against. We can ignore `sha256` for now.
-
-Looking at `lsp.ipkg`, this depends on the `idris2` api, `prelude`, and `contrib`. Two of those are included in the `idris2` executable, but we need to explicitly depend upon the `idris2` package.
-
-```patch
-   # Idris dependencies
--  #, elab-util
-+  , idris2api
-```
-
-```patch
--  # idrisLibraries = [ elab-util ];
-+  idrisLibraries = [ idris2api ];
-```
-
-We can now add this to the registry in `packages/default.nix`, with this line:
-
-```patch
-# packages/default.nix
-
-+   lsp = callPackage ./lsp.nix { inherit idris2api; };
-+
-}
-```
-
-Nix flakes only use files tracked by git, so run
+`rev` is the specific git commit to build against. `sha256` is the hash of an internal Nix file, and the typical way to get it is to try to build without one.
+Nix flakes only use files tracked by git, so stage any new files and build the new package:
 
 ```
-$ git add packages/lsp.nix
-```
-
-There's no need to commit yet. If we try to build the package, nix will complain:
-
-```
+$ git add packages/hedgehog.toml
 $ nix build .#idris2.packages.lsp
 error: hash mismatch in fixed-output derivation '/nix/store/8vhk935pzml87jj620kqhc0avkj474x2-source.drv':
  specified: sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
- got:    sha256-aJV+1u3Guin5ZXj9/XoKRcWeBqdII52sY1H+RrN4X60=
-error: 1 dependencies of derivation '/nix/store/42ypyrqdwwirzpnz2vcw0c9d6c0jyzvk-lsp.drv' failed to build
+ got:    sha256-Ev9LldllXHciUNHU8CcXrciW1WdxN8iW3J0kJwjsqjI=
+error: 1 dependencies of derivation '/nix/store/42ypyrqdwwirzpnz2vcw0c9d6c0jyzvk-hedgehog.drv' failed to build
 ```
 
-But nix is kind enough to provide us the correct checksum! So try to build it anyway. Just copy the correct sha256 and paste it into our `package/lsp.nix`.
+Just copy the correct sha256 and paste it into our `package/hedgehog.toml`.
 
 ```patch
-# package/lsp.nix
-    rev = "63e614776db3accebbcf4b64ac7a76e66e233e64";
--   sha256 = lib.fakeHash;
-+   sha256 = "aJV+1u3Guin5ZXj9/XoKRcWeBqdII52sY1H+RrN4X60=";
-  };
+# package/hedgehog.toml
+  rev = "63e614776db3accebbcf4b64ac7a76e66e233e64"
+- # sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
++ sha256 = "Ev9LldllXHciUNHU8CcXrciW1WdxN8iW3J0kJwjsqjI="
+
 ```
+And we're done! Stage and commit your changes and make a PR.
 
-> Note: Yes, that is actually the typical way to work with hashes in Nix. That is the sha256 of a "derivation", an intermediate file built by Nix, not the repository itself.
+### Update a package
 
-And we're done! Stage and commit your changes, and you're ready for a PR.
-`[ lsp ] Init`
+Assuming no dependencies have changed, a version bump in a TOML file is very easy.
+ - Update the version number
+ - Update `rev` to point to the target commit
+ - Comment out the old `sha256`
+ - Get the correct `sha256` as though we were installing.
+
