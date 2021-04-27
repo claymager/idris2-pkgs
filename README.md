@@ -12,6 +12,10 @@ See `templates/simple` for an example, until I have time for proper documentatio
 
 No matter what you want to do with this repository, to run the code, you'll need [nix]( https://nixos.org/download.html), with its "experimental feature" [flakes](https://nixos.wiki/wiki/Flakes) enabled.
 
+### Know which packages are in this repository
+
+All idris2 packages are declared in `packages/default.nix`, and that file is kept as clean as possible.
+
 ### Experiment with someone else's packages
 
 This is precisely what a `nix shell` is for!
@@ -82,6 +86,7 @@ As an example, let's look the testing library [`hedgehog`](https://github.com/st
 
 
 ```toml
+#packages/hedgehog.toml
 name = "hedgehog"
 version = "0.0.4"
 
