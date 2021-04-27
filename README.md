@@ -56,7 +56,7 @@ If you run `nix flake init -t github:claymager/idris2-pkgs#simple` in a clean di
 
 That looks a bit hairy, but the important part for us is here:
 
-```nix
+```
 (ps: with ps; [
   idris2api
 ]);
@@ -120,12 +120,16 @@ buildIdris {
 We need to tell Nix what to call this package, and where to find it:
 
 ```patch
+# package/lsp.nix
   # package name
 + name = "lsp";
 ```
 
 ```patch
   src = fetchFromGitHub {
+-   owner = "idris-lang";
+-   repo = "Idris2";
+-   rev = "";
 +   owner = "idris2-community";
 +   repo = "idris2-lsp";
 +   rev = "63e614776db3accebbcf4b64ac7a76e66e233e64";
@@ -139,18 +143,23 @@ Looking at `lsp.ipkg`, this depends on the `idris2` api, `prelude`, and `contrib
 
 ```patch
    # Idris dependencies
+-  #, elab-util
 +  , idris2api
 ```
 
 ```patch
+-  # idrisLibraries = [ elab-util ];
 +  idrisLibraries = [ idris2api ];
 ```
 
 We can now add this to the registry in `packages/default.nix`, with this line:
 
-```nix
+```patch
 # packages/default.nix
-lsp = callPackage ./lsp.nix { inherit idris2api; };
+
++   lsp = callPackage ./lsp.nix { inherit idris2api; };
++
+}
 ```
 
 Nix flakes only use files tracked by git, so run
@@ -172,6 +181,7 @@ error: 1 dependencies of derivation '/nix/store/42ypyrqdwwirzpnz2vcw0c9d6c0jyzvk
 But nix is kind enough to provide us the correct checksum! So try to build it anyway. Just copy the correct sha256 and paste it into our `package/lsp.nix`.
 
 ```patch
+# package/lsp.nix
     rev = "63e614776db3accebbcf4b64ac7a76e66e233e64";
 -   sha256 = lib.fakeHash;
 +   sha256 = "aJV+1u3Guin5ZXj9/XoKRcWeBqdII52sY1H+RrN4X60=";
