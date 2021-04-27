@@ -6,6 +6,7 @@
 
 buildIdris {
   name = "pretty-show";
+  version = "0.2.0";
 
   src = fetchFromGitHub {
     owner = "stefan-hoeck";

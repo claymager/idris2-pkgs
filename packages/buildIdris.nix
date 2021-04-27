@@ -10,11 +10,12 @@
 , idrisLibraries ? [ ]
 , extraBuildInputs ? [ ]
 , ipkgName ? name + ".ipkg"
+, version ? "0.0"
 }:
 let
   build = stdenv.mkDerivation {
 
-    inherit name src;
+    inherit name src version;
 
     buildInputs = [ (with-packages idrisLibraries) ] ++ extraBuildInputs;
 

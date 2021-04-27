@@ -3,6 +3,7 @@
 buildIdris {
 
   name = "comonad";
+  version = "0.1.0";
 
   src = fetchFromGitHub {
     owner = "stefan-hoeck";

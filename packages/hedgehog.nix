@@ -7,6 +7,7 @@
 
 buildIdris {
   name = "hedgehog";
+  version = "0.0.4";
 
   src = fetchFromGitHub {
     owner = "stefan-hoeck";

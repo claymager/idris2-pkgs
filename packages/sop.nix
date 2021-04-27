@@ -3,6 +3,7 @@
 buildIdris {
 
   name = "sop";
+  version = "0.2.2";
 
   src = fetchFromGitHub {
     owner = "stefan-hoeck";
