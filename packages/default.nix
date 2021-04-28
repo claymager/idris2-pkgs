@@ -18,6 +18,8 @@ let
 
     hedgehog = callTOML ./hedgehog.toml;
 
+    idrall = callTOML ./idrall.toml;
+
   };
 
 
