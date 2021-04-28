@@ -21,9 +21,11 @@ stdenv.mkDerivation rec {
   nativeBuildInputs = [ makeWrapper clang chez ];
   buildInputs = [ chez ];
 
-  prePatch = ''
-    patchShebangs --build tests
-  '';
+  prePatch = let match = "$\{GIT_SHA1}"; in
+    ''
+      patchShebangs --build tests
+      sed 's/${match}/${builtins.substring 0 9 idris2-src.rev}/' -i Makefile
+    '';
 
   makeFlags = [ "PREFIX=$(out)" ]
     ++ lib.optional stdenv.isDarwin "OS=";
