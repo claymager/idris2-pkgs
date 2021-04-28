@@ -6,7 +6,7 @@ let
 
     idris2api = callNix ./idris2api.nix { };
 
-    readline-sample = callNix ./readline-sample.nix { };
+    readline-sample = callTOML ./readline-sample.toml;
 
     comonad = callTOML ./comonad.toml;
 

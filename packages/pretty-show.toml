@@ -8,4 +8,4 @@ rev = "28d83af17c7f281cf49e593d4283d1b877788231"
 sha256 = "gOLFijoE7zJVlbPAlwMLLy/fYTE4++CQAQjsfd9EisY="
 
 [ depends ]
-idrisDeps = [ "elab-util", "sop" ]
+idrisLibs = [ "elab-util", "sop" ]

@@ -80,7 +80,7 @@ After forking this repo, there are two primary steps. We need to:
 
 #### Creating the package file
 
-Provided they exist on GitHub, most packages can be specified in [TOML](https://toml.io/en/).
+Provided they exist on GitHub, most packages can be specified in [TOML](https://toml.io/en/). Documentation on the schema is [here](./doc/callToml.md).
 
 As an example, let's look the testing library [`hedgehog`](https://github.com/stefan-hoeck/idris2-hedgehog).
 
@@ -128,6 +128,7 @@ And we're done! Stage and commit your changes and make a PR.
 Assuming no dependencies have changed, a version bump in a TOML file is very easy.
  - Update the version number
  - Update `rev` to point to the target commit
- - Comment out the old `sha256`
- - Get the correct `sha256` as though we were installing.
+ - Remove the old `sha256`
+ - Run a build command
+ - Get the correct `sha256`
 

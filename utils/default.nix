@@ -3,7 +3,7 @@
 let
   with-packages = pkgs.callPackage ./with-packages.nix { inherit idris2; };
 
-  buildIdris = args: pkgs.callPackage ./buildIdris.nix ({ inherit idris2 with-packages; } // args);
+  buildIdris = pkgs.callPackage ./buildIdris.nix { inherit with-packages; };
 
   callPackage = file: args: pkgs.callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
 

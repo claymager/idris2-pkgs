@@ -8,5 +8,5 @@ rev = "replace this string with the specific commit hash"
 # sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
 [ depends ]
-idrisDeps = [ ]
-extraDeps = [ ]
+idrisLibs = [ ]
+buildDeps = [ ]
