@@ -26,8 +26,13 @@ let
     '';
 
     installPhase = ''
-      mkdir -p $out/bin
-      mv build/exec/* $out/bin
+      mkdir $out
+      if [ -d build/exec ]; then
+        mkdir -p $out/bin
+        mv build/exec/* $out/bin
+      else
+        echo "build succeeded; no executable produced" > $out/${name}.out
+      fi
     '';
   };
 
