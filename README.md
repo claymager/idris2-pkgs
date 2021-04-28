@@ -105,7 +105,7 @@ Nix flakes only use files tracked by git, so stage any new files and build the n
 
 ```
 $ git add packages/hedgehog.toml
-$ nix build .#idris2.packages.lsp
+$ nix build .#hedgehog
 error: hash mismatch in fixed-output derivation '/nix/store/8vhk935pzml87jj620kqhc0avkj474x2-source.drv':
  specified: sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
  got:    sha256-Ev9LldllXHciUNHU8CcXrciW1WdxN8iW3J0kJwjsqjI=

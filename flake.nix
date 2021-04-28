@@ -22,9 +22,10 @@
       (system:
         let
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
+          idrisPackages = pkgs.idris2.packages;
         in
         {
-          packages.idris2 = pkgs.idris2;
+          packages = idrisPackages // { inherit (pkgs) idris2; };
 
           devShell = pkgs.mkShell {
             buildInputs = [ pkgs.nixpkgs-fmt ];
