@@ -1,4 +1,4 @@
-name: "Nix on Darwin"
+name: "macOS"
 on:
   pull_request:
   push:

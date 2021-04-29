@@ -1,28 +1,21 @@
+[![](https://github.com/claymager/idris2-pkgs/actions/workflows/ci-ubuntu.yml/badge.svg)](https://github.com/claymager/idris2-pkgs/actions/workflows/ci-ubuntu.yml)
+[![](https://github.com/claymager/idris2-pkgs/actions/workflows/ci-macos.yml/badge.svg)](https://github.com/claymager/idris2-pkgs/actions/workflows/ci-macos.yml)
+
 # Idris2-pkgs
 
-An Idris2 package repository in Nix.
+An unofficial Idris2 package repository for Nix.
 
 > Note: I try to be precise, but end up using Idris and Idris2 interchangeably. If I ever actually need to refer to the original, Haskell-based project, I will call it Idris1.
 
-See `templates/simple` for an example, until I have time for proper documentation.
-
-`nix flake init -t github:claymager/idris2-pkgs#simple`
+For a list of available Idris2 packages, see [packages/default.nix](packages/default.nix)
 
 Compilers live in `idris2/`. Unless you want to write nix, you probably don't need to go in `utils/`.
 
-## How do I...?
+## Supported Platforms
 
 No matter what you want to do with this repository, to run the code, you'll need [nix]( https://nixos.org/download.html), with its "experimental feature" [flakes](https://nixos.wiki/wiki/Flakes) enabled.
 
-### Know which packages are in this repository
-
-All idris2 packages are declared in `packages/default.nix`, and that file is kept as clean as possible.
-
-### Experiment with someone else's packages
-
-This is precisely what a `nix shell` is for!
-
-Our specific implementation is still coming, though.
+The CI builds with both Linux and MacOS. Unfortunately, there is no native Windows support, but nix can be installed with [WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10#step-2---check-requirements-for-running-wsl-2).
 
 ### Run a pure Idris2 project, using packages from this repository
 

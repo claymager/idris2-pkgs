@@ -1,4 +1,4 @@
-name: "Nix on Ubuntu"
+name: "Ubuntu"
 on:
   pull_request:
   push:
