@@ -33,10 +33,10 @@
 
           checks =
             let
-              names = builtins.attrNames pkgs.idris2.packages;
+              names = builtins.attrNames idrisPackages;
               mkCheck = nm: {
                 name = nm;
-                value = pkgs.idris2.packages.${nm}.asLib;
+                value = pkgs.idris2.packages.${nm}.overrideAttrs (attrs: { doCheck = true; });
               };
             in
             builtins.listToAttrs (builtins.map mkCheck names);
