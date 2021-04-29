@@ -1,5 +1,7 @@
 # Build a version of idris with a set of idris packages
-{ lib, idris2, symlinkJoin, makeWrapper, writeScriptBin }: packages:
+{ lib, idris2, symlinkJoin, makeWrapper, writeScriptBin }:
+
+packages: # List Ipkg
 
 let
   idrisEnv = lib.appendToName "with-packages" (symlinkJoin {

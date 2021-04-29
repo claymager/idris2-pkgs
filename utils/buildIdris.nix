@@ -56,7 +56,7 @@ let
 
       installPhase = args.installPhase or ''
         runHook preBinInstall
-       
+
         mkdir $out
         if [ -d build/exec ]; then
           mkdir -p $out/bin

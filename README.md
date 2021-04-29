@@ -8,6 +8,8 @@ See `templates/simple` for an example, until I have time for proper documentatio
 
 `nix flake init -t github:claymager/idris2-pkgs#simple`
 
+Compilers live in `idris2/`. Unless you want to write nix, you probably don't need to go in `utils/`.
+
 ## How do I...?
 
 No matter what you want to do with this repository, to run the code, you'll need [nix]( https://nixos.org/download.html), with its "experimental feature" [flakes](https://nixos.wiki/wiki/Flakes) enabled.
