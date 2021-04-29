@@ -1,10 +1,11 @@
-{ lib, pkgs, buildIdris, packages, fetchFromGitHub }:
+{ lib, pkgs, buildIdris, ipkgs, fetchFromGitHub }:
 
-file:
 let
-  tomlPackage = (builtins.fromTOML (builtins.readFile file));
+  # loadTOML : File -> TomlDec
+  loadTOML = file: builtins.fromTOML (builtins.readFile file);
 
-  toIdrisPackage = toml: lib.filterAttrs (n: v: v != null) {
+  # cleanTOML : (SourceDec -> Source) -> TomlDec -> IdrisDec
+  cleanTOML = fetchSource: toml: lib.filterAttrs (n: v: v != null) {
     # (bare)
     name = toml.name;
     version = toml.version or null;
@@ -12,7 +13,7 @@ let
     ipkgFile = toml.ipkgFile or null;
 
     # [ source ]
-    src = fetchFromGitHub toml.source;
+    src = fetchSource toml.source;
 
     # [ patch ]
     preBuild = toml.patch.preBuild or null;
@@ -28,10 +29,19 @@ let
     preCheck = toml.test.preTest or null;
     postCheck = toml.test.postTest or null;
 
-    # [ Depends ]
+    # [ depends ]
     buildInputs = map (p: pkgs.${p}) (toml.depends.buildDeps or [ ]);
-    idrisLibraries = map (p: packages.${p}) (toml.depends.idrisLibs or [ ]);
+    idrisLibraries = map (p: ipkgs.${p}) (toml.depends.idrisLibs or [ ]);
+
+    # [ meta ]
+    meta = toml.meta or { };
 
   };
 in
-buildIdris (toIdrisPackage tomlPackage)
+
+{
+  callTOML = file:
+    buildIdris (cleanTOML fetchFromGitHub (loadTOML file));
+
+  buildTOMLRepo = dir: file: 7;
+}
