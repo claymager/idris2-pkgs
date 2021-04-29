@@ -43,5 +43,6 @@ in
   callTOML = file:
     buildIdris (cleanTOML fetchFromGitHub (loadTOML file));
 
-  buildTOMLRepo = dir: file: 7;
+  buildTOMLRepo = dir: file:
+    buildIdris (cleanTOML (_: dir) (loadTOML file));
 }
