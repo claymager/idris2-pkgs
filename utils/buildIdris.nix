@@ -7,94 +7,96 @@
 
   # Idris-specific options
 , idrisLibraries ? [ ]
+, idrisTestLibraries ? [ ]
 , codegen ? "chez"
 , ipkgFile ? "${name}.ipkg"
 
   # accept other arguments
+, doCheck ? false
 , ...
 } @ args:
 let
   buildcommand = "idris2 --codegen ${codegen}";
 
-  build = stdenv.mkDerivation (
-    args // {
+  # if checkPhase is enabled, add testing inputs
+  # : Bool -> List Derivations
+  mkBuildInputs = check: [ (with-packages (idrisLibraries ++ lib.optionals check idrisTestLibraries)) ]
+    ++ (args.buildInputs or [ ])
+    ++ lib.optionals check (args.checkInputs or [ ]);
 
-      name = "${name}-${version}";
+  build = stdenv.mkDerivation (args // {
+    name = "${name}-${version}";
 
-      buildInputs = [ (with-packages idrisLibraries) ] ++ (args.buildInputs or [ ]);
+    buildInputs = mkBuildInputs doCheck;
 
-      buildPhase = args.buildPhase or ''
-        runHook preBuild
+    buildPhase = args.buildPhase or ''
+      runHook preBuild
 
-        ${buildcommand} --build ${ipkgFile}
+      ${buildcommand} --build ${ipkgFile}
 
-        runHook postBuild
-      '';
+      runHook postBuild
+    '';
 
-      doCheck = args.doCheck or false;
-      checkPhase = args.checkPhase or (
-        let checkCommand = args.checkCommand or ''
-          if [ -e test.ipkg ]; then
-            buildcommand} --build test.ipkg
-          fi
-        '';
-        in
-        ''
-          # Locally install any new libraries
-          export IDRIS2_PREFIX=build/env
-          mkdir -p $(idris2 --libdir)
-          ${buildcommand} --install ${ipkgFile}
-
-          runHook preCheck
-
-          # build test target
-          ${checkCommand}
-
-          runHook postCheck
-        ''
-      );
-
-      installPhase = args.installPhase or ''
-        runHook preBinInstall
-
-        mkdir $out
-        if [ -d build/exec ]; then
-          mkdir -p $out/bin
-          mv build/exec/* $out/bin
-        else
-          echo "build succeeded; no executable produced" > $out/${name}.out
+    inherit doCheck;
+    checkPhase = args.checkPhase or (
+      let checkCommand = args.checkCommand or ''
+        if [ -e test.ipkg ]; then
+          ${buildcommand} --build test.ipkg
         fi
-
-        runHook postBinInstall
       '';
+      in
+      ''
+        runHook preCheck
 
-    }
-  );
+        # build test target
+        ${checkCommand}
+
+        runHook postCheck
+      ''
+    );
+
+    installPhase = args.installPhase or ''
+      runHook preBinInstall
+
+      mkdir $out
+      if [ "$(ls build/exec)"  ]; then
+        mkdir -p $out/bin
+        mv build/exec/* $out/bin
+      else
+        echo "build succeeded; no executable produced" > $out/${name}.out
+      fi
+
+      runHook postBinInstall
+    '';
+
+  });
 
 
   installLibrary =
     let
-      thisLib = build.overrideAttrs (oldAttrs: {
-        installPhase = ''
-          runHook preLibInstall
+      thisLib = build.overrideAttrs
+        (oldAttrs: {
+          installPhase = ''
+            runHook preLibInstall
 
-          export IDRIS2_PREFIX=$out/
-          mkdir -p $(idris2 --libdir)
-          idris2 --install ${ipkgFile}
+            export IDRIS2_PREFIX=$out/
+            mkdir -p $(idris2 --libdir)
+            idris2 --install ${ipkgFile}
 
-          runHook postLibInstall
-        '';
-      });
+            runHook postLibInstall
+          '';
+        });
     in
     # If
       #  A depends on B, and
       #  B depends on C
       # Then
       #  Include A when building C
-    symlinkJoin {
-      inherit name;
-      paths = [ thisLib ] ++ map (p: p.asLib) idrisLibraries;
-    };
+    symlinkJoin
+      {
+        inherit name;
+        paths = [ thisLib ] ++ map (p: p.asLib) idrisLibraries;
+      };
 
 in
 
@@ -107,4 +109,9 @@ in
   #     build/ttc/mypkg-0.0/*
   #   becomes
   #     $out/idris2-0.3.0/mypkg-0.0/*
-build // { asLib = installLibrary; }
+build // {
+  asLib = installLibrary;
+
+  # for including in devshell
+  dev-inputs = mkBuildInputs true;
+}

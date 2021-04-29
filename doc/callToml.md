@@ -51,14 +51,10 @@ In addition, there are a number of optional fields that may be specified.
         - [nixpkgs](https://search.nixos.org/packages) packages containing dependencies needed at compile time for the target package.
 
 - `[ test ]`
-    - Tests are run before installing, in environment where:
-        - all input libs are available
-        - the libraries have been installed
-        - the executable is in `build/exec`
-        - `buildDeps` are in \$PATH:
     - `enable`: Bool
         - default: `false`
         - Whether to run the tests specified by `test.command`
     - `command`: string
         - default: `"idris2 --build test.ipkg"`
     - `preCheck`, `postCheck`
+        - example: [pretty-show](../packages/pretty-show.toml)

@@ -9,3 +9,7 @@ sha256 = "gOLFijoE7zJVlbPAlwMLLy/fYTE4++CQAQjsfd9EisY="
 
 [ depends ]
 idrisLibs = [ "elab-util", "sop" ]
+
+[ test ]
+enable = true
+postTest = "build/exec/runTest"
