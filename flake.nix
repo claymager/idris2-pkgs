@@ -27,6 +27,8 @@
         {
           packages = idrisPackages // { inherit (pkgs) idris2; };
 
+          defaultPackage = pkgs.idris2;
+
           devShell = pkgs.mkShell {
             buildInputs = [ pkgs.nixpkgs-fmt ];
           };
