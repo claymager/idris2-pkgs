@@ -26,7 +26,7 @@ In addition, there are a number of optional fields that may be specified.
 
 - `codegen`: String
     - default: "chez"
-    - The default idris2 has runtime access to `chez`. If using another codegen, be sure to edit `depends.buildDeps`.
+    - The default idris2 has runtime access to `chez`. If using another codegen, be sure to edit `depends.buildInputs`.
 
 * `ipkgFile`: String
     - default: "\${name}.ipkg"
@@ -46,7 +46,7 @@ In addition, there are a number of optional fields that may be specified.
         - example: [hedgehog](../packages/hedgehog.toml)
         - Every element is the name of a library package this one depends on, where "name" comes from the LHS of a declaration in [packages/default.nix](../packages/default.nix).
        - Unlike in an `ipkg` file, libraries included with Idris (`contrib`, `network`, `test`; *NOT* `idris2api`) do not need to be declared here.
-    - `buildDeps` : List String
+    - `buildInputs` : List String
         - example: [readline-sample](../packages/readline-sample.toml)
         - [nixpkgs](https://search.nixos.org/packages) packages containing dependencies needed at compile time for the target package.
 

@@ -9,4 +9,4 @@ rev = "replace this string with the specific commit hash"
 
 [ depends ]
 idrisLibs = [ ]
-buildDeps = [ ]
+buildInputs = [ ]

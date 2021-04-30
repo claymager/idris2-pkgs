@@ -92,7 +92,7 @@ rev = "929b27c4a58111b4d1327abb18a2eee4ad304f48"
 # sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
 
 [ depends ]
-idrisDeps = [ "elab-util", "sop", "pretty-show" ]
+idrisLibs = [ "elab-util", "sop", "pretty-show" ]
 ```
 
 `rev` is the specific git commit to build against. `sha256` is the hash of an internal Nix file, and the typical way to get it is to try to build without one.

@@ -14,4 +14,4 @@ preBuild = """
 """
 
 [ depends ]
-buildDeps = [ "readline" ]
+buildInputs = [ "readline" ]

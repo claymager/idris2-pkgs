@@ -31,7 +31,7 @@ let
 
     # [ depends ]
     # Map strings from TOML to nixpkgs packages
-    buildInputs = map (p: pkgs.${p}) (toml.depends.buildDeps or [ ]);
+    buildInputs = map (p: pkgs.${p}) (toml.depends.buildInputs or [ ]);
     #                     ^- an error here may be a typo in buildDep entries
 
     # Map strings from TOML to Idris Libraries
