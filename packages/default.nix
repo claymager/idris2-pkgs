@@ -1,6 +1,6 @@
 { utils }:
 let
-  inherit (utils.builders packages) withPackages buildTOMLRepo callTOML callNix;
+  inherit (utils.builders packages) withPackages buildTOMLSource callTOML callNix;
 
   packages = rec {
 
@@ -25,5 +25,5 @@ let
 
 in
 {
-  inherit withPackages packages buildTOMLRepo callNix;
+  inherit withPackages packages buildTOMLSource callNix;
 }
