@@ -18,8 +18,8 @@ in
   builders = ipkgs:
     {
       inherit (buildFromTOML ipkgs)
-        callTOML#      # TOMLFile -> IPkg
-        buildTOMLRepo; # PATH??? -> String -> Ipkg
+        callTOML#        # (toml : Path) -> IPkg
+        buildTOMLSource; # (root : Path) -> (toml : Path) -> Ipkg
 
       callNix = callNix; # IdrisDec -> Ipkg
 

@@ -1,6 +1,16 @@
 # Building from TOML
 
-The builder function `callTOML` builds a GitHub-hosted Idris2 package from a TOML specification. View its implementation [here](../utils/callToml.nix).
+Many packages can be built from a TOML specification. This flake provides two functions:
+ - `callTOML` : (toml : Path) -> IdrisPkg
+    - For specifying packages to include in `idris2-pkgs`
+    - Currently requires package to be hosted on GitHub
+ - `callTOMLSource` : (projectRoot : Path) -> (toml : Path) -> IdrisPkg
+    - For using idris2-pkgs locally
+    - If either path points outside of the flake's directory, you will need to use `--impure` with any Nix commands
+
+Many basic functionalities are available from the TOML interface, and are detailed below. To use more advanced features like specifying the commit of a dependency, you will have to call the nix function `buildIdris` directly. For help porting a TOML specification to a nix one, see the [implementation](../utils/callToml.nix) of callTOML.
+
+## Usage
 
 The minimum a package needs to build is here:
 
@@ -11,7 +21,7 @@ name = "mypkg"
 [ source ]
 owner = "my-github-username"
 repo = "my-project"
-rev = "hash-of-latest-commit"
+rev = "tag-or-hash-of-commit"
 sha256 = "hash-of-intermediate-buildifile"
 ```
 
@@ -56,5 +66,7 @@ In addition, there are a number of optional fields that may be specified.
         - Whether to run the tests specified by `test.command`
     - `command`: string
         - default: `"idris2 --build test.ipkg"`
+    - `idrisLibs` : List String
+        - Functions exactly like `depends.idrisLibs`, but are only included if testing is enabled.
     - `preCheck`, `postCheck`
         - example: [pretty-show](../packages/pretty-show.toml)

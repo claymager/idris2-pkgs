@@ -28,6 +28,9 @@ let
     checkCommand = toml.test.command or null;
     preCheck = toml.test.preTest or null;
     postCheck = toml.test.postTest or null;
+    # Map strings from TOML to Idris Libraries
+    idrisTestLibraries = map (lib: ipkgs.${lib}) (toml.test.idrisLibs or [ ]);
+    #                              ^- an error here may be a typo in [test] idrisLibs
 
     # [ depends ]
     # Map strings from TOML to nixpkgs packages
@@ -36,7 +39,7 @@ let
 
     # Map strings from TOML to Idris Libraries
     idrisLibraries = map (lib: ipkgs.${lib}) (toml.depends.idrisLibs or [ ]);
-    #                          ^- an error here may be a typo in idrisLibs entries
+    #                          ^- an error here may be a typo in [depends] idrisLibs
 
     # [ meta ]
     meta = toml.meta or { };
@@ -48,6 +51,6 @@ in
   callTOML = file:
     buildIdris (cleanTOML fetchFromGitHub (loadTOML file));
 
-  buildTOMLRepo = dir: file:
+  buildTOMLSource = dir: file:
     buildIdris (cleanTOML (_: dir) (loadTOML file));
 }
