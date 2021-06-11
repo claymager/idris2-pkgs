@@ -8,7 +8,6 @@
 , gambit
 , nodejs
 , idris2-src
-, gmp
 }:
 
 # Uses scheme to bootstrap the build of idris2
@@ -20,7 +19,7 @@ stdenv.mkDerivation rec {
 
   strictDeps = true;
   nativeBuildInputs = [ makeWrapper clang chez ];
-  buildInputs = [ chez gmp ];
+  buildInputs = [ chez ];
 
   prePatch = let match = "$\{GIT_SHA1}"; in
     ''
