@@ -8,6 +8,7 @@
 , gambit
 , nodejs
 , idris2-src
+, gmp
 }:
 
 # Uses scheme to bootstrap the build of idris2
@@ -19,16 +20,16 @@ stdenv.mkDerivation rec {
 
   strictDeps = true;
   nativeBuildInputs = [ makeWrapper clang chez ];
-  buildInputs = [ chez ];
+  buildInputs = [ chez gmp ];
 
   prePatch = let match = "$\{GIT_SHA1}"; in
     ''
       patchShebangs --build tests
       sed 's/${match}/${builtins.substring 0 9 idris2-src.rev}/' -i Makefile
+      sed 's/Darwin/FakeSystem/' -i bootstrap/*.sh
     '';
 
-  makeFlags = [ "PREFIX=$(out)" ]
-    ++ lib.optional stdenv.isDarwin "OS=";
+  makeFlags = [ "PREFIX=$(out)" ];
 
   # The name of the main executable of pkgs.chez is `scheme`
   buildFlags = [ "bootstrap" "SCHEME=scheme" ];

@@ -4,8 +4,8 @@ version = "0.2.0"
 [ source ]
 owner = "stefan-hoeck"
 repo = "idris2-pretty-show"
-rev = "28d83af17c7f281cf49e593d4283d1b877788231"
-sha256 = "gOLFijoE7zJVlbPAlwMLLy/fYTE4++CQAQjsfd9EisY="
+rev = "1c872b6b0dfcb3f2cd73ead773fa267c04780eda"
+sha256 = "2Li9x4HvBUGZEqFlysGafQ06I2kbKyMdz2WiJbnJMZI="
 
 [ depends ]
 idrisLibs = [ "elab-util", "sop" ]
