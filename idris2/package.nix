@@ -26,10 +26,10 @@ stdenv.mkDerivation rec {
     ''
       patchShebangs --build tests
       sed 's/${match}/${builtins.substring 0 9 idris2-src.rev}/' -i Makefile
+      sed 's/Darwin/FakeSystem/' -i bootstrap/*.sh
     '';
 
-  makeFlags = [ "PREFIX=$(out)" ]
-    ++ lib.optional stdenv.isDarwin "OS=";
+  makeFlags = [ "PREFIX=$(out)" ];
 
   # The name of the main executable of pkgs.chez is `scheme`
   buildFlags = [ "bootstrap" "SCHEME=scheme" ];

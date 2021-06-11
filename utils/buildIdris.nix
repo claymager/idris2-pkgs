@@ -18,9 +18,45 @@
 let
   buildcommand = "idris2 --codegen ${codegen}";
 
+  # A postBuild patch for every executable produced by the given codegen.
+  #
+  # Each entry is the body of a function called with one argument:
+  #   the relative path of the executable.
+  patchCodegen = {
+    chez = ''
+      # No special treatment for Darwin: we don't have zsh in PATH.
+      sed 's/Darwin/FakeSystem/' -i $1;
+    '';
+  };
+
+  setupCodegenPatch = ''
+    patchCodegen () {
+      ${patchCodegen.${codegen} or ""}
+    }
+
+    runPatchCodegen () {
+
+      # We may need to call this more than once, so ignore any files passed as argument
+      local ignoredFiles=
+      for arg in $@; do
+        ignoredFiles="$ignoredFiles ! -wholename $arg"
+      done
+
+      # Patch executables in build/exec
+      if [ -d build/exec ]; then
+        export -f patchCodegen
+        find build/exec \
+          -maxdepth 1 -type f -executable \
+         $ignoredFiles \
+         -exec bash -c 'patchCodegen "$0"' {} \;
+      fi
+    }
+  '';
+
   # if checkPhase is enabled, add testing inputs
   # : Bool -> List Derivations
-  mkBuildInputs = check: [ (with-packages (idrisLibraries ++ lib.optionals check idrisTestLibraries)) ]
+  mkBuildInputs = check:
+    [ (with-packages (idrisLibraries ++ lib.optionals check idrisTestLibraries)) ]
     ++ (args.buildInputs or [ ])
     ++ lib.optionals check (args.checkInputs or [ ]);
 
@@ -29,10 +65,13 @@ let
 
     buildInputs = mkBuildInputs doCheck;
 
+    inherit setupCodegenPatch;
     buildPhase = args.buildPhase or ''
+      runHook setupCodegenPatch
       runHook preBuild
 
       ${buildcommand} --build ${ipkgFile}
+      runPatchCodegen
 
       runHook postBuild
     '';
@@ -47,10 +86,12 @@ let
       in
       ''
         runHook preCheck
+        ignoreFiles=$(find build/exec -maxdepth 1 -type f -executable || true)
 
         # build test target
         ${checkCommand}
 
+        runPatchCodegen $ignoreFiles
         runHook postCheck
       ''
     );
