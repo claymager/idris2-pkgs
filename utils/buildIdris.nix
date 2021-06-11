@@ -20,12 +20,15 @@ let
 
   # A postBuild patch for every executable produced by the given codegen.
   #
-  # Each entry is the body of a function called with one argument:
+  # Each entry is the body of a bash function with one argument:
   #   the relative path of the executable.
   patchCodegen = {
     chez = ''
       # No special treatment for Darwin: we don't have zsh in PATH.
       sed 's/Darwin/FakeSystem/' -i $1;
+
+      # We don't need these anymore
+      rm $1_app/compileChez $1_app/$(basename $1).ss
     '';
   };
 
@@ -42,7 +45,7 @@ let
         ignoredFiles="$ignoredFiles ! -wholename $arg"
       done
 
-      # Patch executables in build/exec
+      # Patch remaining executables in build/exec
       if [ -d build/exec ]; then
         export -f patchCodegen
         find build/exec \
