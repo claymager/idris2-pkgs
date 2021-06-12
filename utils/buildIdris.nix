@@ -1,4 +1,4 @@
-{ stdenv, lib, symlinkJoin, with-packages }:
+{ stdenv, lib, makeWrapper, symlinkJoin, with-packages, idris2 }:
 
 # # minimum requirements
 { name
@@ -10,6 +10,7 @@
 , idrisTestLibraries ? [ ]
 , codegen ? "chez"
 , ipkgFile ? "${name}.ipkg"
+, runtimeLibs ? false
 
   # accept other arguments
 , doCheck ? false
@@ -29,7 +30,11 @@ let
 
       # We don't need these anymore
       rm $1_app/compileChez $1_app/$(basename $1).ss
-    '';
+    '' + (if runtimeLibs then ''
+      wrapProgram $1 \
+        --set-default IDRIS2_PREFIX "~/.idris2"
+        --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
+    '' else "");
   };
 
   setupCodegenPatch = ''
@@ -56,17 +61,18 @@ let
     }
   '';
 
-  # if checkPhase is enabled, add testing inputs
-  # : Bool -> List Derivations
-  mkBuildInputs = check:
-    [ (with-packages (idrisLibraries ++ lib.optionals check idrisTestLibraries)) ]
-    ++ (args.buildInputs or [ ])
-    ++ lib.optionals check (args.checkInputs or [ ]);
-
   build = stdenv.mkDerivation (args // {
     name = "${name}-${version}";
 
-    buildInputs = mkBuildInputs doCheck;
+    nativeBuildInputs =
+      [ (with-packages idrisLibraries) makeWrapper ]
+        ++ args.nativeBuildInputs or [ ];
+
+    checkInputs =
+      [ (with-packages (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries)) ]
+        ++ args.checkInptus or [ ];
+
+    buildInputs = args.buildInputs or [ ];
 
     inherit setupCodegenPatch;
     buildPhase = args.buildPhase or ''
@@ -155,5 +161,5 @@ build // {
   asLib = installLibrary;
 
   # for including in devshell
-  dev-inputs = mkBuildInputs true;
+  dev-inputs = [ ];
 }

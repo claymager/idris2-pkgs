@@ -6,7 +6,7 @@ let
   with-packages = pkgs.callPackage ./with-packages.nix { inherit idris2; };
 
   # buildIdris : IdrisDec -> IPkg
-  buildIdris = lib.makeOverridable (pkgs.callPackage ./buildIdris.nix { inherit with-packages; });
+  buildIdris = lib.makeOverridable (pkgs.callPackage ./buildIdris.nix { inherit with-packages idris2; });
 
   # wrap callPackage with default buildIdris added to args
   callNix = file: args: pkgs.callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
