@@ -20,8 +20,8 @@ let
 
     idrall = callTOML ./idrall.toml;
 
+    lsp = extendWithLibs (callTOML ./lsp.toml);
   };
-
 
 in
 {
