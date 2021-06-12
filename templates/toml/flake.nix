@@ -12,13 +12,7 @@
 
       in
       {
-
         defaultPackage = mypkg;
-
-        devShell = pkgs.mkShell {
-          buildInputs = mypkg.dev-inputs;
-        };
-
       }
     );
 }

@@ -159,7 +159,4 @@ in
   #     $out/idris2-0.3.0/mypkg-0.0/*
 build // {
   asLib = installLibrary;
-
-  # for including in devshell
-  dev-inputs = [ ];
 }
