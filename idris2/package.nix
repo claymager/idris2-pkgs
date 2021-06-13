@@ -14,6 +14,7 @@
 # Uses scheme to bootstrap the build of idris2
 stdenv.mkDerivation rec {
   pname = "idris2";
+  executable = pname;
   version = "0.3.0";
 
   src = idris2-src;

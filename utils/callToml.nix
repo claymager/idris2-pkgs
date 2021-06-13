@@ -11,6 +11,7 @@ let
     version = toml.version or null;
     codegen = toml.codegen or null;
     ipkgFile = toml.ipkgFile or null;
+    executable = toml.executable or null;
 
     # [ source ]
     src = fetchSource toml.source;

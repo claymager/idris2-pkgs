@@ -1,29 +1,19 @@
 # Build a version of idris with a set of idris packages
 { lib, idris2, symlinkJoin, makeWrapper, writeScriptBin }:
 
+base: # Derivation; something like `idris2` or `lsp`
 packages: # List Ipkg
 
-let
-  idrisEnv = lib.appendToName "with-packages" (symlinkJoin {
-    inherit (idris2) name;
+lib.appendToName "with-packages" (symlinkJoin {
+  inherit (base) name;
 
-    paths = map (p: p.asLib) packages ++ [ idris2 ];
+  paths = map (p: p.asLib) packages ++ [ base ];
 
-    buildInputs = [ makeWrapper ];
+  buildInputs = [ makeWrapper ];
 
-    postBuild = ''
-      wrapProgram "$out/bin/idris2" \
-        --run "export IDRIS2_PACKAGE_PATH=$out/${idris2.name}:\$IDRIS2_PACKAGE_PATH" \
-    '';
-
-  });
-
-  wrapIdrisLibs = writeScriptBin "wrap-idris-libs" ''
-    export IDRIS2_PACKAGE_PATH=${idrisEnv}/${idris2.name}:\$IDRIS2_PACKAGE_PATH
-    exec "$@"
+  postBuild = ''
+    wrapProgram "$out/bin/${base.executable}" \
+      --suffix IDRIS2_PACKAGE_PATH ':' "$out/${idris2.name}"
   '';
-in
-symlinkJoin {
-  inherit (idrisEnv) name;
-  paths = [ idrisEnv wrapIdrisLibs ];
-}
+
+})

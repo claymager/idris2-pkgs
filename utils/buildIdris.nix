@@ -11,13 +11,14 @@
 , codegen ? "chez"
 , ipkgFile ? "${name}.ipkg"
 , runtimeLibs ? false
+, executable ? ""
 
   # accept other arguments
 , doCheck ? false
 , ...
 } @ args:
 let
-  buildcommand = "idris2 --codegen ${codegen}";
+  buildcommand = "${idris2.executable} --codegen ${codegen}";
 
   setupCodegenPatch = ''
     runPatchCodegen () {
@@ -47,6 +48,7 @@ let
        done;
     '' else "";
 
+  # Idris, and any packages needed to run tests
   testIdris = with-packages (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
 
   build = stdenv.mkDerivation (args // {
@@ -148,4 +150,4 @@ in
   #     $out/idris2-0.3.0/mypkg-0.0/*
 build // {
   asLib = installLibrary;
-}
+} // (if executable == "" then { } else { inherit executable; })
