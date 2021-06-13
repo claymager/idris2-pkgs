@@ -2,11 +2,13 @@
 
 # IPkg is subtype of Derivation
 let
+  patchCodegen = import ./patchCodegen.nix;
+
   # with-packages : List IPkg -> Derivation
   with-packages = pkgs.callPackage ./with-packages.nix { inherit idris2; };
 
   # buildIdris : IdrisDec -> IPkg
-  buildIdris = lib.makeOverridable (pkgs.callPackage ./buildIdris.nix { inherit with-packages idris2; });
+  buildIdris = lib.makeOverridable (pkgs.callPackage ./buildIdris.nix { inherit with-packages idris2 patchCodegen; });
 
   # wrap callPackage with default buildIdris added to args
   callNix = file: args: pkgs.callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);

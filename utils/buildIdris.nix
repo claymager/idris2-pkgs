@@ -1,4 +1,4 @@
-{ stdenv, lib, makeWrapper, symlinkJoin, with-packages, idris2 }:
+{ stdenv, lib, makeWrapper, symlinkJoin, patchCodegen, with-packages, idris2 }:
 
 # # minimum requirements
 { name
@@ -19,29 +19,7 @@
 let
   buildcommand = "idris2 --codegen ${codegen}";
 
-  # A postBuild patch for every executable produced by the given codegen.
-  #
-  # Each entry is the body of a bash function with one argument:
-  #   the relative path of the executable.
-  patchCodegen = {
-    chez = ''
-      # No special treatment for Darwin: we don't have zsh in PATH.
-      sed 's/Darwin/FakeSystem/' -i $1;
-
-      # We don't need these anymore
-      rm $1_app/compileChez $1_app/$(basename $1).ss
-    '' + (if runtimeLibs then ''
-      wrapProgram $1 \
-        --set-default IDRIS2_PREFIX "~/.idris2"
-        --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
-    '' else "");
-  };
-
   setupCodegenPatch = ''
-    patchCodegen () {
-      ${patchCodegen.${codegen} or ""}
-    }
-
     runPatchCodegen () {
 
       # We may need to call this more than once, so ignore any files passed as argument
@@ -52,11 +30,10 @@ let
 
       # Patch remaining executables in build/exec
       if [ -d build/exec ]; then
-        export -f patchCodegen
-        find build/exec \
-          -maxdepth 1 -type f -executable \
-         $ignoredFiles \
-         -exec bash -c 'patchCodegen "$0"' {} \;
+        find build/exec -maxdepth 1 -type f -executable $ignoredFiles \
+          | while read file; do
+              ${patchCodegen codegen}
+            done;
       fi
     }
   '';
