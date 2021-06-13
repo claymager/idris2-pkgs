@@ -1,6 +1,6 @@
 { utils }:
 let
-  inherit (utils.builders packages) withPackages buildTOMLSource callTOML callNix extendWithLibs;
+  inherit (utils.builders packages) extendWithPackages buildTOMLSource callTOML callNix;
 
   packages = rec {
 
@@ -20,10 +20,10 @@ let
 
     idrall = callTOML ./idrall.toml;
 
-    lsp = extendWithLibs (callTOML ./lsp.toml);
+    lsp = extendWithPackages (callTOML ./lsp.toml);
   };
 
 in
 {
-  inherit withPackages packages buildTOMLSource callNix;
+  inherit extendWithPackages packages buildTOMLSource callNix;
 }

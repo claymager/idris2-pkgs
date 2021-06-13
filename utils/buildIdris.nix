@@ -1,4 +1,4 @@
-{ stdenv, lib, makeWrapper, symlinkJoin, patchCodegen, with-packages, idris2 }:
+{ stdenv, lib, makeWrapper, symlinkJoin, patchCodegen, idris2, extendWithPackages }:
 
 # # minimum requirements
 { name
@@ -49,14 +49,14 @@ let
     '' else "";
 
   # Idris, and any packages needed to run tests
-  testIdris = with-packages (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
+  testIdris = extendWithPackages idris2 (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
 
   build = stdenv.mkDerivation (args // {
 
     name = "${name}-${version}";
 
     nativeBuildInputs =
-      [ (with-packages idrisLibraries) makeWrapper ]
+      [ (extendWithPackages idris2 idrisLibraries) makeWrapper ]
         ++ args.nativeBuildInputs or [ ];
 
     checkInputs = [ testIdris ] ++ args.checkInputs or [ ];

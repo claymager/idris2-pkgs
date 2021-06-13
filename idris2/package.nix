@@ -9,6 +9,9 @@
 , nodejs
 , idris2-src
 , gmp
+
+  # for compatability with extendWithPackages
+, runtimeLibs ? true
 }:
 
 # Uses scheme to bootstrap the build of idris2

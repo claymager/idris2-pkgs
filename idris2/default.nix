@@ -4,4 +4,4 @@ let
   utils = pkgs.callPackage ./../utils { inherit idris2; };
   packages = pkgs.callPackage ./../packages { inherit utils; };
 in
-lib.recursiveUpdate idris2 packages
+lib.recursiveUpdate packages (packages.extendWithPackages idris2)
