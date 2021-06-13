@@ -38,6 +38,9 @@ let
     buildInputs = map (p: pkgs.${p}) (toml.depends.buildInputs or [ ]);
     #                     ^- an error here may be a typo in buildDep entries
 
+    # Map strings from TOML to nixpkgs packages, used only at build time
+    nativeBuildInputs = map (p: pkgs.${p}) (toml.depends.nativeBuildInputs or [ ]);
+
     # Map strings from TOML to Idris Libraries
     idrisLibraries = map (lib: ipkgs.${lib}) (toml.depends.idrisLibs or [ ]);
     #                          ^- an error here may be a typo in [depends] idrisLibs
