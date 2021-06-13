@@ -82,9 +82,7 @@ let
     inherit doCheck;
     checkPhase = args.checkPhase or (
       let checkCommand = args.checkCommand or ''
-        if [ -e test.ipkg ]; then
-          ${buildcommand} --build test.ipkg
-        fi
+        find . -maxdepth 2 -name test.ipkg -exec ${buildcommand} --build {} \;
       '';
       in
       ''
