@@ -61,16 +61,26 @@ let
     }
   '';
 
+  forwardLibs =
+    if runtimeLibs then ''
+      find $out/bin -maxdepth 1 -type f -executable | while read file; do
+         wrapProgram $file \
+           --set-default IDRIS2_PREFIX "~/.idris2" \
+           --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
+       done;
+    '' else "";
+
+  testIdris = with-packages (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
+
   build = stdenv.mkDerivation (args // {
+
     name = "${name}-${version}";
 
     nativeBuildInputs =
       [ (with-packages idrisLibraries) makeWrapper ]
         ++ args.nativeBuildInputs or [ ];
 
-    checkInputs =
-      [ (with-packages (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries)) ]
-        ++ args.checkInptus or [ ];
+    checkInputs = [ testIdris ] ++ args.checkInputs or [ ];
 
     buildInputs = args.buildInputs or [ ];
 
@@ -86,6 +96,7 @@ let
     '';
 
     inherit doCheck;
+    IDRIS2_PACKAGE_PATH = "${testIdris}/${idris2.name}";
     checkPhase = args.checkPhase or (
       let checkCommand = args.checkCommand or ''
         find . -maxdepth 2 -name test.ipkg -exec ${buildcommand} --build {} \;
@@ -110,6 +121,7 @@ let
       if [ "$(ls build/exec)"  ]; then
         mkdir -p $out/bin
         mv build/exec/* $out/bin
+        ${forwardLibs}
       else
         echo "build succeeded; no executable produced" > $out/${name}.out
       fi
