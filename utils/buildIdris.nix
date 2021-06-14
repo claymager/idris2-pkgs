@@ -21,31 +21,19 @@ let
   buildcommand = "${idris2.executable} --codegen ${codegen}";
 
   setupCodegenPatch = ''
-    runPatchCodegen () {
-
-      # We may need to call this more than once, so ignore any files passed as argument
-      local ignoredFiles=
-      for arg in $@; do
-        ignoredFiles="$ignoredFiles ! -wholename $arg"
-      done
-
-      # Patch remaining executables in build/exec
-      if [ -d build/exec ]; then
-        find build/exec -maxdepth 1 -type f -executable $ignoredFiles \
-          | while read file; do
-              ${patchCodegen codegen}
-            done;
+    patchFile () {
+      file=$1
+      if [ -x "$file" ]; then
+        ${patchCodegen codegen}
       fi
     }
   '';
 
   forwardLibs =
     if runtimeLibs then ''
-      find $out/bin -maxdepth 1 -type f -executable | while read file; do
-         wrapProgram $file \
-           --set-default IDRIS2_PREFIX "~/.idris2" \
-           --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
-       done;
+      wrapProgram build/exec/${executable} \
+        --set-default IDRIS2_PREFIX "~/.idris2" \
+        --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
     '' else "";
 
   # Idris, and any packages needed to run tests
@@ -69,7 +57,7 @@ let
       runHook preBuild
 
       ${buildcommand} --build ${ipkgFile}
-      runPatchCodegen
+      patchFile build/exec/${executable}
 
       runHook postBuild
     '';
@@ -83,12 +71,10 @@ let
       in
       ''
         runHook preCheck
-        ignoreFiles=$(find build/exec -maxdepth 1 -type f -executable || true)
 
         # build test target
         ${checkCommand}
 
-        runPatchCodegen $ignoreFiles
         runHook postCheck
       ''
     );

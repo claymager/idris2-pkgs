@@ -12,4 +12,8 @@ idrisLibs = [ "elab-util", "sop" ]
 
 [ test ]
 enable = true
-postTest = "build/exec/runTest"
+command = """
+idris2 --build test.ipkg
+patchFile build/exec/runTest
+build/exec/runTest
+"""
