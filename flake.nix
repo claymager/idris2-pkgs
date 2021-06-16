@@ -35,13 +35,16 @@
 
           checks =
             let
-              names = builtins.attrNames pkgs.idris2.packages;
+              names = builtins.attrNames idrisPackages;
               mkCheck = nm: {
                 name = nm;
-                value = pkgs.idris2.packages.${nm}.asLib;
+                value = idrisPackages.${nm}.asLib;
               };
             in
-            builtins.listToAttrs (builtins.map mkCheck names);
+            # All packages as libraries, and certain executable environments
+            builtins.listToAttrs (builtins.map mkCheck names) // {
+              lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
+            };
 
         }
       );
