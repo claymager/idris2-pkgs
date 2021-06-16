@@ -17,5 +17,5 @@ enable = true
 command = """
 make -C tests testbin
 patchFile tests/build/exec/runtests
-make -C tests test INTERACTIVE=
+make -C tests INTERACTIVE=
 """

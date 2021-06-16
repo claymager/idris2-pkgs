@@ -29,13 +29,6 @@ let
     }
   '';
 
-  forwardLibs =
-    if runtimeLibs then ''
-      wrapProgram build/exec/${executable} \
-        --set-default IDRIS2_PREFIX "~/.idris2" \
-        --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
-    '' else "";
-
   # Idris, and any packages needed to run tests
   testIdris = extendWithPackages idris2 (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
 
@@ -79,20 +72,29 @@ let
       ''
     );
 
-    installPhase = args.installPhase or ''
-      runHook preBinInstall
+    installPhase =
+      let
+        forwardLibs =
+          if runtimeLibs then ''
+            wrapProgram $out/bin/${executable} \
+              --set-default IDRIS2_PREFIX "~/.idris2" \
+              --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
+          '' else "";
+      in
+        args.installPhase or ''
+          runHook preBinInstall
 
-      mkdir $out
-      if [ "$(ls build/exec)"  ]; then
-        mkdir -p $out/bin
-        mv build/exec/* $out/bin
-        ${forwardLibs}
-      else
-        echo "build succeeded; no executable produced" > $out/${name}.out
-      fi
+          mkdir $out
+          if [ "$(ls build/exec)"  ]; then
+            mkdir -p $out/bin
+            mv build/exec/* $out/bin
+            ${forwardLibs}
+          else
+            echo "build succeeded; no executable produced" > $out/${name}.out
+          fi
 
-      runHook postBinInstall
-    '';
+          runHook postBinInstall
+        '';
 
   });
 
