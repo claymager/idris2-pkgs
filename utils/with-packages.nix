@@ -5,7 +5,7 @@ base: # Derivation; something like `idris2` or `lsp`
 packages: # List Ipkg
 
 lib.appendToName "with-packages" (symlinkJoin {
-  inherit (base) name;
+  inherit (base) name executable;
 
   paths = map (p: p.asLib) packages ++ [ base ];
 

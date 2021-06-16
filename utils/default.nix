@@ -30,10 +30,12 @@ in
         let
           # If we can use TTC files, we almost certainly need Prelude, etc.
           pk = pkg.override { runtimeLibs = true; };
+          add-libs = p: p // builtins.mapAttrs (name: lib: (add-libs (extendWithPackages p [ lib ]))) ipkgs;
         in
         pk // {
           # withPackages : (Attrset IPkg -> List Ipkg) -> Derivation
           withPackages = fn: extendWithPackages pk (fn ipkgs);
+          withPkgs = add-libs pk;
         };
     };
 }
