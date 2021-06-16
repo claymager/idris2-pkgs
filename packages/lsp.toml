@@ -14,8 +14,14 @@ buildInputs = [ ]
 
 [ test ]
 enable = true
-command = """
+preTest = """
+# macOS does not allow direct access to /tmp
+for file in tests/Makefile tests/lsp/message001/*; do
+  sed -i "s|/tmp/test-lsp.idr|$(pwd)/tests/test-lsp.idr|g" $file;
+done
+
+# Apply codegen patches to the test binary so it can run in nix
 make -C tests testbin
 patchFile tests/build/exec/runtests
-make -C tests INTERACTIVE=
 """
+command = "make -C tests INTERACTIVE= "
