@@ -9,6 +9,7 @@
 , nodejs
 , idris2-src
 , gmp
+, zsh
 
   # for compatability with extendWithPackages
 , runtimeLibs ? true
@@ -23,14 +24,14 @@ stdenv.mkDerivation rec {
   src = idris2-src;
 
   strictDeps = true;
-  nativeBuildInputs = [ makeWrapper clang chez ];
+  nativeBuildInputs = [ makeWrapper clang chez ]
+    ++ lib.optional stdenv.isDarwin [ zsh ];
   buildInputs = [ chez gmp ];
 
   prePatch = let match = "$\{GIT_SHA1}"; in
     ''
       patchShebangs --build tests
       sed 's/${match}/${builtins.substring 0 9 idris2-src.rev}/' -i Makefile
-      sed 's/Darwin/FakeSystem/' -i bootstrap/*.sh
     '';
 
   makeFlags = [ "PREFIX=$(out)" ];

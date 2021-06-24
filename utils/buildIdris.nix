@@ -1,4 +1,4 @@
-{ stdenv, lib, makeWrapper, symlinkJoin, patchCodegen, idris2, extendWithPackages }:
+{ stdenv, lib, makeWrapper, symlinkJoin, idris2, extendWithPackages, zsh }:
 
 # # minimum requirements
 { name
@@ -20,15 +20,6 @@
 let
   buildcommand = "${idris2.executable} --codegen ${codegen}";
 
-  setupCodegenPatch = ''
-    patchFile () {
-      file=$1
-      if [ -x "$file" ]; then
-        ${patchCodegen codegen}
-      fi
-    }
-  '';
-
   # Idris, and any packages needed to run tests
   testIdris = extendWithPackages idris2 (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
 
@@ -38,19 +29,17 @@ let
 
     nativeBuildInputs =
       [ (extendWithPackages idris2 idrisLibraries) makeWrapper ]
+        ++ lib.optional stdenv.isDarwin [ zsh ]
         ++ args.nativeBuildInputs or [ ];
 
     checkInputs = [ testIdris ] ++ args.checkInputs or [ ];
 
     buildInputs = args.buildInputs or [ ];
 
-    inherit setupCodegenPatch;
     buildPhase = args.buildPhase or ''
-      runHook setupCodegenPatch
       runHook preBuild
 
       ${buildcommand} --build ${ipkgFile}
-      patchFile build/exec/${executable}
 
       runHook postBuild
     '';
