@@ -63,7 +63,7 @@ That looks a bit hairy, but the important part for us is here:
 
 This says "include the idris2api package when installing Idris." You can add any Idris packages you want in this (whitespace-separated) list. Now, you can run `nix develop`, and Nix will build the environment for you.
 
-> Note: While `idris2` *can* find the packages, as of version 0.3.0, it doesn't know to look for them unless you tell it to. Without a proper `your-pkg.ipkg`, you'll still need to run `idris2` with `-p contrib -p elab-util -p sop -p pretty-show -p hedgehog` in order to `import Hedgehog`.
+> Note: While `idris2` *can* find the packages, it doesn't know to look for them unless you tell it to. Without a proper `your-pkg.ipkg`, you'll still need to run `idris2` with `-p contrib -p elab-util -p sop -p pretty-show -p hedgehog` in order to `import Hedgehog`.
 
 ### Add a pure Idris2 library to this repository
 

@@ -135,7 +135,7 @@ in
   # `$ nix build .#mypkg.asLib` =>
   #     build/ttc/mypkg-0.0/*
   #   becomes
-  #     $out/idris2-0.3.0/mypkg-0.0/*
+  #     $out/idris2-0.4.0/mypkg-0.0/*
 build // {
   asLib = installLibrary;
 } // (if executable == "" then { } else { inherit executable; })

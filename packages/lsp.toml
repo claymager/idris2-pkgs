@@ -5,8 +5,8 @@ executable = "idris2-lsp"
 [ source ]
 owner = "idris-community"
 repo = "idris2-lsp"
-rev = "12b4c27481fd7e3b32d2afba5bb11ff7b7e324d8"
-sha256 = "88Z7Gd6EwDrHUByZ5Kw52kY5kvAwkgNeuZQ7KK7RHk8="
+rev = "e9508d781646e96a382eac37f8cfeb3e13a2aae0"
+sha256 = "nlMReXd7AhhSkYOuV1SlPA4fSHDrk4pEwdutaoHQziw="
 
 [ depends ]
 idrisLibs = [ "idris2api" ]
