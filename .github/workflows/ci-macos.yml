@@ -13,5 +13,5 @@ jobs:
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
         extra_nix_config: |
           experimental-features = nix-command flakes
-    - run: nix build
-    - run: nix flake check
+    - run: nix-build
+    - run: nix-build -A checks.x86_64-darwin

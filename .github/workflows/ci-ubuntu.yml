@@ -15,5 +15,5 @@ jobs:
           experimental-features = nix-command flakes
     - name: Lint nix files
       run: nix run nixpkgs#nixpkgs-fmt -- --check .
-    - run: nix build
-    - run: nix flake check
+    - run: nix-build
+    - run: nix-build -A checks.x86_64-linux
