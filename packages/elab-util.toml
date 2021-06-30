@@ -1,8 +1,8 @@
 name = "elab-util"
-version = "0.2.0"
+version = "0.3.1"
 
 [ source ]
 owner = "stefan-hoeck"
 repo = "idris2-elab-util"
-rev = "f3f1ff2a2d5558ee8217732e06b0e20a10fb7b3a"
-sha256 = "i+Bhw6GR1HDZ9imp8eNTGvBuNsIiKX+ZQu3apUqXxsw="
+rev = "ccd299b776a16b3f0f572b4692e419bd58df6278"
+sha256 = "Wmwk47Ko1xl+oX146U7OnDK3M1pai2ccxdnzeE+Do/U="
