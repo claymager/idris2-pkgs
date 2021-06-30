@@ -28,11 +28,10 @@ stdenv.mkDerivation rec {
     ++ lib.optional stdenv.isDarwin [ zsh ];
   buildInputs = [ chez gmp ];
 
-  prePatch = let match = "$\{GIT_SHA1}"; in
-    ''
-      patchShebangs --build tests
-      sed 's/${match}/${builtins.substring 0 9 idris2-src.rev}/' -i Makefile
-    '';
+  prePatch = ''
+    patchShebangs --build tests
+    sed 's/''${GIT_SHA1}/${idris2-src.shortRev}/' -i Makefile
+  '';
 
   makeFlags = [ "PREFIX=$(out)" ];
 
@@ -51,29 +50,20 @@ stdenv.mkDerivation rec {
     ''
       # Remove existing idris2 wrapper that sets incorrect LD_LIBRARY_PATH
       rm $out/bin/idris2
-      # Move actual idris2 binary
-      mv $out/bin/idris2_app/idris2.so $out/bin/idris2
 
-      # After moving the binary, there is nothing left in idris2_app that isn't
-      # either contained in lib/ or is useless to us.
+      # The only thing we need from idris2_app is the actual binary
+      mv $out/bin/idris2_app/idris2.so $out/bin/idris2
       rm $out/bin/idris2_app/*
       rmdir $out/bin/idris2_app
 
       # idris2 needs to find scheme at runtime to compile
-      # idris2 installs packages with --install into the path given by PREFIX.
-      # Since PREFIX is in nix-store, it is immutable so --install does not work.
-      # If the user redefines PREFIX to be able to install packages, idris2 will
-      # not find the libraries and packages since all paths are relative to
-      # PREFIX by default.
-      # We explicitly make all paths to point to nix-store, such that they are
-      # independent of what IDRIS2_PREFIX is. This allows the user to redefine
-      # IDRIS2_PREFIX and use --install as expected.
-      # TODO: Make support libraries their own derivation such that
-      #       overriding LD_LIBRARY_PATH is unnecessary
-      # TODO: Maybe set IDRIS2_PREFIX to the users home directory
+      # idris2 installs packages with --install into the path given by
+      #   IDRIS2_PREFIX. We set that to a default of ~/.idris2, to mirror the
+      #   behaviour of the standard Makefile install.
+      # TODO: Make libraries their own derivations to trim closure of extendWithPackages
       wrapProgram "$out/bin/idris2" \
         --set-default CHEZ "${chez}/bin/scheme" \
-        --set-default IDRIS2_PREFIX "~/.idris2" \
+        --run 'export IDRIS2_PREFIX=''${IDRIS2_PREFIX-"$HOME/.idris2"}' \
         --suffix IDRIS2_LIBS ':' "$out/${name}/lib" \
         --suffix IDRIS2_DATA ':' "$out/${name}/support" \
         --suffix IDRIS2_PACKAGE_PATH ':' "$out/${name}" \
