@@ -1,11 +1,11 @@
 name = "sop"
-version = "0.3.0"
+version = "0.4.0"
 
 [ source ]
 owner = "stefan-hoeck"
 repo = "idris2-sop"
-rev = "c1117fc24256d188fbd1503512e18c0eb5aae083"
-sha256 = "3QlRX7udc9r6atPIc9GqYD5Lj7jTfeOIQpUzB/sr+/k="
+rev = "v0.4.0"
+sha256 = "GSkeEpEJHvcdu627IQCBKdvCzE59PqUbrorhmL+ofds="
 
 [ depends ]
 idrisLibs = [ "elab-util" ]
