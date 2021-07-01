@@ -1,12 +1,12 @@
 name = "lsp"
-version = "0.0"
+version = "0.4.0"
 executable = "idris2-lsp"
 
 [ source ]
 owner = "idris-community"
 repo = "idris2-lsp"
-rev = "e9508d781646e96a382eac37f8cfeb3e13a2aae0"
-sha256 = "nlMReXd7AhhSkYOuV1SlPA4fSHDrk4pEwdutaoHQziw="
+rev = "9be436dcc26ab60c5b3a5f2c07cb1d051353e629"
+sha256 = "5ovOehyEh3RMEp2lbjv71sGaKI+VaNgt7WhORIDVyXU="
 
 [ depends ]
 idrisLibs = [ "idris2api" ]
