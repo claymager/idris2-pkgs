@@ -4,5 +4,5 @@ version = "0.0"
 [ source ]
 owner = "alexhumphreys"
 repo = "idrall"
-rev = "218accd4bbef48082480f55004db3b1f5485acf8"
-sha256 = "VedUn0imKw1DZEKiIWh+XogsVZxEVWkFpsyVOx0qn1o="
+rev = "81b56d84e2941693bb2372bc97325eba16bf3091"
+sha256 = "RZE+odB1WZggYMRwP41+E7tBEQcZc0Qi67qNzNJA8aU="
