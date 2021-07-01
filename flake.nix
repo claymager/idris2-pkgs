@@ -2,11 +2,11 @@
   description = "Idris2 and its packages";
 
   inputs.idris2-src = {
-    url = github:idris-lang/idris2;
+    url = "github:idris-lang/idris2";
     flake = false;
   };
 
-  inputs.flake-utils.url = github:numtide/flake-utils;
+  inputs.flake-utils.url = "github:numtide/flake-utils";
 
   outputs = { self, nixpkgs, idris2-src, flake-utils }:
     {
