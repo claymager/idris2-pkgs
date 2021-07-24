@@ -16,6 +16,7 @@ let
 
 in
 {
+  inherit buildIdris;
   builders = ipkgs:
     {
       inherit (buildFromTOML ipkgs)

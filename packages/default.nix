@@ -26,4 +26,5 @@ let
 in
 {
   inherit extendWithPackages packages buildTOMLSource callNix;
+  buildIdris = utils.buildIdris;
 }
