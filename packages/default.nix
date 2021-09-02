@@ -18,6 +18,10 @@ let
 
     hedgehog = callTOML ./hedgehog.toml;
 
+    experimental = callTOML ./experimental.toml;
+
+    dom = callTOML ./dom.toml;
+
     idrall = callTOML ./idrall.toml;
 
     lsp = extendWithPackages (callTOML ./lsp.toml);
