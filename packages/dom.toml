@@ -8,4 +8,4 @@ rev = "v0.1.0"
 sha256 = "sha256-bHy+bcq92WeNdHlfzrZyu6PfX0Zd9y2qURFk0G+OXS0="
 
 [ depends ]
-idrisLibs = [ "sop" "experimental" ]
+idrisLibs = [ "sop", "experimental" ]
