@@ -12,7 +12,7 @@ let
   # callPackage, but it also knows about buildIdris
   callNix = file: args: pkgs.callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
 
-  buildFromTOML = ipkgs: pkgs.callPackage ./callToml.nix { inherit buildIdris ipkgs; };
+  buildFromTOML = idris2Pkgs: pkgs.callPackage ./callToml.nix { inherit buildIdris idris2Pkgs; };
 
 in
 {
@@ -21,6 +21,7 @@ in
     {
       inherit (buildFromTOML ipkgs)
         callTOML#        # (toml : Path) -> IPkg
+        extendCallTOML#  # (extraPkgs : Attrset Ipkgs) -> (toml : Path) -> IPkg
         buildTOMLSource; # (root : Path) -> (toml : Path) -> Ipkg
 
       callNix = callNix; # IdrisDec -> Ipkg
