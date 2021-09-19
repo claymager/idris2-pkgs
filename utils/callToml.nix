@@ -6,7 +6,7 @@ let
 
   # gets the source described in a TOML file
   # Switches on "source.host", with github as default.
-  fetchers =
+  fetchers = sourceDesc:
     let
       sourceTypes = {
         github = fetchFromGitHub;
@@ -15,8 +15,8 @@ let
           then /. + path
           else ./. + path;
       };
-      host = toml.source.host or "github";
-      args = builtins.removeAttrs toml.source [ "host" ];
+      host = sourceDesc.host or "github";
+      args = builtins.removeAttrs sourceDesc [ "host" ];
     in
     sourceTypes.${host} args;
 
