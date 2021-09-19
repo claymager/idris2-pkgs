@@ -2,7 +2,13 @@
 
 let
   # loadTOML : File -> TomlDec
-  loadTOML = file: builtins.fromTOML (builtins.readFile file);
+  loadTOML = file:
+    let
+      contents = builtins.fromTOML (builtins.readFile file);
+      isLocal = (contents.source.host or "") == "local";
+    in
+    lib.recursiveUpdate contents
+      (if isLocal then { source._parent = builtins.dirOf file; } else { });
 
   # gets the source described in a TOML file
   # Switches on "source.host", with github as default.
@@ -10,10 +16,10 @@ let
     let
       sourceTypes = {
         github = fetchFromGitHub;
-        local = { path }:
+        local = { path ? ".", _parent }:
           if lib.hasPrefix "/" path
           then /. + path
-          else ./. + path;
+          else _parent + ("/" + path);
       };
       host = sourceDesc.host or "github";
       args = builtins.removeAttrs sourceDesc [ "host" ];
