@@ -4,6 +4,22 @@ let
   # loadTOML : File -> TomlDec
   loadTOML = file: builtins.fromTOML (builtins.readFile file);
 
+  # gets the source described in a TOML file
+  # Switches on "source.host", with github as default.
+  fetchers =
+    let
+      sourceTypes = {
+        github = fetchFromGitHub;
+        local = { path }:
+          if lib.hasPrefix "/" path
+          then /. + path
+          else ./. + path;
+      };
+      host = toml.source.host or "github";
+      args = builtins.removeAttrs toml.source [ "host" ];
+    in
+    sourceTypes.${host} args;
+
   # cleanTOML : [Gamma] -> (SourceDec -> Source) -> TomlDec -> IdrisDec
   cleanTOML = fetchSource: toml: lib.filterAttrs (n: v: v != null) {
     # (bare)
@@ -56,5 +72,6 @@ in
     buildIdris (cleanTOML fetchFromGitHub (loadTOML file));
 
   buildTOMLSource = dir: file:
-    buildIdris (cleanTOML (_: dir) (loadTOML file));
+    lib.warn "buildTOMLSource is deprecated: please set [ source ] and use callTOML"
+      (buildIdris (cleanTOML { } (_: dir) (loadTOML file)));
 }
