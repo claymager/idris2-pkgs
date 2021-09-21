@@ -7,6 +7,8 @@ let
       contents = builtins.fromTOML (builtins.readFile file);
       isLocal = (contents.source.host or "") == "local";
     in
+    # If the TOML describes a package whose source is given with a relative path, we'll
+      # need the absolute path to the file.
     lib.recursiveUpdate contents
       (if isLocal then { source._parent = builtins.dirOf file; } else { });
 

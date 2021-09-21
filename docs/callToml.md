@@ -1,13 +1,14 @@
 
 # Building from TOML
 
-Many packages can be built from a TOML specification. This flake provides two functions:
+Many packages can be built from a TOML specification. This flake provides the function `callTOML`, which we make heavy use of in `packages/`.
  - `callTOML` : (toml : Path) -> IdrisPkg
-    - For specifying packages to include in `idris2-pkgs`
-    - Currently requires package to be hosted on GitHub
- - `callTOMLSource` : (projectRoot : Path) -> (toml : Path) -> IdrisPkg
-    - For using idris2-pkgs locally
-    - If either path points outside of the flake's directory, you will need to use `--impure` with any Nix commands
+    - Currently requires the source code to be hosted locally or on GitHub
+
+`callTOML` can be used to make packages from a local repository, but sometimes you'll want to *depend on* those local packages, without publishing them into `idris2-pkgs`.
+When you need to depend on locally defined packages, you may inject them into `callTOML` by instead using `extendCallTOML`.
+
+ - `extendCallTOML` : (extraPkgs : AttrSet IdrisPkg) -> (toml : Path) -> IdrisPkg
 
 Many basic functionalities are available from the TOML interface, and are detailed below. To use more advanced features like specifying the commit of a dependency, you will have to call the nix function `buildIdris` directly. For help porting a TOML specification to a nix one, see the [implementation](../utils/callToml.nix) of callTOML.
 
@@ -20,14 +21,34 @@ The minimum a package needs to build is here:
 name = "mypkg"
 
 [ source ]
+# host = "github"
 owner = "my-github-username"
 repo = "my-project"
 rev = "tag-or-hash-of-commit"
-sha256 = "hash-of-intermediate-buildifile"
+sha256 = "hash-of-intermediate-buildfile"
 ```
 
-Without `sha256`, nix will assume the fake hash "AAA..." and fail, providing the correct hash. So just comment out that line, run, and copy-paste to get the correct `sha256`.
+Without `sha256`, nix will assume the fake hash "AAA..." and fail, providing the correct hash.
+So just set the other three fields, comment out that line, run, and copy-paste to get the correct `sha256`.
 
+### Alternate sources
+
+In addition to the default host "github", we can tell Nix to use the source code from elsewhere.
+This is done by setting `[source].host`. Currently, the only other implemented `host` is a local repository.
+
+```toml
+[ source ]
+host = "local"
+path = "project/root"
+```
+
+`path` may be absolute or relative, and its default is `"."`, or the directory containing the TOML file.
+
+There are some sharp corners to watch out for.
+- When using absolute paths, nix commands may require the build flag `--impure`.
+- When using relative paths, all referenced files must be within the flake. That is, they must still be within the directory containing `flake.nix`, or its children.
+
+### Others options
 
 In addition, there are a number of optional fields that may be specified.
 

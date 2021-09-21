@@ -1,6 +1,9 @@
 name = "mypkg"
 version = "0.0"
 
+[ source ]
+host = "local"
+
 [ depends ]
 idrisLibs = [ ]
 buildInputs = [ ]

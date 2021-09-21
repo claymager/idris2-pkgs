@@ -8,7 +8,7 @@ After forking this repo, there are two primary steps. We need to:
 
 #### Creating the package file
 
-Provided they exist on GitHub, most packages can be specified in [TOML](https://toml.io/en/). Documentation on the schema is [here](./docs/callToml.md).
+Provided they exist on GitHub, most packages can be specified in [TOML](https://toml.io/en/). Documentation on the schema is [here](./callToml.md).
 
 As an example, let's look the testing library [`hedgehog`](https://github.com/stefan-hoeck/idris2-hedgehog).
 

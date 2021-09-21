@@ -28,6 +28,9 @@ Let's say we want to `import Control.Comonad` from [comonad](https://github.com/
 name = "mypkg"
 version = "0.0"
 
+[ source ]
+host = "local"
+
 [ depends ]
 idrisLibs = [ "comonad" ]
 ```
@@ -75,13 +78,13 @@ The `idris2` derivation provided by `idris2-pkgs` contains a couple of utility f
 # flake.nix::9-16
 let
   pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
-  mypkg = pkgs.idris2.buildTOMLSource ./. ./mypkg.toml;
+  mypkg = pkgs.idris2.callTOML ./mypkg.toml;
 in
 {
   defaultPackage = mypkg;
 }
 ```
-`buildTOMLSource` is the function that constructs our package out of the source directory and `./mypkg.toml`. What we want, is to be able to build `mypkg.withPkgs.comonad.hedgehog`, or the like, as we can do with the `idris2` derivation.
+`callTOML` is the function that constructs our package out of the source directory and `./mypkg.toml`. What we want, is to be able to build `mypkg.withPkgs.comonad.hedgehog`, or the like, as we can do with the `idris2` derivation.
 
 This functionality is provided by wrapping our package with a call to `extendWithPackages`.
 
@@ -90,7 +93,7 @@ This functionality is provided by wrapping our package with a call to `extendWit
 let
   pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
   i = pkgs.idris2;
-  mypkg = i.extendWithPackages (i.buildTOMLSource ./. ./mypkg.toml);
+  mypkg = i.extendWithPackages (i.callTOML ./mypkg.toml);
 in
 {
   defaultPackage = mypkg;
@@ -105,6 +108,9 @@ name = "mypkg"
 executable = "runMyPkg"
 version = "0.0"
 
+[ source ]
+host = "local"
+
 [ depends ]
 idrisLibs = [ "comonad", "hedgehog" ]
 ```
@@ -118,9 +124,9 @@ I tend to use something like this:
 # flake.nix::9-25
 let
   pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
-  mypkg = pkgs.idris2.buildTOMLSource ./. ./mypkg.toml;
+  mypkg = pkgs.idris2.callTOML ./mypkg.toml;
 in
-{ 
+{
   defaultPackage = mypkg;
 
   devShell =
@@ -138,4 +144,4 @@ Note that any environment variables, `nixpkgs` dependencies, or testing librarie
 
 ### Publishing to `idris2-pkgs`
 
-The `buildTOMLSource` function we've been using ignores the `[ source ]` attributes of the TOML files, so we can use the same specification to publish the package. See [here](./new-package.md) for documentation on publishing to `idris2-pkgs`.
+The `callTOML` function we've been using is the same that we use internally, in `packages/default.nix`. All we'll need to do is update the `[ source ]` attributes of the TOML file to point to a publically available github repo, and we can use the same specification to publish the package. See [here](./new-package.md) for documentation on publishing to `idris2-pkgs`.
