@@ -4,8 +4,8 @@ version = "0.1.0"
 [ source ]
 owner = "stefan-hoeck"
 repo = "idris2-dom"
-rev = "v0.1.0"
-sha256 = "sha256-bHy+bcq92WeNdHlfzrZyu6PfX0Zd9y2qURFk0G+OXS0="
+rev = "793a012645ac07e1929603bb95d9b8a69640808e"
+sha256 = "bCq45qy18ggpBiEQ3zbx98Am/ODCRspa4K1gc347MOs="
 
 [ depends ]
 idrisLibs = [ "sop", "experimental" ]

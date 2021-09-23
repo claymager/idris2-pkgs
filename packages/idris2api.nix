@@ -8,7 +8,7 @@ buildIdris {
 
   preBuild = ''
     echo 'module IdrisPaths' >> src/IdrisPaths.idr
-    echo 'export idrisVersion : ((Nat,Nat,Nat), String); idrisVersion = ((0,4,0), "${idris2.src.rev}")' >> src/IdrisPaths.idr
+    echo 'export idrisVersion : ((Nat,Nat,Nat), String); idrisVersion = ((${builtins.replaceStrings ["."] [","] idris2.version}), "${idris2.src.rev}")' >> src/IdrisPaths.idr
     echo 'export yprefix : String; yprefix="~/.idris2"' >> src/IdrisPaths.idr
   '';
 }

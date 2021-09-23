@@ -1,11 +1,11 @@
 name = "hedgehog"
-version = "0.1.0"
+version = "0.5.0"
 
 [ source ]
 owner = "stefan-hoeck"
 repo = "idris2-hedgehog"
-rev = "e48a6a16156ceb9cd2a92d796cdafbf2a3520702"
-sha256 = "9uqFKqpA3oQJhEnnJDwG2etsNP5PPXe/JR0h/2yPZLE="
+rev = "v0.5.0"
+sha256 = "0P8MJiQjytAddmmsYmrm4fFhCybSGi9mlLfQKeDHpZo="
 
 [ depends ]
 idrisLibs = [ "elab-util", "sop", "pretty-show" ]
