@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "elab-util": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1632201198,
+        "narHash": "sha256-Yg96qpo79VYwXhg+H9EhXxf2CZ/1N8Dy6L6DayIMvS0=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-elab-util",
+        "rev": "b8bbc14f5299f5bf4d9a84c72f3236b791e85dbe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-elab-util",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1631561581,
@@ -18,11 +34,11 @@
     "idris2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1633691231,
-        "narHash": "sha256-w9xnHRaqL5kUtwgW/jo+gHSxRDWtxJhojB2FYXqE1TA=",
+        "lastModified": 1634219931,
+        "narHash": "sha256-YMuk0KauTLMzu+cf/a+VNOkbm507V0sqWGN+qg/wPoY=",
         "owner": "idris-lang",
         "repo": "idris2",
-        "rev": "1ebe204c3fde3547c644bb972aac102680184aa5",
+        "rev": "62237f74ea199990f1dd13859e387ae3d9c870e8",
         "type": "github"
       },
       "original": {
@@ -45,11 +61,46 @@
         "type": "indirect"
       }
     },
+    "pretty-show": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634216182,
+        "narHash": "sha256-ZXAPN4ueU19vK/zvEQIAsnY9Wdfz5qb4AKUtmw+fid8=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-pretty-show",
+        "rev": "3a63c50d1988f7b64f6955bde55cef88fb6c9e75",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-pretty-show",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
+        "elab-util": "elab-util",
         "flake-utils": "flake-utils",
         "idris2-src": "idris2-src",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs",
+        "pretty-show": "pretty-show",
+        "sop": "sop"
+      }
+    },
+    "sop": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1632203586,
+        "narHash": "sha256-2AdfUud5W+/R+KFHOaPUO5Lu1xKbnUdcCRLT8sGB3fg=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-sop",
+        "rev": "a90f2e5c02b6fac09ad6e8339f0c8c3ad0ed1444",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-sop",
+        "type": "github"
       }
     }
   },

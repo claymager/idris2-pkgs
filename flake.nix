@@ -6,12 +6,30 @@
     flake = false;
   };
 
+  inputs.elab-util = { url = "github:stefan-hoeck/idris2-elab-util"; flake = false; };
+  inputs.pretty-show = { url = "github:stefan-hoeck/idris2-pretty-show"; flake = false; };
+  inputs.sop = { url = "github:stefan-hoeck/idris2-sop"; flake = false; };
+
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, idris2-src, flake-utils }:
+  outputs = { self, nixpkgs, idris2-src, flake-utils, ... }@srcs:
+    let
+      packageSrcs = builtins.removeAttrs srcs [ "self" "nixpkgs" "idris2-src" "flake-utils" ];
+      packageSet = buildIdris:
+        let
+          buildIdrisRepo = import utils/buildRepo.nix { inherit buildIdris; lib = nixpkgs.lib; };
+        in
+        rec {
+          elab-util = buildIdrisRepo srcs.elab-util { };
+          sop = buildIdrisRepo srcs.sop { idrisLibraries = [ elab-util ]; };
+          pretty-show = buildIdrisRepo srcs.pretty-show { idrisLibraries = [ sop elab-util ]; };
+        };
+    in
     {
       overlay = final: prev: {
-        idris2 = prev.callPackage ./idris2 { inherit idris2-src; };
+        idris2 = prev.callPackage ./idris2 {
+          inherit idris2-src;
+        };
       };
 
       templates = import ./templates;
@@ -22,7 +40,7 @@
       (system:
         let
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
-          idrisPackages = pkgs.idris2.packages;
+          idrisPackages = packageSet (pkgs.idris2.buildIdris);
         in
         {
           packages = idrisPackages // { inherit (pkgs) idris2; };
@@ -43,7 +61,7 @@
             in
             # All packages as libraries, and certain executable environments
             builtins.listToAttrs (builtins.map mkCheck names) // {
-              lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
+              # lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
             };
 
         }
