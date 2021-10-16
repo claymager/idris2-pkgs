@@ -31,19 +31,68 @@
         "type": "github"
       }
     },
+    "hedgehog": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1632203971,
+        "narHash": "sha256-0P8MJiQjytAddmmsYmrm4fFhCybSGi9mlLfQKeDHpZo=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-hedgehog",
+        "rev": "172fde98dd3a90f26f60a58bccdcfcd7e6037538",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-hedgehog",
+        "type": "github"
+      }
+    },
+    "idrall": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634234727,
+        "narHash": "sha256-fbGhrSqOAnyD/r1GvXXLajV8/QanE7+LpP5u+dgXzWQ=",
+        "owner": "alexhumphreys",
+        "repo": "idrall",
+        "rev": "8dfb3275948e85f0da9cfae46f94a652872c8126",
+        "type": "github"
+      },
+      "original": {
+        "owner": "alexhumphreys",
+        "repo": "idrall",
+        "type": "github"
+      }
+    },
     "idris2-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1634219931,
-        "narHash": "sha256-YMuk0KauTLMzu+cf/a+VNOkbm507V0sqWGN+qg/wPoY=",
+        "lastModified": 1633619223,
+        "narHash": "sha256-0QuNyQ/H7faxjmiF5Lc1jXKazyqhyYjut3t++BO+h9Q=",
         "owner": "idris-lang",
         "repo": "idris2",
-        "rev": "62237f74ea199990f1dd13859e387ae3d9c870e8",
+        "rev": "0a29d06fea91264aa8474e8bfe7e731d5252790c",
         "type": "github"
       },
       "original": {
         "owner": "idris-lang",
+        "ref": "0a29d06f",
         "repo": "idris2",
+        "type": "github"
+      }
+    },
+    "lsp": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1633546642,
+        "narHash": "sha256-HJp6aHH1w/aN7aaHVQtlq2KLiBUpS3HkFIFuY1/64rU=",
+        "owner": "idris-community",
+        "repo": "idris2-lsp",
+        "rev": "a9458e79a739b108561b50572eae6abe922b519f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "idris-community",
+        "repo": "idris2-lsp",
         "type": "github"
       }
     },
@@ -81,7 +130,10 @@
       "inputs": {
         "elab-util": "elab-util",
         "flake-utils": "flake-utils",
+        "hedgehog": "hedgehog",
+        "idrall": "idrall",
         "idris2-src": "idris2-src",
+        "lsp": "lsp",
         "nixpkgs": "nixpkgs",
         "pretty-show": "pretty-show",
         "sop": "sop"

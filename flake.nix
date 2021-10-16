@@ -2,13 +2,16 @@
   description = "Idris2 and its packages";
 
   inputs.idris2-src = {
-    url = "github:idris-lang/idris2";
+    url = "github:idris-lang/idris2/0a29d06f";
     flake = false;
   };
 
   inputs.elab-util = { url = "github:stefan-hoeck/idris2-elab-util"; flake = false; };
   inputs.pretty-show = { url = "github:stefan-hoeck/idris2-pretty-show"; flake = false; };
   inputs.sop = { url = "github:stefan-hoeck/idris2-sop"; flake = false; };
+  inputs.hedgehog = { url = "github:stefan-hoeck/idris2-hedgehog"; flake = false; };
+  inputs.lsp = { url = "github:idris-community/idris2-lsp"; flake = false; };
+  inputs.idrall = { url = "github:alexhumphreys/idrall"; flake = false; };
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
@@ -18,11 +21,34 @@
       packageSet = buildIdris:
         let
           buildIdrisRepo = import utils/buildRepo.nix { inherit buildIdris; lib = nixpkgs.lib; };
+          # buildIdrisRepo = pkgs.dhallToNix "${./utils/buildRepo.dhall}" { inherit buildIdris; lib = nixpkgs.lib; };
         in
         rec {
           elab-util = buildIdrisRepo srcs.elab-util { };
+          lsp = buildIdrisRepo srcs.lsp {
+            idrisLibraries = [ idris2api ];
+            runtimeLibs = true;
+            executable = "idris2-lsp";
+          };
+          idrall = buildIdrisRepo srcs.idrall { };
+          idris2api = buildIdrisRepo srcs.idris2-src {
+            ipkgFile = "idris2api.ipkg";
+            name = "idris2api";
+            preBuild = ''
+              # get correct version information
+              IFS=' -' read -ra ARR <<< $(idris2 --version)
+              VERSION=$(sed 's/\./,/g' <<< ''${ARR[-2]})
+              IDRIS_VERSION="(($VERSION), \"${srcs.idris2-src.shortRev}\")"
+
+              # make IdrisPaths
+              echo 'module IdrisPaths' >> src/IdrisPaths.idr
+              echo "export idrisVersion : ((Nat,Nat,Nat), String); idrisVersion = $IDRIS_VERSION" >> src/IdrisPaths.idr
+              echo 'export yprefix : String; yprefix="~/.idris2"' >> src/IdrisPaths.idr
+            '';
+          };
           sop = buildIdrisRepo srcs.sop { idrisLibraries = [ elab-util ]; };
           pretty-show = buildIdrisRepo srcs.pretty-show { idrisLibraries = [ sop elab-util ]; };
+          hedgehog = buildIdrisRepo srcs.hedgehog { idrisLibraries = [ sop elab-util pretty-show ]; };
         };
     in
     {
