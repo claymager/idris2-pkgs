@@ -1,5 +1,6 @@
 { buildIdris, src, stdenv, writeText }:
 let
+  inherit (builtins) fromJSON readFile;
   executable = buildIdris {
     name = "ipkg-to-json";
     version = "0.1";
@@ -10,7 +11,7 @@ let
     let
       file = writeText "ipkg-contents" code;
 
-      drv = builtins.trace "calling on ${builtins.readFile file}" stdenv.mkDerivation {
+      drv = stdenv.mkDerivation {
         name = "idris-package.json";
         buildCommand = ''
           ipkg-to-json ${file} > $out
@@ -18,6 +19,6 @@ let
         buildInputs = [ executable ];
       };
     in
-    builtins.fromJSON (builtins.readFile drv);
+    fromJSON (readFile drv);
 in
 ipkgToNix

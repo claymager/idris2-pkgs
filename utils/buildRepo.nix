@@ -1,16 +1,15 @@
 { buildIdris, ipkgToNix, lib }: src: args:
 let
-  inherit (builtins) filter match attrNames readDir any;
+  inherit (builtins) filter match attrNames readDir readFile removeAttrs any;
   inherit (lib.lists) sort length head findSingle;
 
   err = msg: throw "When configuring package for ${src}:\n${msg}";
 
   /* Loads data from (what it guesses is) the primary .ipkg */
-  mainIpkg =
+  ipkg = args.ipkgFile or (
     let
       allIpkgs = lib.lists.flatten (filter (x: x != null)
         (map (match "(.*)\\.ipkg") (attrNames (readDir src))));
-
       /* It is common to include  something like `mypkg-docs.ipkg` at the toplevel.
         We want to ignore such a file, unless specified otherwise. */
       ignored = [ "test" "tests" "doc" "docs" ];
@@ -21,10 +20,14 @@ let
         (err "Multiple valid *.ipkg files found")
         allIpkgs;
     in
-    ipkgToNix (builtins.readFile (src + "/${main}.ipkg"));
-in
+    main + ".ipkg"
+  );
 
+  ipkgData = ipkgToNix (readFile (src + "/${ipkg}"));
+
+in
 buildIdris ({
   inherit src;
-  inherit (mainIpkg) name version;
+  inherit (ipkgData) name version;
+  executable = ipkgData.executable or "";
 } // args)
