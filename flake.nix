@@ -44,18 +44,20 @@
             buildInputs = [ pkgs.nixpkgs-fmt ];
           };
 
-          checks =
-            let
-              names = builtins.attrNames idrisPackages;
-              mkCheck = nm: {
-                name = nm;
-                value = idrisPackages.${nm}.asLib;
-              };
-            in
-            # All packages as libraries, and certain executable environments
-            builtins.listToAttrs (builtins.map mkCheck names) // {
-              # lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
-            };
+          # `nix flake check`, and `... show`, require configured build machines for all systems supported by `idris2-pkgs`.
+          # TODO: write an alternative test script or derivation.
+          # checks =
+          #   let
+          #     names = builtins.attrNames idrisPackages;
+          #     mkCheck = nm: {
+          #       name = nm;
+          #       value = idrisPackages.${nm}.asLib;
+          #     };
+          #   in
+          #   # All packages as libraries, and certain executable environments
+          #   builtins.listToAttrs (builtins.map mkCheck names) // {
+          #     # lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
+          #   };
 
         }
       );
