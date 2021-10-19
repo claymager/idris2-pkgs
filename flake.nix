@@ -1,28 +1,25 @@
 {
   description = "Idris2 and its packages";
 
-  inputs.idris2-src = {
-    url = "github:idris-lang/idris2/0a29d06f";
-    flake = false;
+  inputs = {
+    idris2-src = { url = "github:idris-lang/idris2/0a29d06f"; flake = false; };
+    flake-utils.url = "github:numtide/flake-utils";
+    ipkg-to-json = { url = "github:claymager/ipkg-to-json"; flake = false; };
+
+    elab-util = { url = "github:stefan-hoeck/idris2-elab-util"; flake = false; };
+    pretty-show = { url = "github:stefan-hoeck/idris2-pretty-show"; flake = false; };
+    sop = { url = "github:stefan-hoeck/idris2-sop"; flake = false; };
+    hedgehog = { url = "github:stefan-hoeck/idris2-hedgehog"; flake = false; };
+    lsp = { url = "github:idris-community/idris2-lsp"; flake = false; };
+    idrall = { url = "github:alexhumphreys/idrall"; flake = false; };
   };
 
-  inputs.elab-util = { url = "github:stefan-hoeck/idris2-elab-util"; flake = false; };
-  inputs.pretty-show = { url = "github:stefan-hoeck/idris2-pretty-show"; flake = false; };
-  inputs.sop = { url = "github:stefan-hoeck/idris2-sop"; flake = false; };
-  inputs.hedgehog = { url = "github:stefan-hoeck/idris2-hedgehog"; flake = false; };
-  inputs.lsp = { url = "github:idris-community/idris2-lsp"; flake = false; };
-  inputs.idrall = { url = "github:alexhumphreys/idrall"; flake = false; };
-
-  inputs.ipkg-to-json = { url = "github:claymager/ipkg-to-json"; flake = false; };
-
-  inputs.flake-utils.url = "github:numtide/flake-utils";
-
-  outputs = { self, nixpkgs, idris2-src, flake-utils, ipkg-to-json, ... }@srcs:
+  outputs = { self, nixpkgs, idris2-src, flake-utils, ... }@srcs:
     let
-      packageSrcs = builtins.removeAttrs srcs [ "self" "nixpkgs" "idris2-src" "flake-utils" ];
       packageSet = { buildIdris, callPackage, stdenv }:
         let
-          ipkgToNix = callPackage ./utils/ipkg-to-json { inherit buildIdris; src = ipkg-to-json; };
+          # utils
+          ipkgToNix = callPackage ./utils/ipkg-to-json { inherit buildIdris; src = srcs.ipkg-to-json; };
           buildIdrisRepo = callPackage utils/buildRepo.nix { inherit buildIdris ipkgToNix; };
         in
         rec {
