@@ -25,7 +25,7 @@ let
 
   build = stdenv.mkDerivation (args // {
 
-    name = "${name}-${version}";
+    name = "${name}-${if version == null then "0.0" else version}";
 
     nativeBuildInputs =
       [ (extendWithPackages idris2 idrisLibraries) makeWrapper ]
@@ -33,8 +33,6 @@ let
         ++ args.nativeBuildInputs or [ ];
 
     checkInputs = [ testIdris ] ++ args.checkInputs or [ ];
-
-    buildInputs = args.buildInputs or [ ];
 
     buildPhase = args.buildPhase or ''
       runHook preBuild
