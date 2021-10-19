@@ -1,5 +1,37 @@
 {
   "nodes": {
+    "comonad": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1632376482,
+        "narHash": "sha256-Hq13g/Q/P6OfbUM78Ha4lkAwroS+Soc2SlRgwGrpqmg=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-comonad",
+        "rev": "19f6f70af95377b0c05f20509417f43aac84f388",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-comonad",
+        "type": "github"
+      }
+    },
+    "dom": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634639188,
+        "narHash": "sha256-wsQh2F2/k5NZvKle0IKLVsbF5vMC+NbQNPUpIA1+1XQ=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-dom",
+        "rev": "a44ba08b01ee818adb991bd33891fa3a5b079cb9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-dom",
+        "type": "github"
+      }
+    },
     "elab-util": {
       "flake": false,
       "locked": {
@@ -80,6 +112,22 @@
         "type": "github"
       }
     },
+    "ipkg-to-json": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634588014,
+        "narHash": "sha256-q8IRj06NQN4MRX32mHalGA2TTix+e3XD7EFPXgsTaOY=",
+        "owner": "claymager",
+        "repo": "ipkg-to-json",
+        "rev": "4849a0810c822bc4ec4609b1b7952c62fe21aa70",
+        "type": "github"
+      },
+      "original": {
+        "owner": "claymager",
+        "repo": "ipkg-to-json",
+        "type": "github"
+      }
+    },
     "lsp": {
       "flake": false,
       "locked": {
@@ -128,11 +176,14 @@
     },
     "root": {
       "inputs": {
+        "comonad": "comonad",
+        "dom": "dom",
         "elab-util": "elab-util",
         "flake-utils": "flake-utils",
         "hedgehog": "hedgehog",
         "idrall": "idrall",
         "idris2-src": "idris2-src",
+        "ipkg-to-json": "ipkg-to-json",
         "lsp": "lsp",
         "nixpkgs": "nixpkgs",
         "pretty-show": "pretty-show",
