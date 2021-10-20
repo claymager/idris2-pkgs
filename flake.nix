@@ -60,8 +60,7 @@
               };
             in
             # All packages as libraries, and certain executable environments
-            builtins.trace (builtins.toString names)
-              builtins.listToAttrs
+            builtins.listToAttrs
               (builtins.map mkCheck names) // {
               lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
             };
