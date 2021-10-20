@@ -1,8 +1,0 @@
-name = "idrall"
-version = "0.0"
-
-[ source ]
-owner = "alexhumphreys"
-repo = "idrall"
-rev = "346efac09ba197948410f3ddd42ac524f65fe7b8"
-sha256 = "X+hRf0M3HfzrG7375LXsEU8o6EUJ5zY4RR7CP9iNx78="

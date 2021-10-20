@@ -1,7 +1,27 @@
-{ buildIdris, ipkgToNix, lib, pkgmap }: src: { extraPkgs ? { }, ... }@args:
+{ callPackage, buildIdris, lib, renamePkgs, ipkg-to-json }: basePkgs:
+src: { extraPkgs ? { }, ... }@args:
 let
-  inherit (builtins) filter match attrNames readDir readFile removeAttrs any;
+  inherit (builtins) match attrNames readDir readFile any
+    elem filter removeAttrs getAttr mapAttrs;
   inherit (lib.lists) sort length head findSingle;
+  inherit (lib) subtractLists recursiveUpdate maybeAttr;
+
+  # ipkgToNix : (contents : String) -> Attrs*
+  ipkgToNix = callPackage ./ipkg-to-json { inherit buildIdris; src = ipkg-to-json; };
+
+  choosePkgs = ps: extraPkgs: depends:
+    let
+      ipkgs = recursiveUpdate ps extraPkgs;
+      savedPkgNames = attrNames extraPkgs;
+      notDefault = p: !(elem p (subtractLists savedPkgNames [ "network" "test" "contrib" "base" "prelude" ]));
+      pkgNames = removeAttrs renamePkgs savedPkgNames;
+      renameDeps = dep: maybeAttr dep dep pkgNames;
+      depNames = map renameDeps (filter notDefault (map (d: d.name) depends));
+    in
+    map (d: maybeAttr (throw "Unknown idris package ${d}") d ipkgs) depNames;
+
+
+  pkgmap = choosePkgs basePkgs;
 
   err = msg: throw "When configuring package for ${src}:\n${msg}";
 

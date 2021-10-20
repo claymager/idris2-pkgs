@@ -35,7 +35,7 @@
         let
           sources = builtins.removeAttrs srcs [ "self" "nixpkgs" "flake-utils" "idris2-src" ] // { idris2api = idris2-src; };
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
-          idrisPackages = pkgs.callPackage ./package-list.nix { buildIdris = pkgs.idris2.buildIdris; srcs = sources; };
+          idrisPackages = pkgs.callPackage ./packageSet.nix { idrisCompiler = pkgs.idris2; inherit sources; };
         in
         {
           packages = idrisPackages // { inherit (pkgs) idris2; };

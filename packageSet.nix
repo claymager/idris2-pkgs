@@ -1,41 +1,30 @@
-{ buildIdris, callPackage, lib, srcs }:
+{ idrisCompiler, callPackage, lib, sources }:
 let
   inherit (builtins) elem filter attrNames removeAttrs getAttr mapAttrs;
   inherit (lib) subtractLists recursiveUpdate maybeAttr;
 
-  # utils
-  ipkgToNix = callPackage ./utils/ipkg-to-json { inherit buildIdris; src = srcs.ipkg-to-json; };
+  renamePkgs = {
+    #  name-in-ipkg = name-in-idris2-pks;
+    "idris2" = "idris2api";
+  };
 
-  choosePkgs = ps: extraPkgs: depends:
-    let
-      ipkgs = recursiveUpdate ps extraPkgs;
-      savedPkgNames = attrNames extraPkgs;
-      notDefault = p: !(elem p (subtractLists savedPkgNames [ "network" "test" "contrib" "base" "prelude" ]));
-      pkgNames = removeAttrs
-        {
-          #  name-in-ipkg = name-in-idris2-pks;
-          "idris2" = "idris2api";
-        }
-        savedPkgNames;
-      renameDeps = dep: maybeAttr dep dep pkgNames;
-      depNames = map renameDeps (filter notDefault (map (d: d.name) depends));
-    in
-    map (d: maybeAttr (throw "Unknown idris package ${d}") d ipkgs) depNames;
-
-  buildIdrisRepo = callPackage utils/buildRepo.nix
+  builders = callPackage ./utils
     {
-      inherit buildIdris ipkgToNix;
-      pkgmap = choosePkgs packageSet;
-    };
+      inherit renamePkgs;
+      inherit (sources) ipkg-to-json;
+      idris2 = idrisCompiler;
+    }
+    packageSet;
 
-  /* Configuration overrides for the primary packges of each flake input.
+  inherit (builders) idrisPackage;
+
+  /* Configuration for the primary packges of each flake input.
 
     If you would call
-    #   dom = buildIdrisRepo srcs.dom { ipkgFile = "dom.ipkg" };
+    #   dom = idrisPackage sources.dom { ipkgFile = "dom.ipkg" };
     set that here instead.
-
   */
-  configOverrides = {
+  packageConfig = {
 
     lsp.runtimeLibs = true;
 
@@ -47,7 +36,7 @@ let
       preBuild = ''
         LONG_VERSION=$(idris2 --version)
         ARR=($(echo $LONG_VERSION | sed 's/-/ /g; s/\./,/g' ))
-        VERSION="((''${ARR[-2]}), \"${srcs.idris2api.shortRev}\")"
+        VERSION="((''${ARR[-2]}), \"${sources.idris2api.shortRev}\")"
 
         echo 'module IdrisPaths' >> src/IdrisPaths.idr
         echo "export idrisVersion : ((Nat,Nat,Nat), String); idrisVersion = $VERSION" >> src/IdrisPaths.idr
@@ -65,7 +54,7 @@ let
     */
     readline-sample = callPackage
       ({ readline }:
-        buildIdrisRepo srcs.idris2api {
+        idrisPackage sources.idris2api {
           buildInputs = [ readline ];
           ipkgFile = "samples/FFI-readline/readline.ipkg";
           preBuild = ''
@@ -78,8 +67,11 @@ let
 
   packageSet = (mapAttrs
     (name: src:
-      let cfg = maybeAttr { } name configOverrides; in
-      buildIdrisRepo (getAttr name srcs) cfg)
-    srcs) // extraPackages;
+      let cfg = maybeAttr { } name packageConfig; in
+      idrisPackage (getAttr name sources) cfg)
+    sources) // extraPackages;
+
 in
-packageSet
+packageSet // { _builders = builders; }
+
+
