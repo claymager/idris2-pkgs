@@ -31,7 +31,7 @@
     flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" "i686-linux" ]
       (system:
         let
-          sources = builtins.removeAttrs srcs [ "self" "nixpkgs" "flake-utils" ];
+          sources = builtins.removeAttrs srcs [ "self" "nixpkgs" "flake-utils" "idris2-src" ] // { idris2api = idris2-src; };
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
           idrisPackages = pkgs.callPackage ./package-list.nix { buildIdris = pkgs.idris2.buildIdris; srcs = sources; };
         in

@@ -13,6 +13,7 @@ let
       notDefault = p: !(elem p (subtractLists savedPkgNames [ "network" "test" "contrib" "base" "prelude" ]));
       pkgNames = removeAttrs
         {
+          #  name-in-ipkg = name-in-idris2-pks;
           "idris2" = "idris2api";
         }
         savedPkgNames;
@@ -27,28 +28,40 @@ let
       pkgmap = choosePkgs packageSet;
     };
 
-  packageSet = rec {
-    idris2api = buildIdrisRepo srcs.idris2-src {
+  configOverrides = {
+    lsp.runtimeLibs = true;
+    dom.ipkgFile = "dom.ipkg";
+    idris2api = {
       ipkgFile = "idris2api.ipkg";
       name = "idris2api";
       preBuild = ''
         LONG_VERSION=$(idris2 --version)
         ARR=($(echo $LONG_VERSION | sed 's/-/ /g; s/\./,/g' ))
-        VERSION="((''${ARR[-2]}), \"${srcs.idris2-src.shortRev}\")"
+        VERSION="((''${ARR[-2]}), \"${srcs.idris2api.shortRev}\")"
 
         echo 'module IdrisPaths' >> src/IdrisPaths.idr
         echo "export idrisVersion : ((Nat,Nat,Nat), String); idrisVersion = $VERSION" >> src/IdrisPaths.idr
         echo 'export yprefix : String; yprefix="~/.idris2"' >> src/IdrisPaths.idr
       '';
     };
-    dom = buildIdrisRepo srcs.dom { ipkgFile = "dom.ipkg"; };
-    ipkg-to-json = buildIdrisRepo srcs.ipkg-to-json { };
-    elab-util = buildIdrisRepo srcs.elab-util { };
-    lsp = buildIdrisRepo srcs.lsp { runtimeLibs = true; };
-    idrall = buildIdrisRepo srcs.idrall { };
-    sop = buildIdrisRepo srcs.sop { };
-    pretty-show = buildIdrisRepo srcs.pretty-show { };
-    hedgehog = buildIdrisRepo srcs.hedgehog { };
   };
+
+  extraPackages = rec {
+    readline-sample = callPackage ({ readline }:
+      buildIdrisRepo srcs.idris2api {
+        buildInputs = [ readline ];
+        ipkgFile = "samples/FFI-readline/readline.ipkg";
+        preBuild = ''
+          # idris-lang/Idris2 (#1179)
+          sed -i 's/^\(#include <readline\)/#include <stdio.h>\n\1/' samples/FFI-readline/readline_glue/idris_readline.c
+        '';
+      }) { };
+  };
+
+  packageSet = (mapAttrs
+    (name: src:
+      let cfg = configOverrides."${name}" or { }; in
+      buildIdrisRepo (getAttr name srcs) cfg)
+    srcs) // extraPackages;
 in
 packageSet
