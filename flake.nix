@@ -63,7 +63,7 @@
             builtins.trace (builtins.toString names)
               builtins.listToAttrs
               (builtins.map mkCheck names) // {
-              # lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
+              lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
             };
 
         }

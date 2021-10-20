@@ -30,8 +30,7 @@ ipkgs:
     callTOML#        # (toml : Path) -> IPkg
     buildTOMLSource; # (root : Path) -> (toml : Path) -> Ipkg
 
-
-  extendWithPackages = pkg:
+  useRuntimeLibs = pkg:
     let
       # If we can use TTC files, we almost certainly need Prelude, etc.
       pk = pkg.override { runtimeLibs = true; };

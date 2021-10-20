@@ -1,32 +1,20 @@
 { idrisCompiler, callPackage, lib, sources }:
 let
-  inherit (builtins) elem filter attrNames removeAttrs getAttr mapAttrs;
-  inherit (lib) subtractLists recursiveUpdate maybeAttr;
-
+  /* If idris2-pkgs and the idris2 compiler call the same package different names,
+    tell us about that here.
+  */
   renamePkgs = {
-    #  name-in-ipkg = name-in-idris2-pks;
+    #  name-in-ipkg = name-in-idris2-pkgs;
     "idris2" = "idris2api";
   };
-
-  builders = callPackage ./utils
-    {
-      inherit renamePkgs;
-      inherit (sources) ipkg-to-json;
-      idris2 = idrisCompiler;
-    }
-    packageSet;
-
-  inherit (builders) idrisPackage;
 
   /* Configuration for the primary packges of each flake input.
 
     If you would call
-    #   dom = idrisPackage sources.dom { ipkgFile = "dom.ipkg" };
+    *   dom = idrisPackage sources.dom { ipkgFile = "dom.ipkg" };
     set that here instead.
   */
   packageConfig = {
-
-    lsp.runtimeLibs = true;
 
     dom.ipkgFile = "dom.ipkg";
 
@@ -65,13 +53,30 @@ let
       { };
   };
 
-  packageSet = (mapAttrs
-    (name: src:
-      let cfg = maybeAttr { } name packageConfig; in
-      idrisPackage (getAttr name sources) cfg)
-    sources) // extraPackages;
+  /* Names of packages which require access to idris TTC files at runtime. */
+  needRuntimeLibs = [
+    "lsp"
+  ];
 
+  /* end of configuration section */
+  inherit (builtins) elem getAttr mapAttrs;
+  inherit (builders) idrisPackage useRuntimeLibs;
+  builders = callPackage ./utils
+    {
+      inherit renamePkgs;
+      inherit (sources) ipkg-to-json;
+      idris2 = idrisCompiler;
+    }
+    allPackages;
+
+  allPackages =
+    let
+      primaryPackages = mapAttrs
+        (name: src:
+          let cfg = lib.maybeAttr { } name packageConfig; in
+          idrisPackage (getAttr name sources) cfg)
+        sources;
+    in
+    primaryPackages // extraPackages;
 in
-packageSet // { _builders = builders; }
-
-
+mapAttrs (name: pkg: if (elem name needRuntimeLibs) then (useRuntimeLibs pkg) else pkg) allPackages // { _builders = builders; }
