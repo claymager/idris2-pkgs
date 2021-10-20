@@ -7,7 +7,7 @@ let
   inherit (lib) subtractLists recursiveUpdate maybeAttr;
 
   # ipkgToNix : (contents : String) -> Attrs*
-  ipkgToNix = callPackage ./ipkg-to-json { inherit buildIdris; src = ipkg-to-json; };
+  ipkgToNix = callPackage ./ipkg-to-nix.nix { inherit buildIdris; src = ipkg-to-json; };
 
   choosePkgs = ps: extraPkgs: depends:
     let
