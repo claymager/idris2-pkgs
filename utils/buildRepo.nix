@@ -1,4 +1,4 @@
-{ buildIdris, ipkgToNix, lib, pkgmap }: src: args:
+{ buildIdris, ipkgToNix, lib, pkgmap }: src: { extraPkgs ? { }, ... }@args:
 let
   inherit (builtins) filter match attrNames readDir readFile removeAttrs any;
   inherit (lib.lists) sort length head findSingle;
@@ -29,6 +29,6 @@ in
 buildIdris ({
   inherit src;
   inherit (ipkgData) name version;
-  idrisLibraries = pkgmap ipkgData.depends;
+  idrisLibraries = pkgmap extraPkgs ipkgData.depends;
   executable = ipkgData.executable or "";
 } // args)

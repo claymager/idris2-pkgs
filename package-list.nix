@@ -1,27 +1,30 @@
 { buildIdris, callPackage, lib, srcs }:
 let
-  inherit (builtins) filter elem;
+  inherit (builtins) elem filter attrNames removeAttrs;
+  inherit (lib) subtractLists recursiveUpdate;
+
   # utils
   ipkgToNix = callPackage ./utils/ipkg-to-json { inherit buildIdris; src = srcs.ipkg-to-json; };
 
-  filterSrcs = ps: depends:
+  choosePkgs = ps: extraPkgs: depends:
     let
-      notDefault = p: !elem p [ "network" "test" "contrib" "base" "prelude" ];
-
-      pkgNames = {
-        "idris2" = "idris2api";
-      };
-
+      ipkgs = recursiveUpdate ps extraPkgs;
+      savedPkgNames = attrNames extraPkgs;
+      notDefault = p: !(elem p (subtractLists savedPkgNames [ "network" "test" "contrib" "base" "prelude" ]));
+      pkgNames = removeAttrs
+        {
+          "idris2" = "idris2api";
+        }
+        savedPkgNames;
       renameDeps = dep: pkgNames."${dep}" or dep;
-
       depNames = map renameDeps (filter notDefault (map (d: d.name) depends));
     in
-    map (d: ps."${d}") depNames;
+    map (d: ipkgs."${d}") depNames;
 
   buildIdrisRepo = callPackage utils/buildRepo.nix
     {
       inherit buildIdris ipkgToNix;
-      pkgmap = filterSrcs packageSet;
+      pkgmap = choosePkgs packageSet;
     };
 
   packageSet = rec {
