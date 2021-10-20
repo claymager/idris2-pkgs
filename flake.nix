@@ -22,6 +22,7 @@
         idris2 = prev.callPackage ./idris2 {
           inherit idris2-src;
         };
+        lib = prev.lib.recursiveUpdate prev.lib (import ./lib);
       };
 
       templates = import ./templates;

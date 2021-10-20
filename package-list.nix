@@ -1,7 +1,7 @@
 { buildIdris, callPackage, lib, srcs }:
 let
-  inherit (builtins) elem filter attrNames removeAttrs;
-  inherit (lib) subtractLists recursiveUpdate;
+  inherit (builtins) elem filter attrNames removeAttrs getAttr mapAttrs;
+  inherit (lib) subtractLists recursiveUpdate maybeAttr;
 
   # utils
   ipkgToNix = callPackage ./utils/ipkg-to-json { inherit buildIdris; src = srcs.ipkg-to-json; };
@@ -17,10 +17,10 @@ let
           "idris2" = "idris2api";
         }
         savedPkgNames;
-      renameDeps = dep: pkgNames."${dep}" or dep;
+      renameDeps = dep: maybeAttr dep dep pkgNames;
       depNames = map renameDeps (filter notDefault (map (d: d.name) depends));
     in
-    map (d: ipkgs."${d}") depNames;
+    map (d: maybeAttr (throw "Unknown idris package ${d}") d ipkgs) depNames;
 
   buildIdrisRepo = callPackage utils/buildRepo.nix
     {
@@ -47,20 +47,22 @@ let
   };
 
   extraPackages = rec {
-    readline-sample = callPackage ({ readline }:
-      buildIdrisRepo srcs.idris2api {
-        buildInputs = [ readline ];
-        ipkgFile = "samples/FFI-readline/readline.ipkg";
-        preBuild = ''
-          # idris-lang/Idris2 (#1179)
-          sed -i 's/^\(#include <readline\)/#include <stdio.h>\n\1/' samples/FFI-readline/readline_glue/idris_readline.c
-        '';
-      }) { };
+    readline-sample = callPackage
+      ({ readline }:
+        buildIdrisRepo srcs.idris2api {
+          buildInputs = [ readline ];
+          ipkgFile = "samples/FFI-readline/readline.ipkg";
+          preBuild = ''
+            # idris-lang/Idris2 (#1179)
+            sed -i 's/^\(#include <readline\)/#include <stdio.h>\n\1/' samples/FFI-readline/readline_glue/idris_readline.c
+          '';
+        })
+      { };
   };
 
   packageSet = (mapAttrs
     (name: src:
-      let cfg = configOverrides."${name}" or { }; in
+      let cfg = maybeAttr { } name configOverrides; in
       buildIdrisRepo (getAttr name srcs) cfg)
     srcs) // extraPackages;
 in
