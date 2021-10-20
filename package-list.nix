@@ -28,9 +28,19 @@ let
       pkgmap = choosePkgs packageSet;
     };
 
+  /* Configuration overrides for the primary packges of each flake input.
+
+    If you would call
+    #   dom = buildIdrisRepo srcs.dom { ipkgFile = "dom.ipkg" };
+    set that here instead.
+
+  */
   configOverrides = {
+
     lsp.runtimeLibs = true;
+
     dom.ipkgFile = "dom.ipkg";
+
     idris2api = {
       ipkgFile = "idris2api.ipkg";
       name = "idris2api";
@@ -44,9 +54,15 @@ let
         echo 'export yprefix : String; yprefix="~/.idris2"' >> src/IdrisPaths.idr
       '';
     };
+
   };
 
+  /* Packages that are *not* named in the flake inputs go here. */
   extraPackages = rec {
+
+    /* Please don't depend on readline-sample; it is included primarily as an example.
+      As the ecosystem imprroves, this will probably removed.
+    */
     readline-sample = callPackage
       ({ readline }:
         buildIdrisRepo srcs.idris2api {
