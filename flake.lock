@@ -115,11 +115,11 @@
     "ipkg-to-json": {
       "flake": false,
       "locked": {
-        "lastModified": 1634588014,
-        "narHash": "sha256-q8IRj06NQN4MRX32mHalGA2TTix+e3XD7EFPXgsTaOY=",
+        "lastModified": 1634747173,
+        "narHash": "sha256-0LG+Y6JMHBGmuHgH8VbhqR/0McBvOhSTh5+HcG//8UU=",
         "owner": "claymager",
         "repo": "ipkg-to-json",
-        "rev": "4849a0810c822bc4ec4609b1b7952c62fe21aa70",
+        "rev": "45b468475938e0c36d70da91a12fc28d88b4f575",
         "type": "github"
       },
       "original": {

@@ -35,7 +35,7 @@
         let
           sources = builtins.removeAttrs srcs [ "self" "nixpkgs" "flake-utils" "idris2-src" ] // { idris2api = idris2-src; };
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
-          idrisPackages = pkgs.callPackage ./packageSet.nix { idrisCompiler = pkgs.idris2; inherit sources; };
+          idrisPackages = import ./packageSet.nix { idrisCompiler = pkgs.idris2; inherit sources; inherit (pkgs) callPackage lib; };
         in
         {
           packages = idrisPackages // { inherit (pkgs) idris2; };
@@ -46,20 +46,25 @@
             buildInputs = [ pkgs.nixpkgs-fmt ];
           };
 
-          # `nix flake check`, and `... show`, require configured build machines for all systems supported by `idris2-pkgs`.
-          # TODO: write an alternative test script or derivation.
-          # checks =
-          #   let
-          #     names = builtins.attrNames idrisPackages;
-          #     mkCheck = nm: {
-          #       name = nm;
-          #       value = idrisPackages.${nm}.asLib;
-          #     };
-          #   in
-          #   # All packages as libraries, and certain executable environments
-          #   builtins.listToAttrs (builtins.map mkCheck names) // {
-          #     # lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
-          #   };
+          /* `$ nix flake check` (and `.. show`) require configured build machines for all systems
+            supported by `idris2-pkgs`. This is due to ipkgToNix, which requ
+
+            `$ nix-build -A checks.CURRENT_SYSTEM` behaves as expected, and is used in the CI.
+          */
+          checks =
+            let
+              names = pkgs.lib.lists.subtractLists [ "_builders" ] (builtins.attrNames idrisPackages);
+              mkCheck = nm: {
+                name = nm;
+                value = idrisPackages.${nm}.asLib;
+              };
+            in
+            # All packages as libraries, and certain executable environments
+            builtins.trace (builtins.toString names)
+              builtins.listToAttrs
+              (builtins.map mkCheck names) // {
+              # lspWithPackages = idrisPackages.lsp.withPackages (ps: [ ps.comonad ]);
+            };
 
         }
       );
