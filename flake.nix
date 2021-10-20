@@ -19,7 +19,8 @@
   outputs = { self, nixpkgs, idris2-src, flake-utils, ... }@srcs:
     {
       overlay = final: prev: {
-        idris2 = prev.callPackage ./idris2 {
+        # just compiler; no builders or packages yet
+        idris2 = final.callPackage ./compiler.nix {
           inherit idris2-src;
         };
         lib = prev.lib.recursiveUpdate prev.lib (import ./lib);

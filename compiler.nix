@@ -1,6 +1,5 @@
 { lib
 , stdenv
-, fetchFromGitHub
 , makeWrapper
 , clang
 , chez
