@@ -33,21 +33,36 @@ ipkgs:
   /* If an executable `pkg` needs to understand idris code at runtime, like the lsp or various backends,
     `useRuntimeLibs pkg` configure that correctly.
   */
-  useRuntimeLibs = pkg:
+  useRuntimeLibs = pkg':
     let
       # If we can use TTC files, we almost certainly need Prelude, etc.
-      pk = pkg.override { runtimeLibs = true; };
-      add-libs = withSource: p:
-        p // builtins.mapAttrs
-          (_: lib:
-            (add-libs withSource (extendWithPackages withSource p [ lib ])))
-          ipkgs;
+      pkg = pkg'.override { runtimeLibs = true; };
+
+      /* recursive mess
+        This allows us to build arbitrary chains of libraries, i.e.
+        `lsp.withSrcs.comonad.hedgehog`
+      */
+      add-libs = withSource:
+        let go = p:
+          let extendWith = q: extendWithPackages withSource p [ q ]; in
+          (builtins.mapAttrs
+            (_: q: go (extendWith q))
+            ipkgs) // p;
+        in go;
+
     in
-    pk // {
+    pkg // rec {
       # withPackages : (Attrset IPkg -> List Ipkg) -> Derivation
-      withPackages = fn: extendWithPackages false pk (fn ipkgs);
-      withSources = fn: extendWithPackages true pk (fn ipkgs);
-      withPkgs = add-libs false pk;
-      withSrcs = add-libs true pk;
+      withLibraries = fn: extendWithPackages false pkg (fn ipkgs);
+      withSources = fn: extendWithPackages true pkg (fn ipkgs);
+      withPackages = lib.warn
+        "DeprecationWarning: withPackages is deprecated in favor of withLibraries"
+        withLibraries;
+
+      withLibs = add-libs false pkg;
+      withSrcs = add-libs true pkg;
+      withPkgs = lib.warn
+        "DeprecationWarning: withPkgs is deprecated in favor of withLibs"
+        withLibs;
     };
 }
