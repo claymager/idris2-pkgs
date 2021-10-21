@@ -1,4 +1,4 @@
-{ idrisCompiler, callPackage, lib, sources }:
+{ lib, sources }: callPackage: idrisCompiler:
 let
   /* If idris2-pkgs and the idris2 compiler call the same package different names,
     tell us about that here.
