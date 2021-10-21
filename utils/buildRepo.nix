@@ -1,10 +1,9 @@
 { callPackage, buildIdris, lib, renamePkgs, ipkg-to-json }: basePkgs:
 src: { extraPkgs ? { }, ... }@args:
 let
-  inherit (builtins) match attrNames readDir readFile any
-    elem filter removeAttrs getAttr mapAttrs;
-  inherit (lib.lists) sort length head findSingle;
-  inherit (lib) subtractLists recursiveUpdate maybeAttr;
+  inherit (builtins) match readDir readFile removeAttrs;
+  inherit (lib.lists) any filter findSingle;
+  inherit (lib.attrsets) attrNames recursiveUpdate maybeAttr;
 
   # ipkgToNix : (contents : String) -> Attrs*
   ipkgToNix = callPackage ./ipkg-to-nix.nix { inherit buildIdris; src = ipkg-to-json; };
@@ -13,10 +12,10 @@ let
     let
       ipkgs = recursiveUpdate ps extraPkgs;
       savedPkgNames = attrNames extraPkgs;
-      notDefault = p: !(elem p (subtractLists savedPkgNames [ "network" "test" "contrib" "base" "prelude" ]));
-      pkgNames = removeAttrs renamePkgs savedPkgNames;
-      renameDeps = dep: maybeAttr dep dep pkgNames;
-      depNames = map renameDeps (filter notDefault (map (d: d.name) depends));
+      renameDeps = dep: maybeAttr dep.name dep.name (
+        removeAttrs renamePkgs savedPkgNames
+      );
+      depNames = map renameDeps depends ++ [ "prelude" "base" ];
     in
     map (d: maybeAttr (throw "Unknown idris package ${d}") d ipkgs) depNames;
 

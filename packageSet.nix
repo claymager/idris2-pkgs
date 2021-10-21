@@ -36,6 +36,13 @@ let
 
   /* Packages that are *not* named in the flake inputs go here. */
   extraPackages = rec {
+    prelude = idrisPackage sources.idris2api
+      { idrisLibraries = [ ]; ipkgFile = "libs/prelude/prelude.ipkg"; };
+    base = idrisPackage sources.idris2api
+      { idrisLibraries = [ ]; ipkgFile = "libs/base/base.ipkg"; };
+    contrib = idrisPackage sources.idris2api { ipkgFile = "libs/contrib/contrib.ipkg"; };
+    network = idrisPackage sources.idris2api { ipkgFile = "libs/network/network.ipkg"; };
+    test = idrisPackage sources.idris2api { ipkgFile = "libs/test/test.ipkg"; };
 
     /* Please don't depend on readline-sample; it is included primarily as an example.
       As the ecosystem imprroves, this will probably removed.
