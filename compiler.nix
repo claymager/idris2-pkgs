@@ -59,7 +59,6 @@ stdenv.mkDerivation rec {
       # idris2 installs packages with --install into the path given by
       #   IDRIS2_PREFIX. We set that to a default of ~/.idris2, to mirror the
       #   behaviour of the standard Makefile install.
-      # TODO: Make libraries their own derivations to trim closure of extendWithPackages
       wrapProgram "$out/bin/idris2" \
         --set-default CHEZ "${chez}/bin/scheme" \
         --run 'export IDRIS2_PREFIX=''${IDRIS2_PREFIX-"$HOME/.idris2"}' \

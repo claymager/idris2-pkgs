@@ -10,7 +10,6 @@
 , idrisTestLibraries ? [ ]
 , codegen ? "chez"
 , ipkgFile ? "${name}.ipkg"
-, runtimeLibs ? false
 , executable ? ""
 
   # accept other arguments
@@ -60,28 +59,19 @@ let
     );
 
     installPhase =
-      let
-        forwardLibs =
-          if runtimeLibs then ''
-            wrapProgram $out/bin/${executable} \
-              --set-default IDRIS2_PREFIX "~/.idris2" \
-              --suffix IDRIS2_PACKAGE_PATH ':' "${idris2}/${idris2.name}"
-          '' else "";
-      in
-        args.installPhase or ''
-          runHook preBinInstall
+      args.installPhase or ''
+        runHook preBinInstall
 
-          mkdir $out
-          if [ "$(ls build/exec)"  ]; then
-            mkdir -p $out/bin
-            mv build/exec/* $out/bin
-            ${forwardLibs}
-          else
-            echo "build succeeded; no executable produced" > $out/${name}.out
-          fi
+        mkdir $out
+        if [ "$(ls build/exec)"  ]; then
+          mkdir -p $out/bin
+          mv build/exec/* $out/bin
+        else
+          echo "build succeeded; no executable produced" > $out/${name}.out
+        fi
 
-          runHook postBinInstall
-        '';
+        runHook postBinInstall
+      '';
 
   });
 
