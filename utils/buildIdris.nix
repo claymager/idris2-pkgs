@@ -86,7 +86,7 @@ let
   });
 
 
-  installLibrary =
+  installLibrary = withSource:
     let
       thisLib = build.overrideAttrs
         (oldAttrs: {
@@ -95,7 +95,7 @@ let
 
             export IDRIS2_PREFIX=$out/
             mkdir -p $(idris2 --libdir)
-            idris2 --install ${ipkgFile}
+            idris2 --install${if withSource then "-with-src" else ""} ${ipkgFile}
 
             runHook postLibInstall
           '';
@@ -109,7 +109,7 @@ let
     symlinkJoin
       {
         inherit name;
-        paths = [ thisLib ] ++ map (p: p.asLib) idrisLibraries;
+        paths = [ thisLib ] ++ map (p: if withSource then p.withSource else p.asLib) idrisLibraries;
       };
 
 in
@@ -124,5 +124,6 @@ in
   #   becomes
   #     $out/idris2-0.4.0/mypkg-0.0/*
 build // {
-  asLib = installLibrary;
+  asLib = installLibrary false;
+  withSource = installLibrary true;
 } // (if executable == "" then { } else { inherit executable; })

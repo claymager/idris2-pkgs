@@ -3,12 +3,12 @@
 # IPkg is subtype of Derivation
 let
 
-  # with-packages : List IPkg -> Derivation
+  # with-packages : (withSource : Bool) -> List IPkg -> Derivation
   extendWithPackages = callPackage ./with-packages.nix { inherit idris2; };
 
   # buildIdris : IdrisDec -> IPkg
   buildIdris = lib.makeOverridable (callPackage ./buildIdris.nix
-    { inherit idris2 extendWithPackages; });
+    { inherit idris2; extendWithPackages = extendWithPackages false; });
 
   # callPackage, but it also knows about buildIdris
   callNix = file: args: callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
@@ -30,15 +30,24 @@ ipkgs:
     callTOML#        # (toml : Path) -> IPkg
     buildTOMLSource; # (root : Path) -> (toml : Path) -> Ipkg
 
+  /* If an executable `pkg` needs to understand idris code at runtime, like the lsp or various backends,
+    `useRuntimeLibs pkg` configure that correctly.
+  */
   useRuntimeLibs = pkg:
     let
       # If we can use TTC files, we almost certainly need Prelude, etc.
       pk = pkg.override { runtimeLibs = true; };
-      add-libs = p: p // builtins.mapAttrs (name: lib: (add-libs (extendWithPackages p [ lib ]))) ipkgs;
+      add-libs = withSource: p:
+        p // builtins.mapAttrs
+          (_: lib:
+            (add-libs withSource (extendWithPackages withSource p [ lib ])))
+          ipkgs;
     in
     pk // {
       # withPackages : (Attrset IPkg -> List Ipkg) -> Derivation
-      withPackages = fn: extendWithPackages pk (fn ipkgs);
-      withPkgs = add-libs pk;
+      withPackages = fn: extendWithPackages false pk (fn ipkgs);
+      withSources = fn: extendWithPackages true pk (fn ipkgs);
+      withPkgs = add-libs false pk;
+      withSrcs = add-libs true pk;
     };
 }
