@@ -69,11 +69,9 @@
 
             `$ nix-build --no-out-links -A checks.CURRENT_SYSTEM` behaves as expected, and is used in the CI.
           */
-          checks =
-            # All packages as libraries, and certain executable environments
-            mapAttrs (name: p: p.asLib) (removeAttrs packages [ "idris2" ]) // {
-              lspWithPackages = packages.lsp.withPackages (ps: [ ps.comonad ]);
-            };
+          checks = packages // {
+            lspWithPackages = packages.lsp.withLibraries (ps: [ ps.comonad ]);
+          };
 
         }
       );
