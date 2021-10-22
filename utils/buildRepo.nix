@@ -2,7 +2,7 @@
 src: { extraLibs ? { }, ... }@args:
 let
 
-  inherit (builtins) match readDir readFile removeAttrs;
+  inherit (builtins) isNull match readDir readFile removeAttrs;
   inherit (lib.lists) any filter flatten findSingle;
   inherit (lib.attrsets) attrNames recursiveUpdate maybeAttr;
   inherit (lib.strings) hasSuffix;
@@ -47,7 +47,7 @@ let
       );
       depNames = map renameDeps depends;
     in
-    map (d: maybeAttr (err "Unknown idris package ${d}") d allPkgs) depNames;
+    filter (p: !isNull p) (map (d: maybeAttr null d allPkgs) depNames);
 
 in
 buildIdris ({

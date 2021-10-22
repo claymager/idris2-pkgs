@@ -32,6 +32,15 @@ let
       '';
     };
 
+    inigo = {
+      codegen = "node";
+      buildPhase = ''
+        sed 's/: idrall/:/' -i Makefile
+        make bootstrap
+      '';
+      propagatedBuildInputs = [ pkgs.nodejs ];
+    };
+
   };
 
   /* Packages that are *not* directly named in the flake inputs go here. */

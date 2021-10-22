@@ -112,6 +112,22 @@
         "type": "github"
       }
     },
+    "inigo": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1633155834,
+        "narHash": "sha256-iCxOT7718LExN+9TD9VzLHbhTBxCPLMhHYnDzEWfczQ=",
+        "owner": "idris-community",
+        "repo": "Inigo",
+        "rev": "64163d453a60df58a2d0be595ec97fb45aa638fd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "idris-community",
+        "repo": "Inigo",
+        "type": "github"
+      }
+    },
     "ipkg-to-json": {
       "flake": false,
       "locked": {
@@ -183,6 +199,7 @@
         "hedgehog": "hedgehog",
         "idrall": "idrall",
         "idris2-src": "idris2-src",
+        "inigo": "inigo",
         "ipkg-to-json": "ipkg-to-json",
         "lsp": "lsp",
         "nixpkgs": "nixpkgs",

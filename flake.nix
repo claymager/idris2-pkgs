@@ -11,6 +11,7 @@
     hedgehog = { url = "github:stefan-hoeck/idris2-hedgehog"; flake = false; };
     idrall = { url = "github:alexhumphreys/idrall"; flake = false; };
     ipkg-to-json = { url = "github:claymager/ipkg-to-json"; flake = false; };
+    inigo = { url = "github:idris-community/Inigo"; flake = false; };
     lsp = { url = "github:idris-community/idris2-lsp"; flake = false; };
     pretty-show = { url = "github:stefan-hoeck/idris2-pretty-show"; flake = false; };
     sop = { url = "github:stefan-hoeck/idris2-sop"; flake = false; };
