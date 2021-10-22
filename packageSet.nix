@@ -99,4 +99,6 @@ let
     in
     primaryPackages // extraPackages;
 in
-mapAttrs (name: pkg: if (elem name needRuntimeLibs) then (useRuntimeLibs pkg) else pkg) allPackages // { _builders = builders; }
+mapAttrs (name: pkg: if (elem name needRuntimeLibs) then (useRuntimeLibs pkg) else pkg) allPackages // {
+  _builders = builders;
+}
