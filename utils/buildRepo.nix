@@ -39,11 +39,8 @@ let
       allPkgs = recursiveUpdate ps extraPkgs;
       savedPkgNames = attrNames extraPkgs;
 
-      /* TODO: renameDeps is just using attrset lookup as a map, where the keys are
+      /* renameDeps is just using attrset lookup as a map, where the keys are
         "idris2 package" names and the values are `idris2-pkgs` names.
-
-        However, unicode compatibility issues are likely here: idris2 supports unicode
-        package names, while nix does not allow unicode in keys.
       */
       renameDeps = dep: maybeAttr dep.name dep.name (
         removeAttrs renamePkgs savedPkgNames
