@@ -40,7 +40,9 @@ let
     base = idrisPackage (sources.idris2api + "/libs/base") { idrisLibraries = [ ]; };
     contrib = idrisPackage (sources.idris2api + "/libs/contrib") { };
     network = idrisPackage (sources.idris2api + "/libs/network") { };
-    test = idrisPackage (sources.idris2api + "/libs/test") { };
+
+    # Normally, we ignoe "test.ipkg", so we need to explicitly enable it here.
+    test = idrisPackage (sources.idris2api + "/libs/test") { ipkgFile = "test.ipkg"; };
 
     /* The following derivations are provided as examples, but are not to be provided in the build
       outputs of the derivation or repository.
