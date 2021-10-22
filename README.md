@@ -30,3 +30,14 @@ That drops you into a shell with idris2 and the packages `comonad` and `idrall` 
 Other executables that need runtime access to libraries, such as the LSP, also have access to that `withPkgs` attribute.
 
 For other uses, check the [documentation](./docs/getting-started.md).
+
+# License
+
+Idris2-pkgs is licensed under the [MIT License](LICENSE).
+
+Note: MIT license does not apply to the packages built by Idris2-pkgs,
+merely to the files in this repository (the Nix expressions, build
+scripts, etc.). It also might not apply to patches
+included in idris2-pkgs, which may be derivative works of the packages to
+which they apply. The aforementioned artifacts are all covered by the
+licenses of the respective packages.
