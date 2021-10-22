@@ -1,4 +1,4 @@
-{ lib, sources }: callPackage: idrisCompiler:
+{ lib, sources }: pkgs: idrisCompiler:
 let
   /* If idris2-pkgs and the idris2 compiler call the same package different names,
     tell us about that here.
@@ -34,41 +34,55 @@ let
 
   };
 
-  /* Packages that are *not* named in the flake inputs go here. */
+  /* Packages that are *not* directly named in the flake inputs go here. */
   extraPackages = rec {
-    prelude = idrisPackage sources.idris2api
-      { idrisLibraries = [ ]; ipkgFile = "libs/prelude/prelude.ipkg"; };
-    base = idrisPackage sources.idris2api
-      { idrisLibraries = [ ]; ipkgFile = "libs/base/base.ipkg"; };
-    contrib = idrisPackage sources.idris2api { ipkgFile = "libs/contrib/contrib.ipkg"; };
-    network = idrisPackage sources.idris2api { ipkgFile = "libs/network/network.ipkg"; };
-    test = idrisPackage sources.idris2api { ipkgFile = "libs/test/test.ipkg"; };
+    prelude = idrisPackage (sources.idris2api + "/libs/prelude") { idrisLibraries = [ ]; };
+    base = idrisPackage (sources.idris2api + "/libs/base") { idrisLibraries = [ ]; };
+    contrib = idrisPackage (sources.idris2api + "/libs/contrib") { };
+    network = idrisPackage (sources.idris2api + "/libs/network") { };
+    test = idrisPackage (sources.idris2api + "/libs/test") { };
 
-    /* Please don't depend on readline-sample; it is included primarily as an example.
-      As the ecosystem imprroves, this will probably removed.
+    /* The following derivations are provided as examples, but are not to be provided in the build
+      outputs of the derivation or repository.
+
+      _idris2 = idrisPackage sources.idris2api {
+      ipkgFile = "idris2.ipkg";
+      idrisLibraries = [ network allPackages.idris2api ];
+      name = "idris3";
+      preBuild = ''
+      mkdir -p newSrc/Idris
+      mv src/Idris/Main.idr newSrc/Idris/Main.idr
+      sed -i 's/src/newSrc/; s/network/network, idris2/' idris2.ipkg
+      '';
+      postBinInstall = ''
+      wrapProgram $out/bin/idris2 --set-default CHEZ "${pkgs.chez}/bin/scheme"
+      '';
+      };
+
+      readline-sample =
+      idrisPackage sources.idris2api {
+      buildInputs = [ pkgs.readline ];
+      ipkgFile = "samples/FFI-readline/readline.ipkg";
+      preBuild = ''
+      # idris-lang/Idris2 (#1179)
+      sed -i 's/^\(#include <readline\)/#include <stdio.h>\n\1/' samples/FFI-readline/readline_glue/idris_readline.c
+      '';
+      };
     */
-    readline-sample = callPackage
-      ({ readline }:
-        idrisPackage sources.idris2api {
-          buildInputs = [ readline ];
-          ipkgFile = "samples/FFI-readline/readline.ipkg";
-          preBuild = ''
-            # idris-lang/Idris2 (#1179)
-            sed -i 's/^\(#include <readline\)/#include <stdio.h>\n\1/' samples/FFI-readline/readline_glue/idris_readline.c
-          '';
-        })
-      { };
+
   };
 
   /* Names of packages which require access to idris TTC files at runtime. */
   needRuntimeLibs = [
+    # "_idris2"
     "lsp"
   ];
 
   /* end of configuration section */
   inherit (builtins) elem getAttr mapAttrs;
   inherit (builders) idrisPackage useRuntimeLibs;
-  builders = callPackage ./utils
+
+  builders = pkgs.callPackage ./utils
     {
       inherit renamePkgs idrisCompiler;
       inherit (sources) ipkg-to-json;

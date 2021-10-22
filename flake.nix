@@ -30,7 +30,7 @@
         let
           compiler = final.callPackage ./compiler.nix { inherit idris2-src; };
 
-          idris2-pkgs = build-idris2-pkgs final.callPackage compiler
+          idris2-pkgs = build-idris2-pkgs final compiler
           // {
             idris2 = compiler.compiler;
             _build-idris2-pkgs = build-idris2-pkgs final.callPackage;
