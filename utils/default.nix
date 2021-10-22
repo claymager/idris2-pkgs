@@ -41,10 +41,9 @@ ipkgs:
         (pkg'.overrideAttrs (_: { runtimeLibs = true; })) [ ipkgs.prelude ipkgs.base ]
       // { inherit (pkg') asLib withSource; };
 
-      /* recursive mess
-        This allows us to build arbitrary chains of libraries, i.e.
-        `lsp.withSrcs.comonad.hedgehog`
-      */
+      # Corecursive mess, but it works
+      # @p is package layer n
+      # @q is package layer n+1
       also = extension:
         let go = p:
           let extendWith = q: extension p [ q ]; in
@@ -62,6 +61,9 @@ ipkgs:
         "DeprecationWarning: withPackages is deprecated in favor of withLibraries"
         withLibraries;
 
+      /* This allows us to build arbitrary chains of libraries, i.e.
+        `lsp.withSrcs.comonad.hedgehog`
+      */
       withLibs = also addLibraries pkg;
       withSrcs = also addSources pkg;
       withPkgs = lib.warn
