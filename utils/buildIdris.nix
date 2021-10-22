@@ -1,4 +1,4 @@
-{ stdenv, lib, makeWrapper, symlinkJoin, idris2, extendWithPackages, zsh }:
+{ stdenv, lib, makeWrapper, symlinkJoin, idrisCompiler, addLibraries, zsh }:
 
 # # minimum requirements
 { name
@@ -11,23 +11,26 @@
 , codegen ? "chez"
 , ipkgFile ? "${name}.ipkg"
 , executable ? ""
+, runtimeLibs ? false
 
   # accept other arguments
 , doCheck ? false
 , ...
 } @ args:
 let
+  idris2 = idrisCompiler.compiler;
+
   buildcommand = "${idris2.executable} --codegen ${codegen}";
 
   # Idris, and any packages needed to run tests
-  testIdris = extendWithPackages idris2 (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
+  testIdris = addLibraries idris2 (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
 
   build = stdenv.mkDerivation (args // {
 
     name = "${name}-${if version == null then "0.0" else version}";
 
     nativeBuildInputs =
-      [ (extendWithPackages idris2 idrisLibraries) makeWrapper ]
+      [ (addLibraries idris2 idrisLibraries) makeWrapper ]
         ++ lib.optional stdenv.isDarwin [ zsh ]
         ++ args.nativeBuildInputs or [ ];
 
@@ -59,19 +62,30 @@ let
     );
 
     installPhase =
-      args.installPhase or ''
-        runHook preBinInstall
+      let
+        forwardLibs =
+          if runtimeLibs then ''
+            wrapProgram $out/bin/${executable} \
+              --set-default IDRIS2_PREFIX "~/.idris2" \
+              --suffix LD_LIBRARY_PATH ':' "${idrisCompiler.support}/${idris2.name}/lib" \
+              --suffix IDRIS2_LIBS ':' "${idrisCompiler.support}/${idris2.name}/lib" \
+              --suffix IDRIS2_DATA ':' "${idrisCompiler.support}/${idris2.name}/support" \
+          '' else "";
+      in
+        args.installPhase or ''
+          runHook preBinInstall
 
-        mkdir $out
-        if [ "$(ls build/exec)"  ]; then
-          mkdir -p $out/bin
-          mv build/exec/* $out/bin
-        else
-          echo "build succeeded; no executable produced" > $out/${name}.out
-        fi
+          mkdir $out
+          if [ "$(ls build/exec)"  ]; then
+            mkdir -p $out/bin
+            mv build/exec/* $out/bin
+            ${forwardLibs}
+          else
+            echo "build succeeded; no executable produced" > $out/${name}.out
+          fi
 
-        runHook postBinInstall
-      '';
+          runHook postBinInstall
+        '';
 
   });
 

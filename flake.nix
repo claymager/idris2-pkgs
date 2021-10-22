@@ -32,7 +32,7 @@
 
           idris2-pkgs = build-idris2-pkgs final.callPackage compiler
           // {
-            idris2 = idris2-pkgs._builders.extendWithPkgs compiler;
+            idris2 = compiler.compiler;
             _build-idris2-pkgs = build-idris2-pkgs final.callPackage;
           };
         in

@@ -1,14 +1,15 @@
-{ callPackage, lib, idris2, renamePkgs, ipkg-to-json }:
+{ callPackage, lib, symlinkJoin, idrisCompiler, renamePkgs, ipkg-to-json }:
 
 # IPkg is subtype of Derivation
 let
+  idris2 = idrisCompiler.compiler;
 
   # with-packages : (withSource : Bool) -> List IPkg -> Derivation
-  extendWithPackages = callPackage ./with-packages.nix { inherit idris2; };
+  inherit (callPackage ./with-packages.nix { inherit idris2; }) addSources addLibraries;
 
   # buildIdris : IdrisDec -> IPkg
   buildIdris = lib.makeOverridable (callPackage ./buildIdris.nix
-    { inherit idris2; extendWithPackages = extendWithPackages false; });
+    { inherit idrisCompiler addLibraries; });
 
   # callPackage, but it also knows about buildIdris
   callNix = file: args: callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
@@ -36,15 +37,15 @@ ipkgs:
   useRuntimeLibs = pkg':
     let
       # If we can use TTC files, we almost certainly need Prelude, etc.
-      pkg = extendWithPackages true pkg' [ ipkgs.prelude ipkgs.base ];
+      pkg = addSources (pkg'.override { runtimeLibs = true; }) [ ipkgs.prelude ipkgs.base ];
 
       /* recursive mess
         This allows us to build arbitrary chains of libraries, i.e.
         `lsp.withSrcs.comonad.hedgehog`
       */
-      add-libs = withSource:
+      also = extension:
         let go = p:
-          let extendWith = q: extendWithPackages withSource p [ q ]; in
+          let extendWith = q: extension p [ q ]; in
           (builtins.mapAttrs
             (_: q: go (extendWith q))
             ipkgs) // p;
@@ -53,14 +54,14 @@ ipkgs:
     in
     pkg // rec {
       # withPackages : (Attrset IPkg -> List Ipkg) -> Derivation
-      withLibraries = fn: extendWithPackages false pkg (fn ipkgs);
-      withSources = fn: extendWithPackages true pkg (fn ipkgs);
+      withLibraries = fn: addLibraries pkg (fn ipkgs);
+      withSources = fn: addSources pkg (fn ipkgs);
       withPackages = lib.warn
         "DeprecationWarning: withPackages is deprecated in favor of withLibraries"
         withLibraries;
 
-      withLibs = add-libs false pkg;
-      withSrcs = add-libs true pkg;
+      withLibs = also addLibraries pkg;
+      withSrcs = also addSources pkg;
       withPkgs = lib.warn
         "DeprecationWarning: withPkgs is deprecated in favor of withLibs"
         withLibs;

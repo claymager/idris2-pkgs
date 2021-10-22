@@ -70,9 +70,8 @@ let
   inherit (builders) idrisPackage useRuntimeLibs;
   builders = callPackage ./utils
     {
-      inherit renamePkgs;
+      inherit renamePkgs idrisCompiler;
       inherit (sources) ipkg-to-json;
-      idris2 = idrisCompiler;
     }
     allPackages;
 
