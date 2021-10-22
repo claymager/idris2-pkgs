@@ -37,7 +37,7 @@ ipkgs:
   useRuntimeLibs = pkg':
     let
       # If we can use TTC files, we almost certainly need Prelude, etc.
-      pkg = addSources (pkg'.override { runtimeLibs = true; }) [ ipkgs.prelude ipkgs.base ];
+      pkg = addSources (pkg'.overrideAttrs (_: { runtimeLibs = true; })) [ ipkgs.prelude ipkgs.base ];
 
       /* recursive mess
         This allows us to build arbitrary chains of libraries, i.e.

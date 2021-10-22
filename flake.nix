@@ -32,7 +32,7 @@
 
           idris2-pkgs = build-idris2-pkgs final compiler
           // {
-            idris2 = compiler.compiler;
+            idris2 = idris2-pkgs._builders.useRuntimeLibs compiler.compiler;
             _build-idris2-pkgs = build-idris2-pkgs final.callPackage;
           };
         in
@@ -51,7 +51,7 @@
       (system:
         let
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
-          packages = removeAttrs pkgs.idris2-pkgs [ "idris2" "_builders" "_build-idris2-pkgs" ];
+          packages = removeAttrs pkgs.idris2-pkgs [ "_builders" "_build-idris2-pkgs" ];
         in
         {
           inherit packages;
@@ -70,7 +70,7 @@
           */
           checks =
             # All packages as libraries, and certain executable environments
-            mapAttrs (name: p: p.asLib) packages // {
+            mapAttrs (name: p: p.asLib) (removeAttrs packages [ "idris2" ]) // {
               lspWithPackages = packages.lsp.withPackages (ps: [ ps.comonad ]);
             };
 

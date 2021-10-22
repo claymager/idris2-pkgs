@@ -10,8 +10,6 @@
 , gmp
 , zsh
 
-  # for compatibility with withLibraries
-, runtimeLibs ? true
 }:
 
 # Uses scheme to bootstrap the build of idris2
@@ -72,6 +70,9 @@ let
         maintainers = with lib.maintainers; [ claymager ];
         inherit (chez.meta) platforms;
       };
+
+      # for compatibility with withLibraries
+      runtimeLibs = true;
     };
 
   support = stdenv.mkDerivation {
