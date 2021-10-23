@@ -1,5 +1,5 @@
 { callPackage, buildIdris, lib, renamePkgs, ipkg-to-json }: basePkgs:
-src: { extraLibs ? { }, ... }@args:
+src: args:
 let
 
   inherit (builtins) isNull match readDir readFile removeAttrs;
@@ -55,4 +55,4 @@ buildIdris ({
   inherit (ipkgData) name version;
   idrisLibraries = chooseFrom basePkgs ipkgData.depends;
   executable = ipkgData.executable or "";
-} // args)
+} // removeAttrs args [ "extraPkgs" ])
