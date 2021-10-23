@@ -116,6 +116,28 @@ let
         paths = [ thisLib ] ++ map (p: if withSource then p.withSource else p.asLib) idrisLibraries;
       };
 
+  docs =
+    build.overrideAttrs
+      ({ name, ... }: {
+        name = name + "-docs";
+        buildPhase = ''
+          runHook preDocBuild
+
+          idris2 --mkdoc ${ipkgFile}
+
+          runHook postDocBuild
+        '';
+
+        installPhase = ''
+          runHook preDocInstall
+
+          mkdir -p $out/doc/${name}
+          mv build/docs/* $out/doc/${name}/
+
+          runHook postDocBuild
+        '';
+      });
+
 in
 
 # `$ nix build .#mypkg` =>
@@ -130,4 +152,7 @@ in
 build // {
   asLib = installLibrary false;
   withSource = installLibrary true;
+  docs = docs;
+  allDocs = symlinkJoin { name = "idris2-docs"; paths = [ docs ] ++ map (p: p.docs) (idrisLibraries ++ idrisTestLibraries); };
+  idrisAttrs = args;
 } // (if executable == "" then { } else { inherit executable; })
