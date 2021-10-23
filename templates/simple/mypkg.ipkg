@@ -1,7 +1,10 @@
 package mypkg
 
-modules = Foo
-main = Foo
-executable = runMyPkg
+modules = Main
+main = Main
+
+depends = contrib
+
+executable = mypkg
 
 sourcedir = "src"

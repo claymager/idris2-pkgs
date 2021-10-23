@@ -8,17 +8,10 @@
     flake-utils.lib.eachSystem [ "x86_64-darwin" "x86_64-linux" "i686-linux" ] (system:
       let
         pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
+        mypkg = pkgs.idris2-pkgs._builders.idrisPackage ./. { };
+        libs = mypkg.idrisLibraries;
 
-        # Idris2, and any libraries you want available
-        idris2-with-pkgs = pkgs.idris2.withPackages
-          (ps: with ps; [
-            idris2api
-          ]);
       in
-      rec {
-        devShell = pkgs.mkShell {
-          buildInputs = [ idris2-with-pkgs ];
-        };
-      }
+      { defaultPackage = mypkg; }
     );
 }
