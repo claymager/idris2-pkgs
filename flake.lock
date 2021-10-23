@@ -63,6 +63,22 @@
         "type": "github"
       }
     },
+    "frex": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634296088,
+        "narHash": "sha256-j+87XNHmviMaqhBZK6Po5xYQwInQ6HIjoCcMC+QXScM=",
+        "owner": "frex-project",
+        "repo": "idris-frex",
+        "rev": "01a16be2c627f900b940dbc25cc4958dd3d567e2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "frex-project",
+        "repo": "idris-frex",
+        "type": "github"
+      }
+    },
     "hedgehog": {
       "flake": false,
       "locked": {
@@ -196,6 +212,7 @@
         "dom": "dom",
         "elab-util": "elab-util",
         "flake-utils": "flake-utils",
+        "frex": "frex",
         "hedgehog": "hedgehog",
         "idrall": "idrall",
         "idris2-src": "idris2-src",

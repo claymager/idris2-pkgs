@@ -31,6 +31,7 @@ let
         echo 'export yprefix : String; yprefix="~/.idris2"' >> src/IdrisPaths.idr
       '';
     };
+    frex = { checkPhase = "make test"; doCheck = true; };
 
     inigo = {
       codegen = "node";
