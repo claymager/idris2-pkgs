@@ -91,7 +91,7 @@ let
   ];
 
   /* end of configuration section */
-  inherit (builtins) elem getAttr mapAttrs;
+  inherit (builtins) elem mapAttrs;
   inherit (builders) idrisPackage useRuntimeLibs;
 
   builders = pkgs.callPackage ./utils
@@ -105,12 +105,13 @@ let
     let
       primaryPackages = mapAttrs
         (name: src:
-          let cfg = lib.maybeAttr { } name packageConfig; in
-          idrisPackage (getAttr name sources) cfg)
+          let cfg = packageConfig."${name}" or { }; in
+          idrisPackage src cfg)
         sources;
     in
-    primaryPackages // extraPackages;
+    lib.recursiveUpdate primaryPackages extraPackages;
 in
-mapAttrs (name: pkg: if (elem name needRuntimeLibs) then (useRuntimeLibs pkg) else pkg) allPackages // {
-  _builders = builders;
-}
+mapAttrs
+  (name: pkg:
+    if (elem name needRuntimeLibs) then (useRuntimeLibs pkg) else pkg)
+  allPackages // { _builders = builders; }
