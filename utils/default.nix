@@ -1,4 +1,4 @@
-{ callPackage, lib, symlinkJoin, idrisCompiler, renamePkgs, ipkg-to-json }:
+{ callPackage, lib, symlinkJoin, python3, idrisCompiler, renamePkgs, ipkg-to-json }:
 
 # IPkg is subtype of Derivation
 let
@@ -21,16 +21,7 @@ let
 
 in
 ipkgs:
-{
-  inherit buildIdris callNix;
-
-  # idrisPackage : Source -> Partial IdrisDec -> IPkg
-  idrisPackage = buildIdrisRepo_ ipkgs;
-
-  inherit (buildFromTOML ipkgs)
-    callTOML#        # (toml : Path) -> IPkg
-    buildTOMLSource; # (root : Path) -> (toml : Path) -> Ipkg
-
+let
   /* If an executable `pkg` needs to understand idris code at runtime, like the lsp or various backends,
     `useRuntimeLibs pkg` configure that correctly.
   */
@@ -69,5 +60,32 @@ ipkgs:
       withPkgs = lib.warn
         "DeprecationWarning: withPkgs is deprecated in favor of withLibs"
         withLibs;
+    };
+in
+{
+  inherit buildIdris callNix useRuntimeLibs;
+
+  # idrisPackage : Source -> Partial IdrisDec -> IPkg
+  idrisPackage = buildIdrisRepo_ ipkgs;
+
+  inherit (buildFromTOML ipkgs)
+    callTOML#        # (toml : Path) -> IPkg
+    buildTOMLSource; # (root : Path) -> (toml : Path) -> Ipkg
+
+  compiler = useRuntimeLibs idris2;
+  devEnv = pkg:
+    let ps = (pkg.idrisAttrs.idrisLibraries or [ ]) ++ (pkg.idrisAttrs.idrisTestLibraries or [ ]);
+    in
+    symlinkJoin {
+      name = "idris2-env";
+      paths = [
+        (addSources idris2 ps)
+        (addSources ipkgs.lsp ps)
+      ] ++ map (p: p.docs) ps;
+      postBuild = ''
+        echo "#!/usr/bin/env sh" > $out/bin/docs-serve
+        echo "${python3}/bin/python -m http.server --directory $out/share/doc \$argv" > $out/bin/docs-serve
+        chmod 755 $out/bin/docs-serve
+      '';
     };
 }

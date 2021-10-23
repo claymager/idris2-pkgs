@@ -47,7 +47,7 @@ let
       );
       depNames = map renameDeps depends;
     in
-    filter (p: !isNull p) (map (d: maybeAttr null d allPkgs) depNames);
+    filter (p: !isNull p) (map (d: maybeAttr null d allPkgs) (depNames ++ [ "prelude" "base" ]));
 
 in
 buildIdris ({
