@@ -47,9 +47,10 @@ let
       renameDeps = dep: maybeAttr dep.name dep.name (
         removeAttrs renamePkgs savedPkgNames
       );
-      depNames = map renameDeps depends;
+
+      depNames = [ "prelude" "base" ] ++ map renameDeps depends;
     in
-    filter (p: !isNull p) (map (d: maybeAttr null d allPkgs) (depNames ++ [ "prelude" "base" ]));
+    filter (p: !isNull p) (map (d: maybeAttr null d allPkgs) depNames);
 
 in
 buildIdris ({

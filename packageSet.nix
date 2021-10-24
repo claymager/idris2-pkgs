@@ -46,8 +46,11 @@ let
 
   /* Packages that are *not* directly named in the flake inputs go here. */
   extraPackages = rec {
+    /* idrisPackage usually automatically adds `base` and `prelude` to the environment, so we
+      explicitly tell it which packages are required to prevent an infinite loop. */
     prelude = idrisPackage (sources.idris2api + "/libs/prelude") { idrisLibraries = [ ]; };
     base = idrisPackage (sources.idris2api + "/libs/base") { idrisLibraries = [ ]; };
+
     contrib = idrisPackage (sources.idris2api + "/libs/contrib") { };
     network = idrisPackage (sources.idris2api + "/libs/network") { };
     test = idrisPackage (sources.idris2api + "/libs/test") { };
