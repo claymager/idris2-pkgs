@@ -77,7 +77,7 @@ let
 
     name = "${name}-${if version == null then "0.0" else version}";
     src = ttc;
-    inherit (ttc.drvAttrs) nativeBuildInputs checkInputs;
+    inherit (ttc.drvAttrs) nativeBuildInputs;
 
     buildPhase = ''
       echo "${ttc.name} already built; doing nothing"
