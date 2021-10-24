@@ -2,10 +2,11 @@
 
 `idris2-pkgs` provides a template that makes getting started very simple. In a clean directory, run the following commands:
 
-```bash
+```sh
 # Set up the project
-$ nix flake new -t github:claymager/idris2-pkgs#toml mypkg
+$ nix flake new -t github:claymager/idris2-pkgs#simple mypkg
 $ cd mypkg
+
 # Build the package, and run it
 $ nix shell --command runMyPkg
 "Hello world!"
@@ -14,26 +15,28 @@ $ nix shell --command runMyPkg
 This creates a basic template with
  - `src/`, the idris2 source code
  - `mypkg.ipkg`, an [idris2 package file](https://idris2.readthedocs.io/en/latest/reference/packages.html)
- - `mypkg.toml`, a simplified [build configuration file](./callToml.md), 
  - `flake.nix`, nix logic
  - `default.nix` : nix compatibility layer, for users without flakes enabled
 
-If you want to change the name of `mypkgs.ipkg`, be sure to update the `name` attribute of `mypkg.toml`. Likewise, to change `mypkg.toml`, update the reference in `flake.nix`.
+But we want to do more than just *run* our project. Let's run another command.
 
-### Adding dependencies
-Let's say we want to `import Control.Comonad` from [comonad](https://github.com/stefan-hoeck/idris2-comonad). We need to include the dependency twice: once in `mypkg.toml` to tell Nix to build the library, and once in `mypkg.ipkg` to have Idris2 look for the library at build time.
-
-```toml
-# mypkg.toml
-name = "mypkg"
-version = "0.0"
-
-[ depends ]
-idrisLibs = [ "comonad" ]
+```sh
+nix develop
 ```
 
+This drops us into a new "development shell", a bit like a virtualenv from python. In this shell,
+we now have three new executables in our path:
+ * `idris2`: the compiler
+ * `idris2-lsp`: a lsp server
+ * `docs-serve`: [a small webserver](docs-serve.md).
+
+Each of these knows all of the libraries our new project depends on. Which, after checking `mypkg.ipkg`, is practically nothing: just the default *prelude* and *base*.
+
+## Adding dependencies
+Let's say we want to play around with some [comonads](https://github.com/stefan-hoeck/idris2-comonad).
+Ignoring nix for the moment, we obviously need to tell idris2 about it, so let's edit `mypkg.ipkg`.
+
 ```ipkg
--- mypkg.ipkg
 package mypkg
 
 main = Main
@@ -42,30 +45,59 @@ depends = comonad
 srcdir = "src"
 ```
 
+And we're done!
 
-Let's say we also want the testing library [hedgehog](https://github.com/stefan-hoeck/idris2-hedgehog), which further depends on other idris2 libraries. If we add that to the `toml` specification, `idris2-pkgs` includes all of those extra dependencies for us.
+Well, no, not really. That is enough to tell Nix about it - we can add `import Control.Comonad` to
+`src/Main.idr`, and `nix build` will work, but none of the `idris2`, `idris2-lsp`, or `docs-serve`
+we brought into our path know where to find the comonad package. There's a simple solution to that,
+though:
 
-```toml
-# mypkg.toml::4-5
-[ depends ]
-idrisLibs = [ "comonad", "hedgehog" ]
+```sh
+exit
+nix develop
 ```
 
-But we have to be more explicit in the `ipkg` file, or when calling `idris2` in the shell.
+Restart any lsp and docs-serve instances you have running, and *now* we're done.
 
-```ipkg
--- mypkg.ipkg::5-10
-depends = comonad,
-          contrib,
-          elab-util,
-          sop,
-          pretty-show,
-          hedgehog
+"But wait," you say, "that's cheating! You chose `comonad` because it's already in `idris2-pkgs`!"
+
+Why yes, you're right. Sometimes we want to depend on something that's not included in the repository.
+Let's try another one, that's already -- and only -- installed on your system.
+
+```
+-- mypkg.ipkg
+depends = comonad, otherpackage
 ```
 
-The TOML interface includes support for a number of other dependency types, and is documented [here](./callToml.md).
+Most of what we've discussed so far will still work. Even `idris2 --build mypkg.ipkg` from the
+development shell. With that small change, only one thing stands out from the ordinary:
+`otherpackage` doesn't show up in `docs-serve`, because `docs-serve` has no idea where to look for
+it. Try to run `nix build`, and we'll see the idris2 compiler within Nix encountering a similar
+problem.
 
-### Making a new backend
+```
+> no configure script, doing nothing
+> building
+> Uncaught error: Can't find package otherpackage (any)
+For full logs, run 'nix log /nix/store/frmbrg220h6rqv3ijr0ds89g3b003av9-mypkg-0.0.drv'.
+```
+
+There is a way to fix this, but to do so, we'll need to dive into `flake.nix`.
+
+## How it works
+
+A full introduction to flakes and the Nix language is beyond the scope of this article. For now,
+let's just focus on this line in `flake.nix`:
+
+```
+    mypkg = idrisPackage ./. { };
+```
+
+That's calling the function [idrisPackage](idrisPackage.md) on the current directory, with an empty attrset
+(think JSON object) of configuration. It then assigns the result to the variable `mypkg`.
+
+
+------------
 
 The above description is often enough for basic idris2 executables, but packages like [alternative backends](https://idris2.readthedocs.io/en/latest/backends/custom.html) or the [lsp](https://github.com/idris-community/idris2-lsp) need something else: runtime access to libraries.
 
@@ -98,16 +130,6 @@ in
 ```
 
 To use this function, we'll also need to tell `idris2-pkgs` the name of the executable to extend. This is done in `mypkg.toml`:
-
-```
-# mypkg.toml
-name = "mypkg"
-executable = "runMyPkg"
-version = "0.0"
-
-[ depends ]
-idrisLibs = [ "comonad", "hedgehog" ]
-```
 
 ### Building a `devShell`
 
