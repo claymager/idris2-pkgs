@@ -1,0 +1,8 @@
+package runTests
+
+depends = mypkg
+
+modules = Tests
+main = Tests
+
+executable = runTests

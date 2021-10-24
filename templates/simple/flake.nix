@@ -8,10 +8,18 @@
     flake-utils.lib.eachSystem [ "x86_64-darwin" "x86_64-linux" "i686-linux" ] (system:
       let
         pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
-        mypkg = pkgs.idris2-pkgs._builders.idrisPackage ./. { };
-        libs = mypkg.idrisLibraries;
-
+        inherit (pkgs.idris2-pkgs._builders) idrisPackage devEnv;
+        mypkg = idrisPackage ./. { };
+        runTests = idrisPackage ./test { extraPkgs.mypkg = mypkg; };
       in
-      { defaultPackage = mypkg; }
+      {
+        defaultPackage = mypkg;
+
+        packages = { inherit mypkg runTests; };
+
+        devShell = {
+          builtInputs = [ (devEnv mypkg) ];
+        };
+      }
     );
 }
