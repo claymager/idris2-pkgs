@@ -13,10 +13,11 @@ $ nix shell --command runMyPkg
 ```
 
 This creates a basic template with
- - `src/`, the idris2 source code
- - `mypkg.ipkg`, an [idris2 package file](https://idris2.readthedocs.io/en/latest/reference/packages.html)
- - `flake.nix`, nix logic
  - `default.nix` : nix compatibility layer, for users without flakes enabled
+ - `flake.nix`, nix logic
+ - `mypkg.ipkg`, an [idris2 package file](https://idris2.readthedocs.io/en/latest/reference/packages.html)
+ - `src/`, the idris2 source code
+ - `test/`, which we'll ignore for now.
 
 But we want to do more than just *run* our project. Let's run another command.
 
@@ -82,82 +83,92 @@ problem.
 For full logs, run 'nix log /nix/store/frmbrg220h6rqv3ijr0ds89g3b003av9-mypkg-0.0.drv'.
 ```
 
-There is a way to fix this, but to do so, we'll need to dive into `flake.nix`.
+There is a way to fix this, but to do so, we'll need to peek into `flake.nix`.
 
-## How it works
+## Other idris2 dependencies
 
 A full introduction to flakes and the Nix language is beyond the scope of this article. For now,
-let's just focus on this line in `flake.nix`:
+let's just focus on these lines in `flake.nix`:
 
 ```
     mypkg = idrisPackage ./. { };
+    runTests = idrisPackage ./test { extraPkgs.mypkg = mypkg; };
 ```
 
 That's calling the function [idrisPackage](idrisPackage.md) on the current directory, with an empty attrset
 (think JSON object) of configuration. It then assigns the result to the variable `mypkg`.
 
+Then comes the interesting bit. We're taking that output, and using the configuration option `extraPkgs`,
+passing it to *another* package called `runTests`.
 
-------------
+So what happens if we try doing that same thing?
 
-The above description is often enough for basic idris2 executables, but packages like [alternative backends](https://idris2.readthedocs.io/en/latest/backends/custom.html) or the [lsp](https://github.com/idris-community/idris2-lsp) need something else: runtime access to libraries.
-
-The `idris2` derivation provided by `idris2-pkgs` contains a couple of utility functions, so let's have a look in our project's `flake.nix`:
-
-```nix
-# flake.nix::9-16
-let
-  pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
-  mypkg = pkgs.idris2.buildTOMLSource ./. ./mypkg.toml;
-in
-{
-  defaultPackage = mypkg;
-}
 ```
-`buildTOMLSource` is the function that constructs our package out of the source directory and `./mypkg.toml`. What we want, is to be able to build `mypkg.withPkgs.comonad.hedgehog`, or the like, as we can do with the `idris2` derivation.
-
-This functionality is provided by wrapping our package with a call to `extendWithPackages`.
-
-```nix
-# flake.nix::9-16
-let
-  pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
-  i = pkgs.idris2;
-  mypkg = i.extendWithPackages (i.buildTOMLSource ./. ./mypkg.toml);
-in
-{
-  defaultPackage = mypkg;
-}
-```
-
-To use this function, we'll also need to tell `idris2-pkgs` the name of the executable to extend. This is done in `mypkg.toml`:
-
-### Building a `devShell`
-
-By default, executing `$ nix develop` drops you into a shell environment with all of the dependencies necessary to build the `defaultPackage`. We can override this value, perhaps bringing in tools for profiling, linting, or the LSP server, but doing so means we need to be fairly explicit about the included libraries again.
-
-I tend to use something like this:
-```nix
-# flake.nix::9-25
-let
-  pkgs = import nixpkgs { inherit system; overlays = [ idris2-pkgs.overlay ]; };
-  mypkg = pkgs.idris2.buildTOMLSource ./. ./mypkg.toml;
-in
-{ 
-  defaultPackage = mypkg;
-
-  devShell =
-    let withDeps = base: base.withPackages (p: mypkg.idrisLibraries ++ mypkg.idrisTestLibraries);
-    in
-    pkgs.mkShell {
-      buildInputs = map withDeps [
-        pkgs.idris2
-        pkgs.idris2.packages.lsp
-      ];
+    otherpackage = idrisPackage /home/user/otherpackage { };
+    mypkg = idrisPackage ./. { extraPkgs.otherpackage = otherpackage; };
+    runTests = idrisPackage ./test {
+        extraPkgs.mypkg = mypkg;
+        extraPkgs.otherpackage = otherpackage;
     };
-}
 ```
-Note that any environment variables, `nixpkgs` dependencies, or testing libraries will need to be re-added to the `devShell` derivation.
 
-### Publishing to `idris2-pkgs`
+Try `nix build` again. If `idrisPackage` can figure out how to build that other package, then
+`mypkg` should build successfully. We can add `otherpackage` to `test/runTests.ipkg`, run `nix run
+.#runTests`, and see that even with two dependencies that are not in `idris2-pkgs`, "tests passed".
 
-The `buildTOMLSource` function we've been using ignores the `[ source ]` attributes of the TOML files, so we can use the same specification to publish the package. See [here](./new-package.md) for documentation on publishing to `idris2-pkgs`.
+There are some potential pitfalls here, though.
+  - Nix can be rather funny with paths. Make sure that all relative paths are contained within the
+    flake.
+  - If a flake is a git repository, all imported files must be tracked by git.
+  - The "otherpackage" key in `extraPkgs.otherpackage` must match the name used by idris (`depends =
+    otherpackage`) *precisely* to be correctly found. If the package name contains unicode, wrap the
+    nix key in quotes, as in `extraPkgs."otherpackage"`.
+  - There are the standard idris2 dependency rules, which we handled above. If `runTests` depends on
+    a module from `mypkg` which itself depends on `otherpackage`, we need to explicitly pass it to
+    idris2 in `runTests.ipkg` and to Nix in runTests's `extraPkgs`.
+
+## Runtime libraries
+
+The above description is often enough for basic idris2 executables and libraries, but the
+executables in [alternative
+backends](https://idris2.readthedocs.io/en/latest/backends/custom.html) or the
+[lsp](https://github.com/idris-community/idris2-lsp) need something else: runtime access to
+libraries. Otherwise, the program will build just fine, but when it comes time to run, we'll get
+an error like the following:
+
+`CRITICAL UNCAUGHT ERROR Can't find package prelude (any)`
+
+Fortunately, `idris2-pkgs` provides a function that handles this: `useRuntimeLibs`. As
+an example, let's add runtime idris2 support to `mypkg`. Completely ignoring the actual idris
+side of things, of course.
+
+Back in our `flake.nix`, let's look at this line:
+
+```
+   inherit (pkgs.idris2-pkgs._builders) idrisPackage devEnv;
+```
+
+
+That's bringing the builder functions `idrisPackage`, which we've seen, and `devEnv`, the brains
+behind our `nix develop`, into scope.
+
+>  Note: `inherit (attrset) x y;` is just sugar for `x = attrset.x; y = attrset.y;`. You'll
+>  see this often if you dig into `idris2-pkgs`.
+
+Let's add bring it into scope, and use it on the `mypkg` executable:
+```
+   inherit (pkgs.idris2-pkgs._builders) idrisPackage devEnv useRuntimeLibs;
+   otherpackage = idrisPackage /home/user/otherpackage { };
+   mypkg = useRuntimeLibs (idrisPackage ./. { extraPkgs.otherpackage = otherpackage; });
+```
+
+## Alternate build commands and non-idris dependencies
+
+There is a lot of power available in the `args`. For the Nix-savvy, `idrisPackage` forwards its `args` to `buildIdris`, which then passes them on
+to `stdenv.mkDerivation`.
+
+## Further Reading
+
+- [idrisPackage](idrisPackage.md)
+- [Publishing to `idris2-pkgs`](new-package.md)
+
