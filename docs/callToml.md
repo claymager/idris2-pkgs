@@ -1,6 +1,8 @@
 
 # Building from TOML
 
+NOTE: the functions described herein may be deprecated soon.
+
 Many packages can be built from a TOML specification. This flake provides two functions:
  - `callTOML` : (toml : Path) -> IdrisPkg
     - For specifying packages to include in `idris2-pkgs`

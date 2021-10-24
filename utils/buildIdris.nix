@@ -51,15 +51,11 @@ let
 
     inherit doCheck;
     checkPhase = cfg.checkPhase or (
-      let checkCommand = cfg.checkCommand or ''
-        find . -maxdepth 2 -name test.ipkg -exec ${buildcommand} --build {} \;
-      '';
-      in
       ''
         runHook preCheck
 
-        # build test target
-        ${checkCommand}
+        # if there is a 'test.ipkg' near the project root, build it
+        find . -maxdepth 2 -name test.ipkg -exec ${buildcommand} --build {} \;
 
         runHook postCheck
       ''
@@ -83,7 +79,7 @@ let
       echo "${ttc.name} already built; doing nothing"
     '';
 
-    installPhase =
+    installPhase = cfg.binInstallPhase or (
       let
         forwardLibs =
           if runtimeLibs then ''
@@ -98,6 +94,7 @@ let
           runHook preBinInstall
 
           mkdir $out
+          # if there is something in build/exec, copy it to $out/bin
           if [ "$(ls build/exec)"  ]; then
             mkdir -p $out/bin
             mv build/exec/* $out/bin
@@ -107,7 +104,8 @@ let
           fi
 
           runHook postBinInstall
-        '';
+        ''
+    );
 
   });
 
@@ -119,8 +117,11 @@ let
           installPhase = ''
             runHook preLibInstall
 
+            # Prepare the install location
             export IDRIS2_PREFIX=$out/
             mkdir -p $(idris2 --libdir)
+
+            # Install
             idris2 --install${if withSource then "-with-src" else ""} ${ipkgFile}
 
             runHook postLibInstall
@@ -139,7 +140,7 @@ let
     build.overrideAttrs
       ({ name, ... }: {
         name = name + "-docs";
-        buildPhase = ''
+        buildPhase = cfg.docBuildPhase or ''
           runHook preDocBuild
 
           idris2 --mkdoc ${ipkgFile}
@@ -147,13 +148,13 @@ let
           runHook postDocBuild
         '';
 
-        installPhase = ''
+        installPhase = cfg.docInstallPhase or ''
           runHook preDocInstall
 
           mkdir -p $out/doc/${name}
           mv build/docs/* $out/doc/${name}/
 
-          runHook postDocBuild
+          runHook postDocInstall
         '';
       });
 

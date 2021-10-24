@@ -1,61 +1,61 @@
-### Add a pure Idris2 library to this repository
+# Adding a package to idris2-pkgs
 
-At the moment, this is only documented for packages hosted on GitHub.
+We've [built a package](new-project.md) with idris2-pkgs, and now want to publish it to this
+repository.
 
-After forking this repo, there are two primary steps. We need to:
- - Create a package file `packages/MYPKG.toml`
- - Register that file in `packages/default.nix`
+## Adding to flake inputs
 
-#### Creating the package file
+The first thing to do is add our source - here, a repo hosted at
+https://github.com/example/mypkg - to `idris2-pkgs::flake.nix`. Idris2-pkgs assumes all package
+inputs are not flakes, so add `flake = false;` even if the project repository is a flake.
 
-Provided they exist on GitHub, most packages can be specified in [TOML](https://toml.io/en/). Documentation on the schema is [here](./docs/callToml.md).
-
-As an example, let's look the testing library [`hedgehog`](https://github.com/stefan-hoeck/idris2-hedgehog).
-
-```toml
-#packages/hedgehog.toml
-name = "hedgehog"
-version = "0.0.4"
-
-[ source ]
-owner = "stefan-hoeck"
-repo = "idris2-hedgehog"
-rev = "929b27c4a58111b4d1327abb18a2eee4ad304f48"
-# sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
-
-[ depends ]
-idrisLibs = [ "elab-util", "sop", "pretty-show" ]
+```nix
+{
+   inputs.mypkg = { url = "github:example/mypkg"; flake = false; };
+}
 ```
 
-`rev` is the specific git commit to build against. `sha256` is the hash of an internal Nix file, and the typical way to get it is to try to build without one.
-Nix flakes only use files tracked by git, so stage any new files and build the new package:
+If `mypkg = idrisPackage ./. { };` was sufficient to build the package, that's probably enough.
+We can build the package with `nix build .#mypkg`, ensure it works as expected, commit the
+change to git, and submit a pull request.
+
+## Configuring the build
+
+If the package was instead built with something like `mypkg = idrisPackage ./. cfg;` for some
+attrset `cfg`, we'll need to give `idris2-pkgs` that configuration. The place to do that, and
+all other configuration overrides, is in [packageSet.nix](../packageSet.nix.md).
+
+Here, add an entry into `packageSet.nix::packageConfig` so that `packageConfig.mypkg = cfg`.
+
+Likewise, if the package used `useRuntimeLibs`, add the package name to the list
+`packageSet.nix::needRuntimLibs`.
+
+Again, run `nix build .#mypkg`, run any tests you feel are necessary, and submit a PR.
+
+## Naming considerations
+
+### Collisions
+
+Neither idris2 nor nix flakes handle name collisions overly well. `idris2-pkgs` is set up so
+that each flake input can be given a unique name, and the `cfg.extraPkgs` input to
+`idrisPackage` can function as a map from what's written in an ipkg file to an idris derivation,
+but it's much cleaner if packages are given unique names.
+
+### Unicode
+
+Both idris2 and Nix allow unicode in package names, though there are two quirks with Nix:
+- Attrs containing unicode should be explicit strings
 
 ```
-$ git add packages/hedgehog.toml
-$ nix build .#hedgehog
-error: hash mismatch in fixed-output derivation '/nix/store/8vhk935pzml87jj620kqhc0avkj474x2-source.drv':
- specified: sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
- got:    sha256-Ev9LldllXHciUNHU8CcXrciW1WdxN8iW3J0kJwjsqjI=
-error: 1 dependencies of derivation '/nix/store/42ypyrqdwwirzpnz2vcw0c9d6c0jyzvk-hedgehog.drv' failed to build
+{
+    "📦" = mypkg; # good
+    📦 = mypkg;   # bad
+}
 ```
 
-Just copy the correct sha256 and paste it into our `package/hedgehog.toml`.
+- Nix only allows unicode in attrs, not in a `let` binding.
 
-```patch
-# package/hedgehog.toml
-  rev = "63e614776db3accebbcf4b64ac7a76e66e233e64"
-- # sha256 = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
-+ sha256 = "Ev9LldllXHciUNHU8CcXrciW1WdxN8iW3J0kJwjsqjI="
+## extraPackages
 
-```
-And we're done! Stage and commit your changes and make a PR.
-
-### Update a package
-
-Assuming no dependencies have changed, a version bump in a TOML file is very easy.
- - Update the version number
- - Update `rev` to point to the target commit
- - Remove the old `sha256`
- - Run a build command
- - Get the correct `sha256`
-
+Any packages which do not have their own, dedicated flake input can be added to the package set
+in `packageSet.nix::extraPackages`.

@@ -18,4 +18,4 @@ You should be able to replace `nix-build` in the above commands with:
     `nix-env -f . -i` to install a package
     `nix-shell` to enter a shell with a package in scope.
 
-The standard `(idris2.withPackages (ps: with ps; [ comonad ]))` does exist, but is not easily accessible from the command prompt, so we use `idris2.withPkgs.comonad` instead.
+The standard `(idris2.withLibraries (ps: with ps; [ comonad ]))` does exist, but is not easily accessible from the command prompt, so we use `idris2.withLibs.comonad` instead.

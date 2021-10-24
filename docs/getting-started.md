@@ -2,13 +2,16 @@
 
 ## Tutorials
 
-- [Without flakes](./compat.md)
 - [Starting a new project](./new-project.md)
 - [Adding to the repository](./new-package.md)
+- [Versioning](versioning.md)
 
 ## Other documentation
 
-- [TOML package format](./callToml.md)
+- [Builders](builders.md)
+- [docs-serve](docs-serve.md)
+- [The Build Process](build-process.md)
+- [Without flakes](./compat.md)
 
 ## Glossary
 

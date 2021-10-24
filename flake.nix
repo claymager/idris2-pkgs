@@ -22,9 +22,10 @@
   outputs = { self, nixpkgs, idris2-src, flake-utils, ... }@srcs:
     let
       inherit (builtins) removeAttrs mapAttrs;
+      inherit (nixpkgs.lib) recursiveUpdate;
       build-idris2-pkgs = import ./packageSet.nix {
         sources = removeAttrs srcs [ "self" "nixpkgs" "flake-utils" "idris2-src" ] // { idris2api = idris2-src; };
-        lib = nixpkgs.lib.recursiveUpdate nixpkgs.lib (import ./lib);
+        lib = recursiveUpdate nixpkgs.lib (import ./lib);
       };
     in
     {
@@ -32,17 +33,17 @@
         let
           compiler = final.callPackage ./compiler.nix { inherit idris2-src; };
 
-          idris2-pkgs = build-idris2-pkgs final compiler
-          // {
-            idris2 = idris2-pkgs._builders.useRuntimeLibs compiler.compiler;
-            _build-idris2-pkgs = build-idris2-pkgs final.callPackage;
-          };
+          idris2-pkgs = recursiveUpdate (build-idris2-pkgs final compiler)
+            {
+              idris2 = idris2-pkgs._builders.useRuntimeLibs compiler.compiler;
+              _builders.build-idris2-pkgs = build-idris2-pkgs final.callPackage;
+            };
         in
         {
           inherit idris2-pkgs;
           idris2 = idris2-pkgs.idris2;
 
-          lib = prev.lib.recursiveUpdate prev.lib (import ./lib);
+          lib = recursiveUpdate prev.lib (import ./lib);
 
         };
 
