@@ -2,8 +2,8 @@
 
 `idrisPackage` is the primary method of building an idris package in this repository.
 
-function in two arguments (a path `src`, and an attrset of configuration values `args`), and returns an
-[idris2 package](idris2_package.md).
+function in two arguments (a path `src`, and an attrset of configuration values `cfg`), and returns an
+idris2 package.
 
 ```nix
 {
@@ -18,7 +18,7 @@ that file to fill out some configuration details. It then passes everything to `
 
 ## Config options
 
-The attrset `args` may contain the following attrs:
+The attrset `cfg` may contain the following attrs:
 
 - `ipkgFile`: String
   idrisPackage makes a guess, but it is often necessary to explicitly state which ipkg file to use.
@@ -35,4 +35,4 @@ All arguments to `buildIdris` or `stdenv.mkDerivation` are also accepted.
 
 `idrisPackage`, and the other user-facing functions, are found in `idris2-pkgs._builders`.
 
-They are not currently a flake output, and are only accessible via the overlay.
+The builders are not currently a flake output, and are only accessible via the overlay.

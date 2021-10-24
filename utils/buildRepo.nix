@@ -1,5 +1,5 @@
 { callPackage, buildIdris, lib, renamePkgs, ipkg-to-json }: basePkgs:
-src: args:
+src: cfg:
 let
 
   inherit (builtins) isNull match readDir readFile removeAttrs;
@@ -13,7 +13,7 @@ let
   err = msg: throw "When configuring package for ${src}:\n${msg}";
 
   /* Loads data from (what it guesses is) the primary .ipkg */
-  ipkgFile = args.ipkgFile or (
+  ipkgFile = cfg.ipkgFile or (
     let
       /* Find all ipkg files in the src root directory */
       ipkgFiles = flatten (filter (x: x != null)
@@ -37,7 +37,7 @@ let
   # chooseFrom : Attrs Packages -> List String -> List Pacakges
   chooseFrom = ps: depends:
     let
-      extraPkgs = args.extraPkgs or { };
+      extraPkgs = cfg.extraPkgs or { };
       allPkgs = recursiveUpdate ps extraPkgs;
       savedPkgNames = attrNames extraPkgs;
 
@@ -58,4 +58,4 @@ buildIdris ({
   inherit (ipkgData) name version;
   idrisLibraries = chooseFrom basePkgs ipkgData.depends;
   executable = ipkgData.executable or "";
-} // removeAttrs args [ "extraPkgs" ])
+} // removeAttrs cfg [ "extraPkgs" ])

@@ -164,7 +164,7 @@ Let's add bring it into scope, and use it on the `mypkg` executable:
 
 ## Alternate build commands and non-idris dependencies
 
-There is a lot of power available in the `args`. For the Nix-savvy, `idrisPackage` forwards its `args` to `buildIdris`, which then passes them on
+There is a lot of power available in `cfg`. For the Nix-savvy, `idrisPackage` forwards its `cfg` to `buildIdris`, which then passes them on
 to `stdenv.mkDerivation`.
 
 ## Further Reading

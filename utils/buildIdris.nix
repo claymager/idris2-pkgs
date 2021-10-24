@@ -16,7 +16,7 @@
   # accept other arguments
 , doCheck ? false
 , ...
-} @ args:
+} @ cfg:
 let
   idris2 = idrisCompiler.compiler;
 
@@ -30,18 +30,18 @@ let
     Without this, each of `pkg`, `pkg.withSource`, `pkg.asLib`, and `pkg.docs` has to
     compile the project independently.
   */
-  ttc = stdenv.mkDerivation (args // {
+  ttc = stdenv.mkDerivation (cfg // {
 
     name = "${name}-ttc-${if version == null then "0.0" else version}";
 
     nativeBuildInputs =
       [ (addLibraries idris2 idrisLibraries) makeWrapper ]
         ++ lib.optional stdenv.isDarwin [ zsh ]
-        ++ args.nativeBuildInputs or [ ];
+        ++ cfg.nativeBuildInputs or [ ];
 
-    checkInputs = [ testIdris ] ++ args.checkInputs or [ ];
+    checkInputs = [ testIdris ] ++ cfg.checkInputs or [ ];
 
-    buildPhase = args.buildPhase or ''
+    buildPhase = cfg.buildPhase or ''
       runHook preBuild
 
       ${buildcommand} --build ${ipkgFile}
@@ -50,8 +50,8 @@ let
     '';
 
     inherit doCheck;
-    checkPhase = args.checkPhase or (
-      let checkCommand = args.checkCommand or ''
+    checkPhase = cfg.checkPhase or (
+      let checkCommand = cfg.checkCommand or ''
         find . -maxdepth 2 -name test.ipkg -exec ${buildcommand} --build {} \;
       '';
       in
@@ -73,7 +73,7 @@ let
   });
 
   # Primary output; the executable
-  build = stdenv.mkDerivation (args // {
+  build = stdenv.mkDerivation (cfg // {
 
     name = "${name}-${if version == null then "0.0" else version}";
     src = ttc;
@@ -94,7 +94,7 @@ let
               --suffix IDRIS2_DATA ':' "${idrisCompiler.support}/${idris2.name}/support" \
           '' else "";
       in
-        args.installPhase or ''
+        cfg.installPhase or ''
           runHook preBinInstall
 
           mkdir $out
@@ -173,5 +173,5 @@ build // {
   withSource = installLibrary true;
   docs = docs;
   allDocs = symlinkJoin { name = "idris2-docs"; paths = [ docs ] ++ map (p: p.docs) (idrisLibraries ++ idrisTestLibraries); };
-  idrisAttrs = args;
+  idrisAttrs = cfg;
 } // (if executable == "" then { } else { inherit executable; })
