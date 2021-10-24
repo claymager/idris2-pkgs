@@ -1,4 +1,4 @@
-{ buildIdris, src, stdenv, writeText }:
+{ lib, buildIdris, src, stdenv, writeText }:
 let
   inherit (builtins) fromJSON readFile;
   executable = buildIdris {
@@ -7,10 +7,8 @@ let
     inherit src;
   };
 
-  ipkgToNix = code:
+  ipkgToNix = file:
     let
-      file = writeText "ipkg-contents" code;
-
       drv = stdenv.mkDerivation {
         name = "idris-package.json";
         buildCommand = ''
@@ -18,7 +16,12 @@ let
         '';
         buildInputs = [ executable ];
       };
+
+      outContents = readFile drv;
     in
-    fromJSON (readFile drv);
+    if (lib.strings.hasPrefix "Parse" outContents)
+    then (throw "ParseError on input ipkg file:\n${file}")
+    else
+      fromJSON outContents;
 in
 ipkgToNix

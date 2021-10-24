@@ -30,7 +30,7 @@ let
     main + ".ipkg"
   );
 
-  ipkgData = ipkgToNix (readFile (src + "/${ipkgFile}"));
+  ipkgData = ipkgToNix (src + "/${ipkgFile}");
 
   # chooseFrom : Attrs Packages -> List String -> List Pacakges
   chooseFrom = ps: depends:
