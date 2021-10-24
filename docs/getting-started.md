@@ -1,10 +1,64 @@
 # Getting Started
 
-### Tutorials
+## Tutorials
+
 - [Without flakes](./compat.md)
 - [Starting a new project](./new-project.md)
 - [Adding to the repository](./new-package.md)
 
-### Other documentation
+## Other documentation
+
 - [TOML package format](./callToml.md)
 
+## Glossary
+
+- **attrs**:
+  Keys of an attrset
+
+- **attrset**:
+  A nix expression of key-value pairs roughly corresponding to a JSON Object or a
+  Python dictionary.
+
+- **derivation**:
+
+  Build instructions for some output.
+
+  Informally, this is an `attrset` with the special property that it can be coerced to a path,
+  which points to the outputs of those instructions (a.k.a. the **realisation** of that derivation).
+
+- **realisation**:
+
+  Build output of a derivation
+
+  The result of running `nix build` on some derivation; this is a path into the Nix store, and the
+  contents at that path.
+
+- **package**: Derivation of an Idris2 project
+  The output of [buildIdris](buildIdris.md) or it's wrapper [idrisPackage](idrisPackage.md).
+
+  The realisation of a package is typically the executable produced by `idris2 --build`, plus
+  whatever it needs to run.
+
+  In addition to the standard derivation attrs, it contains `asLib`, `withSource`, and `docs`; each
+  of which are derivations of their own..
+
+- **library**: Derivation of `<package>.asLib`, or its realisation
+
+  When idris2 package `p` wants to import modules from another package `q`, it depends on
+  the library of `q`. The library typically contains only the `ttc` files of the package.
+
+- **source**:
+  - As a package component:
+
+    The derivation of `<package>.withSource`, or its realisation.
+    Built with `idris2 --install-with-src`.
+
+  - As input for package `p`: `src` attribute of `stdenv.mkDerivation`
+
+    Roughly, a nix derivation copy of whichever path it points to. All relative paths in `p`'s
+    derivation are relative to this.
+
+- **docs**:
+  - As a package component:
+    The derivation of `<package>.docs`, or its realisation. The HTML description of a library
+    built by `idris2 --mkdoc`.
