@@ -25,9 +25,14 @@ let
   # Idris, and any packages needed to run tests
   testIdris = addLibraries idris2 (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
 
-  build = stdenv.mkDerivation (args // {
+  /* An intermediate derivation, which contains the source *and* the build products.
 
-    name = "${name}-${if version == null then "0.0" else version}";
+    Without this, each of `pkg`, `pkg.withSource`, `pkg.asLib`, and `pkg.docs` has to
+    compile the project independently.
+  */
+  ttc = stdenv.mkDerivation (args // {
+
+    name = "${name}-ttc-${if version == null then "0.0" else version}";
 
     nativeBuildInputs =
       [ (addLibraries idris2 idrisLibraries) makeWrapper ]
@@ -45,7 +50,6 @@ let
     '';
 
     inherit doCheck;
-    IDRIS2_PACKAGE_PATH = "${testIdris}/${idris2.name}";
     checkPhase = args.checkPhase or (
       let checkCommand = args.checkCommand or ''
         find . -maxdepth 2 -name test.ipkg -exec ${buildcommand} --build {} \;
@@ -60,6 +64,24 @@ let
         runHook postCheck
       ''
     );
+
+    installPhase = ''
+      # Cache everything for specialized builds
+      mkdir $out/
+      cp -r * $out/
+    '';
+  });
+
+  # Primary output; the executable
+  build = stdenv.mkDerivation (args // {
+
+    name = "${name}-${if version == null then "0.0" else version}";
+    src = ttc;
+    inherit (ttc.drvAttrs) nativeBuildInputs checkInputs;
+
+    buildPhase = ''
+      echo "${ttc.name} already built; doing nothing"
+    '';
 
     installPhase =
       let
@@ -89,11 +111,11 @@ let
 
   });
 
-
+  # Library, for when something else depends on modules in this package
   installLibrary = withSource:
     let
       thisLib = build.overrideAttrs
-        (oldAttrs: {
+        (_: {
           installPhase = ''
             runHook preLibInstall
 
@@ -105,17 +127,14 @@ let
           '';
         });
     in
-    # If
-      #  A depends on B, and
-      #  B depends on C
-      # Then
-      #  Include A when building C
+    # If (A < B) and (B < C); include A when buliding C
     symlinkJoin
       {
         inherit name;
         paths = [ thisLib ] ++ map (p: if withSource then p.withSource else p.asLib) idrisLibraries;
       };
 
+  # Documenation output
   docs =
     build.overrideAttrs
       ({ name, ... }: {
