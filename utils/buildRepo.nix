@@ -15,15 +15,17 @@ let
   /* Loads data from (what it guesses is) the primary .ipkg */
   ipkgFile = args.ipkgFile or (
     let
+      /* Find all ipkg files in the src root directory */
       ipkgFiles = flatten (filter (x: x != null)
         (map (match "(.*)\\.ipkg") (attrNames (readDir src))));
       /* It is common to include  something like `mypkg-docs.ipkg` at the toplevel.
-        We want to ignore such a file, unless specified otherwise. */
+        We want to ignore such a file, if a better option is available. */
       ignored = [ "test" "tests" "doc" "docs" ];
       notIgnored = fn: !any (pat: hasSuffix pat fn) ignored;
-      main = findSingle
-        notIgnored
-        (err "No valid *.ipkg file found")
+      main = findSingle notIgnored
+        (findSingle (_: true) (err "No valid *.ipkg file found")
+          (err "Multiple *.ipkg files found")
+          ipkgFiles)
         (err "Multiple valid *.ipkg files found")
         ipkgFiles;
     in
