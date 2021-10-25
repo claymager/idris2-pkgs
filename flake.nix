@@ -2,7 +2,7 @@
   description = "Idris2 and its packages";
 
   inputs = {
-    idris2 = { url = "github:idris-lang/idris2/0a29d06f"; flake = false; };
+    idris2 = { url = "github:idris-lang/idris2"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
 
     comonad = { url = "github:stefan-hoeck/idris2-comonad"; flake = false; };
