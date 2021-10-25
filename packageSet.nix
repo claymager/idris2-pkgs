@@ -87,7 +87,7 @@ let
   inherit (builtins) elem mapAttrs;
   inherit (builders) idrisPackage useRuntimeLibs;
 
-  builders = pkgs.callPackage ./utils
+  builders = pkgs.callPackage ./builders
     {
       inherit idrisCompiler;
       inherit (sources) ipkg-to-json;

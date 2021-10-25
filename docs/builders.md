@@ -20,7 +20,7 @@ idris2 package.
 The general idea is that it takes a source directory, makes a guess at the `ipkg` file, and uses
 that file to fill out some configuration details. It then passes everything to `buildIdris`.
 
-- [source](../utils/buildRepo.nix)
+- [source](../builders/idris-package.nix)
 
 ### Config options
 
@@ -41,7 +41,7 @@ All arguments to `buildIdris` or `stdenv.mkDerivation` are also accepted and for
 with overrides for using the package as a build library, as a reference "source" library, and as documentation.
 
 - [detailed explanation](build-process.md)
-- [source](../utils/buildIdris.nix)
+- [source](../builders/buildIdris.nix)
 
 ### Required config
 
@@ -72,7 +72,7 @@ All of the `stdenv.mkDerivation` options, plus:
   - an idris2-lsp server with all packages and sources needed to work on `p`
   - [docs serve](docs-serve.md)
 
-Defined in [../utils/default/nix](../utils/default.nix.md)
+Defined in [../builders/default/nix](../builders/default.nix.md)
 For usage, see the [templates](../templates/simple/flake.nix).
 
 ## useRuntimeLibs : Package -> Package
@@ -96,7 +96,7 @@ This adds a few attributes to the package:
  - `withSrcs`: infinite tree of packages
    `withLibs`, but also provides the source of each `ttc` file.
 
-Defined in [../utils/default/nix](../utils/default.nix.md)
+Defined in [../builders/default/nix](../builders/default.nix.md)
 
 ## compiler : Derivation
 
