@@ -15,4 +15,4 @@ jobs:
         name: cm-idris2-pkgs
         authToken : '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix-build
-    - run: nix-build -A checks.x86_64-linux
+    - run: nix-build all-drvs.nix

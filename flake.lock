@@ -114,11 +114,11 @@
     "idris2": {
       "flake": false,
       "locked": {
-        "lastModified": 1635164223,
-        "narHash": "sha256-eW8C8YB36skCgVMF4P9ycbIxYPMme963zNstp9lkWkk=",
+        "lastModified": 1635175011,
+        "narHash": "sha256-Fn4dVp9H5uhBHp0criSKzOJ7xpy4Dm9KVcyg+5QQwag=",
         "owner": "idris-lang",
         "repo": "idris2",
-        "rev": "c340e0e713ad5002227a41dcbbe8ab0a86a6264b",
+        "rev": "377ae22eaca26ab894e319d30f3487a3277d0489",
         "type": "github"
       },
       "original": {

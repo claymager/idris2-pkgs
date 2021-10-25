@@ -70,16 +70,6 @@
             buildInputs = [ pkgs.nixpkgs-fmt ];
           };
 
-          /* `$ nix flake check` (and `.. show`) require configured build machines for all systems
-            supported by `idris2-pkgs`. This is due to ipkgToNix, which needs to execute on each
-            system to read the derivation for each package there.
-
-            `$ nix-build --no-out-links -A checks.CURRENT_SYSTEM` behaves as expected, and is used in the CI.
-          */
-          checks = packages // {
-            lspWithPackages = packages.lsp.withLibraries (ps: [ ps.comonad ]);
-          };
-
         }
       );
 
