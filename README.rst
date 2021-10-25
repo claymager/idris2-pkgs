@@ -17,6 +17,19 @@ userspace yet. You can get an idea by scanning the inputs of
 
    nix eval --apply builtins.attrNames github:claymager/idris2-pkgs#packages.x86_64-linux
 
+Binary Cache
+------------
+
+This repository uses Cachix_ for caching, though that is still highly experimintal.
+
+If you run ``cachix use cm-idris2-pkgs``, it should configure your nix
+to use the cache. The cachix command is only needed for setup, so feel free
+to run that in a nix shell.
+
+- **cache name** ``cm-idris2-pkgs``
+
+- **public key** ``cm-idris2-pkgs.cachix.org-1:YB2oJSEsD5oMJjAESxolC2GQtE6B5I6jkWhte2gtXjk=``
+
 Supported Platforms
 -------------------
 
