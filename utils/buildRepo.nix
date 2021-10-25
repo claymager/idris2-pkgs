@@ -1,4 +1,4 @@
-{ callPackage, buildIdris, lib, renamePkgs, ipkg-to-json }: basePkgs:
+{ callPackage, buildIdris, lib, ipkg-to-json }: basePkgs:
 src: cfg:
 let
 
@@ -34,21 +34,12 @@ let
 
   ipkgData = ipkgToNix (src + "/${ipkgFile}");
 
-  # chooseFrom : Attrs Packages -> List String -> List Pacakges
+  # chooseFrom : Attrs Packages -> List Depends -> List Pacakges
+  # `Depends` has a name and bounds
   chooseFrom = ps: depends:
     let
-      extraPkgs = cfg.extraPkgs or { };
-      allPkgs = recursiveUpdate ps extraPkgs;
-      savedPkgNames = attrNames extraPkgs;
-
-      /* renameDeps is just using attrset lookup as a map, where the keys are
-        "idris2 package" names and the values are `idris2-pkgs` names.
-      */
-      renameDeps = dep: maybeAttr dep.name dep.name (
-        removeAttrs renamePkgs savedPkgNames
-      );
-
-      depNames = [ "prelude" "base" ] ++ map renameDeps depends;
+      allPkgs = recursiveUpdate ps (cfg.extraPkgs or { });
+      depNames = [ "prelude" "base" ] ++ map (d: d.name) depends;
     in
     filter (p: !isNull p) (map (d: maybeAttr null d allPkgs) depNames);
 

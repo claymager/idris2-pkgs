@@ -1,13 +1,5 @@
 { lib, sources }: pkgs: idrisCompiler:
 let
-  /* If idris2-pkgs and the idris2 compiler call the same package different names,
-    tell us about that here.
-  */
-  renamePkgs = {
-    #  name-in-ipkg = name-in-idris2-pkgs;
-    "idris2" = "idris2api";
-  };
-
   /* Configuration for the primary packges of each flake input.
 
     If you would call
@@ -18,13 +10,13 @@ let
 
     dom.ipkgFile = "dom.ipkg";
 
-    idris2api = {
+    idris2 = {
       ipkgFile = "idris2api.ipkg";
-      name = "idris2api";
+      name = "idris2";
       preBuild = ''
         LONG_VERSION=$(idris2 --version)
         ARR=($(echo $LONG_VERSION | sed 's/-/ /g; s/\./,/g' ))
-        VERSION="((''${ARR[-2]}), \"${sources.idris2api.shortRev}\")"
+        VERSION="((''${ARR[-2]}), \"${sources.idris2.shortRev}\")"
 
         echo 'module IdrisPaths' >> src/IdrisPaths.idr
         echo "export idrisVersion : ((Nat,Nat,Nat), String); idrisVersion = $VERSION" >> src/IdrisPaths.idr
@@ -48,19 +40,19 @@ let
   extraPackages = rec {
     /* idrisPackage usually automatically adds `base` and `prelude` to the environment, so we
       explicitly tell it which packages are required to prevent an infinite loop. */
-    prelude = idrisPackage (sources.idris2api + "/libs/prelude") { idrisLibraries = [ ]; };
-    base = idrisPackage (sources.idris2api + "/libs/base") { idrisLibraries = [ ]; };
+    prelude = idrisPackage (sources.idris2 + "/libs/prelude") { idrisLibraries = [ ]; };
+    base = idrisPackage (sources.idris2 + "/libs/base") { idrisLibraries = [ ]; };
 
-    contrib = idrisPackage (sources.idris2api + "/libs/contrib") { };
-    network = idrisPackage (sources.idris2api + "/libs/network") { };
-    test = idrisPackage (sources.idris2api + "/libs/test") { };
+    contrib = idrisPackage (sources.idris2 + "/libs/contrib") { };
+    network = idrisPackage (sources.idris2 + "/libs/network") { };
+    test = idrisPackage (sources.idris2 + "/libs/test") { };
 
     /* The following derivations are provided as examples, but are not to be provided in the build
       outputs of the derivation or repository.
 
-      _idris2 = idrisPackage sources.idris2api {
+      _idris2 = idrisPackage sources.idris2 {
       ipkgFile = "idris2.ipkg";
-      idrisLibraries = [ network allPackages.idris2api ];
+      idrisLibraries = [ network allPackages.idris2 ];
       name = "idris3";
       preBuild = ''
       mkdir -p newSrc/Idris
@@ -73,7 +65,7 @@ let
       };
 
       readline-sample =
-      idrisPackage sources.idris2api {
+      idrisPackage sources.idris2 {
       buildInputs = [ pkgs.readline ];
       ipkgFile = "samples/FFI-readline/readline.ipkg";
       preBuild = ''
@@ -97,7 +89,7 @@ let
 
   builders = pkgs.callPackage ./utils
     {
-      inherit renamePkgs idrisCompiler;
+      inherit idrisCompiler;
       inherit (sources) ipkg-to-json;
     }
     allPackages;

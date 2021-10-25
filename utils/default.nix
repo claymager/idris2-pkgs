@@ -1,4 +1,4 @@
-{ callPackage, lib, symlinkJoin, python3, idrisCompiler, renamePkgs, ipkg-to-json }:
+{ callPackage, lib, symlinkJoin, python3, idrisCompiler, ipkg-to-json }:
 
 # IPkg is subtype of Derivation
 let
@@ -15,7 +15,7 @@ let
   callNix = file: args: callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
 
   # buildIdrisRepo_ : Attrs IPkg -> Source -> Partial IdrisDec -> IPkg
-  buildIdrisRepo_ = callNix ./buildRepo.nix { inherit renamePkgs ipkg-to-json; };
+  buildIdrisRepo_ = callNix ./buildRepo.nix { inherit ipkg-to-json; };
 
   buildFromTOML = ipkgs: callNix ./callToml.nix { inherit ipkgs; };
 

@@ -2,7 +2,7 @@
   description = "Idris2 and its packages";
 
   inputs = {
-    idris2-src = { url = "github:idris-lang/idris2/0a29d06f"; flake = false; };
+    idris2 = { url = "github:idris-lang/idris2/0a29d06f"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
 
     comonad = { url = "github:stefan-hoeck/idris2-comonad"; flake = false; };
@@ -19,19 +19,19 @@
 
   };
 
-  outputs = { self, nixpkgs, idris2-src, flake-utils, ... }@srcs:
+  outputs = { self, nixpkgs, idris2, flake-utils, ... }@srcs:
     let
       inherit (builtins) removeAttrs mapAttrs;
       inherit (nixpkgs.lib) recursiveUpdate;
       build-idris2-pkgs = import ./packageSet.nix {
-        sources = removeAttrs srcs [ "self" "nixpkgs" "flake-utils" "idris2-src" ] // { idris2api = idris2-src; };
+        sources = removeAttrs srcs [ "self" "nixpkgs" "flake-utils" ];
         lib = recursiveUpdate nixpkgs.lib (import ./lib);
       };
     in
     {
       overlay = final: prev:
         let
-          compiler = final.callPackage ./compiler.nix { inherit idris2-src; };
+          compiler = final.callPackage ./compiler.nix { idris2-src = idris2; };
 
           idris2-pkgs = recursiveUpdate (build-idris2-pkgs final compiler)
             {

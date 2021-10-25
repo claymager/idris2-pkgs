@@ -111,7 +111,7 @@
         "type": "github"
       }
     },
-    "idris2-src": {
+    "idris2": {
       "flake": false,
       "locked": {
         "lastModified": 1633619223,
@@ -215,7 +215,7 @@
         "frex": "frex",
         "hedgehog": "hedgehog",
         "idrall": "idrall",
-        "idris2-src": "idris2-src",
+        "idris2": "idris2",
         "inigo": "inigo",
         "ipkg-to-json": "ipkg-to-json",
         "lsp": "lsp",

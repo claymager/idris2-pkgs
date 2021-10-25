@@ -77,8 +77,8 @@ For usage, see the [templates](../templates/simple/flake.nix).
 
 ## useRuntimeLibs : Package -> Package
 
-`useRuntimeLibs` is for executables like the LSP, which use the `idris2api` to access
-library `ttc` files or support data.
+`useRuntimeLibs` is for executables like the LSP, which use the `idris2` library to access `ttc`
+files or support data.
 
 This adds a few attributes to the package:
  - `withLibraries`: (Attrset Package -> List Package) -> Package
@@ -89,10 +89,10 @@ This adds a few attributes to the package:
 
  - `withLibs`: infinite tree of packages
    `withLibraries`, but with a different api.
-   
+
    Instead of typing `lsp.withPackages (ps: [ ps.comonad ps.hedgehog ])`, it is sufficient
    to write `lsp.withPkgs.comonad.hedgehog`.
- 
+
  - `withSrcs`: infinite tree of packages
    `withLibs`, but also provides the source of each `ttc` file.
 
