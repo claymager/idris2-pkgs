@@ -137,14 +137,18 @@ that other package, then ``mypkg`` should build successfully. We can add
 and see that even with two dependencies that are not in ``idris2-pkgs``,
 “tests passed”.
 
-There are some potential pitfalls here, though. - Nix can be rather
-funny with paths. Make sure that all relative paths are contained within
-the flake. - If a flake is a git repository, all imported files must be
-tracked by git. - The “otherpackage” key in ``extraPkgs.otherpackage``
-must match the name used by idris (``depends =     otherpackage``)
-*precisely* to be correctly found. If the package name contains unicode,
-wrap the nix key in quotes, as in ``extraPkgs."otherpackage"``. - There
-are the standard idris2 dependency rules, which we handled above. If
+There are some potential pitfalls here, though.
+
+- Nix can be rather funny with paths. Make sure that all relative paths are contained within
+the flake.
+
+- If a flake is a git repository, all imported files must be tracked by git.
+
+- The “otherpackage” key in ``extraPkgs.otherpackage``
+must match the name used by idris (``depends = otherpackage``)
+*precisely* to be correctly found.
+
+- There are the standard idris2 dependency rules, which we handled above. If
 ``runTests`` depends on a module from ``mypkg`` which itself depends on
 ``otherpackage``, we need to explicitly pass it to idris2 in
 ``runTests.ipkg`` and to Nix in runTests’s ``extraPkgs``.

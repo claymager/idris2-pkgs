@@ -56,17 +56,22 @@ it’s much cleaner if packages are given unique names.
 Unicode
 ~~~~~~~
 
-Both idris2 and Nix allow unicode in package names, though there are two
-quirks with Nix: - Attrs containing unicode should be explicit strings
+Idris2 allows unicode in package names, but support for unicode names is poor in Nix.
+This section is less of a guide, and more notes for potential workarounds.
 
-::
+- Nix does not allow unicode names, except when an attribute name and explicitly a string.
 
-   {
-       "📦" = mypkg; # good
-       📦 = mypkg;   # bad
-   }
+.. code-block::
 
--  Nix only allows unicode in attrs, not in a ``let`` binding.
+   let
+      📦 = 42;               # error
+      a = { "📦" = mypkg; }; # accepted
+      b = { 📦 = mypkg; };   # error
+      c = a."📦";            # accepted
+      d = with a; "📦";      # d is the string "📦"
+      e = with a; 📦;        # error
+
+-  Nix flake inputs do not allow unicode.
 
 extraPackages
 -------------
