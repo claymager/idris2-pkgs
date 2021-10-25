@@ -19,10 +19,10 @@ to install the idris2-lsp.
     That only installs the LSP server and the Prelude and Base libraries it needs to function. If
     you'd like more, explore the `Idris2 interpreters`_ section below.
 
-Within that ``pkgs.idris2-pkgs`` is the special attribute ``_builders``_ and every package produced
+Within that ``pkgs.idris2-pkgs`` is the special attribute `_builders`_ and every package produced
 by this repository.
 
-.. _``_builders``: builders
+.. _`_builders`: builders
 
 Package Structure
 -----------------
