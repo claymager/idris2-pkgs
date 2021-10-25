@@ -47,7 +47,7 @@ enter a REPL, and import whatever you need.
 Other executables that need runtime access to libraries, such as the
 LSP, also have access to that ``withPkgs`` attribute.
 
-For other uses, check the `documentation <./docs/getting-started.rst>`__.
+For other uses, check the `documentation <./docs/README.rst>`__.
 
 License
 =======
