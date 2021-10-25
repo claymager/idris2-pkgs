@@ -133,7 +133,7 @@ let
     # If (A < B) and (B < C); include A when buliding C
     symlinkJoin
       {
-        inherit name;
+        inherit (thisLib) name;
         paths = [ thisLib ] ++ map (p: if withSource then p.withSource else p.asLib) idrisLibraries;
       };
 
