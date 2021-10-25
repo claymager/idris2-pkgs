@@ -22,33 +22,29 @@
   A nix expression of key-value pairs roughly corresponding to a JSON Object or a
   Python dictionary.
 
-- **derivation**:
+- **derivation**: Build instructions for some output
 
-  Build instructions for some output.
-
-  Informally, this is an `attrset` with the special property that it can be coerced to a path,
-  which points to the outputs of those instructions (a.k.a. the **realisation** of that derivation).
+  Informally, a derivation is an `attrset` with the special property that it can be coerced to a
+  path into the nix store (a.k.a. the **realisation** of that derivation).
 
 - **realisation**:
-
   Build output of a derivation
 
-  The result of running `nix build` on some derivation; this is a path into the Nix store, and the
-  contents at that path.
+  A realisation is is the result of running `nix build` on some derivation; this is a path into
+  the Nix store, and the contents at that path.
 
 - **package**: Derivation of an Idris2 project
-  The output of [buildIdris](buildIdris.md) or it's wrapper [idrisPackage](idrisPackage.md).
+
+  A package is the output of [buildIdris](buildIdris.md) or it's wrapper [idrisPackage](idrisPackage.md).
 
   The realisation of a package is typically the executable produced by `idris2 --build`, plus
-  whatever it needs to run.
-
-  In addition to the standard derivation attrs, it contains `asLib`, `withSource`, and `docs`; each
-  of which are derivations of their own..
+  whatever it needs to run. In addition to the standard derivation attrs, it contains `asLib`,
+  `withSource`, and `docs`; each of which are derivations of their own.
 
 - **library**: Derivation of `<package>.asLib`, or its realisation
 
   When idris2 package `p` wants to import modules from another package `q`, it depends on
-  the library of `q`. The library typically contains only the `ttc` files of the package.
+  the library of `q`. The library typically contains only the `ttc` files of the dependency.
 
 - **source**:
   - As a package component:
