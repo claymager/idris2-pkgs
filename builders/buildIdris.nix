@@ -36,8 +36,10 @@ let
 
     nativeBuildInputs =
       [ (addLibraries idris2 idrisLibraries) makeWrapper ]
-        ++ lib.optional stdenv.isDarwin [ zsh ]
         ++ cfg.nativeBuildInputs or [ ];
+
+    propagatedBuildInputs = lib.optional stdenv.isDarwin [ zsh ]
+      ++ cfg.propagatedBuildInputs or [ ];
 
     checkInputs = [ testIdris ] ++ cfg.checkInputs or [ ];
 
@@ -73,7 +75,7 @@ let
 
     name = "${name}-${if version == null then "0.0" else version}";
     src = ttc;
-    inherit (ttc.drvAttrs) nativeBuildInputs;
+    inherit (ttc.drvAttrs) nativeBuildInputs propagatedBuildInputs;
 
     buildPhase = ''
       echo "${ttc.name} already built; doing nothing"
