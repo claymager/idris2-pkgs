@@ -33,11 +33,16 @@
         let
           compiler = final.callPackage ./compiler.nix { idris2-src = idris2; };
 
-          idris2-pkgs = recursiveUpdate (build-idris2-pkgs final compiler)
-            {
-              idris2 = idris2-pkgs._builders.useRuntimeLibs compiler.compiler;
-              _builders.build-idris2-pkgs = build-idris2-pkgs final.callPackage;
-            };
+          idris2-pkgs =
+            let ipkgs = build-idris2-pkgs final compiler;
+            in
+            recursiveUpdate ipkgs
+              {
+                idris2 = (ipkgs._builders.useRuntimeLibs compiler.compiler) // {
+                  inherit (ipkgs.idris2) asLib withSource docs;
+                };
+                _builders.build-idris2-pkgs = build-idris2-pkgs final.callPackage;
+              };
         in
         {
           inherit idris2-pkgs;
