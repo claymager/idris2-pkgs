@@ -17,8 +17,8 @@
 
         packages = { inherit mypkg runTests; };
 
-        devShell = {
-          builtInputs = [ (devEnv mypkg) ];
+        devShell = pkgs.mkShell {
+          buildInputs = [ (devEnv mypkg) ];
         };
       }
     );

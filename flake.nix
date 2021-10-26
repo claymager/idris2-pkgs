@@ -28,7 +28,7 @@
         lib = recursiveUpdate nixpkgs.lib (import ./lib);
       };
     in
-    {
+    rec {
       overlay = final: prev:
         let
           compiler = final.callPackage ./compiler.nix { idris2-src = idris2; };
@@ -53,6 +53,7 @@
         };
 
       templates = import ./templates;
+      defaultTemplate = templates.simple;
     } //
 
     flake-utils.lib.eachSystem [ "x86_64-linux" "x86_64-darwin" "i686-linux" ]
