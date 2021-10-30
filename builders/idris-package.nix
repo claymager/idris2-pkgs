@@ -45,7 +45,7 @@ let
 
 in
 buildIdris ({
-  inherit src;
+  inherit src ipkgFile;
   inherit (ipkgData) name version;
   idrisLibraries = chooseFrom basePkgs ipkgData.depends;
   executable = ipkgData.executable or "";
