@@ -1,7 +1,0 @@
-package mypkg
-
-modules = Main
-main = Main
-executable = runMyPkg
-
-sourcedir = "src"

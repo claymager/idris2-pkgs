@@ -1,7 +1,10 @@
+
++-------------+--------------------------------------------------------------+
+| **WARNING** | The TOML interface is deprecated in favor of `idrisPackage`. |
++-------------+--------------------------------------------------------------+
+
 Building from TOML
 ==================
-
-NOTE: the functions described herein may be deprecated soon.
 
 Many packages can be built from a TOML specification. This flake
 provides two functions: - ``callTOML`` : (toml : Path) -> IdrisPkg - For

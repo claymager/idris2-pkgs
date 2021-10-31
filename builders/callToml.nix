@@ -53,8 +53,10 @@ in
 
 {
   callTOML = file:
-    buildIdris (cleanTOML fetchFromGitHub (loadTOML file));
+    lib.warning "DeprecationWarning: callTOML is deprecated in favor of idrisPackage"
+      (buildIdris (cleanTOML fetchFromGitHub (loadTOML file)));
 
   buildTOMLSource = dir: file:
-    buildIdris (cleanTOML (_: dir) (loadTOML file));
+    lib.warning "DeprecationWarning: buildTOMLSource is deprecated in favor of idrisPackage"
+      (buildIdris (cleanTOML (_: dir) (loadTOML file)));
 }

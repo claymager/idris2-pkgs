@@ -1,6 +1,0 @@
-name = "mypkg"
-version = "0.0"
-
-[ depends ]
-idrisLibs = [ ]
-buildInputs = [ ]
