@@ -6,14 +6,21 @@
     flake-utils.url = "github:numtide/flake-utils";
 
     comonad = { url = "github:stefan-hoeck/idris2-comonad"; flake = false; };
+    collie = { url = "github:ohad/collie"; flake = false; };
+    katla = { url = "github:idris-community/katla"; flake = false; };
+    dot-parse = { url = "github:CodingCellist/idris2-dot-parse"; flake = false; };
     dom = { url = "github:stefan-hoeck/idris2-dom"; flake = false; };
     elab-util = { url = "github:stefan-hoeck/idris2-elab-util"; flake = false; };
+    effect = { url = "github:russoul/idris2-effect"; flake = false; };
     hedgehog = { url = "github:stefan-hoeck/idris2-hedgehog"; flake = false; };
+    fvect = { url = "github:mattpolzin/idris-fvect"; flake = false; };
     idrall = { url = "github:alexhumphreys/idrall"; flake = false; };
     ipkg-to-json = { url = "github:claymager/ipkg-to-json"; flake = false; };
     inigo = { url = "github:idris-community/Inigo"; flake = false; };
     lsp = { url = "github:idris-community/idris2-lsp"; flake = false; };
     frex = { url = "github:frex-project/idris-frex"; flake = false; };
+    json = { url = "github:stefan-hoeck/idris2-json"; flake = false; };
+    Prettier = { url = "github:Z-snails/prettier"; flake = false; };
     pretty-show = { url = "github:stefan-hoeck/idris2-pretty-show"; flake = false; };
     sop = { url = "github:stefan-hoeck/idris2-sop"; flake = false; };
 
@@ -52,6 +59,8 @@
 
         };
 
+      inp = srcs.comonad;
+      inpt = builtins.attrNames srcs.comonad;
       templates = import ./templates;
       defaultTemplate = templates.simple;
     } //

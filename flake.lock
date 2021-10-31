@@ -1,5 +1,37 @@
 {
   "nodes": {
+    "Prettier": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634920614,
+        "narHash": "sha256-75Ci+UElQVbaZf6OPJ00IUgEXooNcubRoF9KmkdIuXg=",
+        "owner": "Z-snails",
+        "repo": "prettier",
+        "rev": "ca24f339e93c3f45d74349887f3f338cc7f5067b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Z-snails",
+        "repo": "prettier",
+        "type": "github"
+      }
+    },
+    "collie": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1631011321,
+        "narHash": "sha256-goYctB+WBoLgsbjA0DlqGjD8i9wr1K0lv0agqpuwflU=",
+        "owner": "ohad",
+        "repo": "collie",
+        "rev": "ed2eda5e04fbd02a7728e915d396e14cc7ec298e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ohad",
+        "repo": "collie",
+        "type": "github"
+      }
+    },
     "comonad": {
       "flake": false,
       "locked": {
@@ -19,16 +51,48 @@
     "dom": {
       "flake": false,
       "locked": {
-        "lastModified": 1634639188,
-        "narHash": "sha256-wsQh2F2/k5NZvKle0IKLVsbF5vMC+NbQNPUpIA1+1XQ=",
+        "lastModified": 1635588472,
+        "narHash": "sha256-vyRpi9d91YcYR1FqcSVqSTORqb6SdraU345jaQRNihY=",
         "owner": "stefan-hoeck",
         "repo": "idris2-dom",
-        "rev": "a44ba08b01ee818adb991bd33891fa3a5b079cb9",
+        "rev": "2d9ff5d19f9e4f3e56eba273c8233c98830d61cc",
         "type": "github"
       },
       "original": {
         "owner": "stefan-hoeck",
         "repo": "idris2-dom",
+        "type": "github"
+      }
+    },
+    "dot-parse": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634139470,
+        "narHash": "sha256-97ybAdkHnw8nrRpxXL/Y0Efg2vpdMk/pz2za9vRKaM4=",
+        "owner": "CodingCellist",
+        "repo": "idris2-dot-parse",
+        "rev": "cb43167bcfb33f1606443af525e1aebffb35fcf8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "CodingCellist",
+        "repo": "idris2-dot-parse",
+        "type": "github"
+      }
+    },
+    "effect": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1630883224,
+        "narHash": "sha256-Uz3UybSOLetaa46kDKoh0SDxhPJOLX05orrlySEVNck=",
+        "owner": "russoul",
+        "repo": "idris2-effect",
+        "rev": "8d0f5381454931e94c855ebc11253e0bcfd5b051",
+        "type": "github"
+      },
+      "original": {
+        "owner": "russoul",
+        "repo": "idris2-effect",
         "type": "github"
       }
     },
@@ -79,6 +143,22 @@
         "type": "github"
       }
     },
+    "fvect": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1633247988,
+        "narHash": "sha256-zElIze03XpcrYL4H5Aj0ZGNplJGbtOx+iWnivJMzHm0=",
+        "owner": "mattpolzin",
+        "repo": "idris-fvect",
+        "rev": "1c5e3761e0cd83e711a3535ef9051bea45e6db3f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpolzin",
+        "repo": "idris-fvect",
+        "type": "github"
+      }
+    },
     "hedgehog": {
       "flake": false,
       "locked": {
@@ -114,11 +194,11 @@
     "idris2": {
       "flake": false,
       "locked": {
-        "lastModified": 1635175011,
-        "narHash": "sha256-Fn4dVp9H5uhBHp0criSKzOJ7xpy4Dm9KVcyg+5QQwag=",
+        "lastModified": 1635634816,
+        "narHash": "sha256-/y1BqL2maaAzSuW/xp+HLl6FR1eqiQOuMWCi3DzY7/Q=",
         "owner": "idris-lang",
         "repo": "idris2",
-        "rev": "377ae22eaca26ab894e319d30f3487a3277d0489",
+        "rev": "d531cc8dea878e43efa4a57f29de9a69f85235a4",
         "type": "github"
       },
       "original": {
@@ -159,14 +239,46 @@
         "type": "github"
       }
     },
+    "json": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1632203993,
+        "narHash": "sha256-fPG1mNqOM2xPJOaLFtTEz8c7lzbD3fszJypIuXUtrLk=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-json",
+        "rev": "04a65808386eb4217ae8e61a297a6baf0daece9b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-json",
+        "type": "github"
+      }
+    },
+    "katla": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634269657,
+        "narHash": "sha256-MmTn1Pw1Oy8xTE6Yv0OVgdFoWqyFQ5M5z7Z0jDaKm28=",
+        "owner": "idris-community",
+        "repo": "katla",
+        "rev": "9d018b2828b6095d54db705170daba314d2da2b7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "idris-community",
+        "repo": "katla",
+        "type": "github"
+      }
+    },
     "lsp": {
       "flake": false,
       "locked": {
-        "lastModified": 1635147249,
-        "narHash": "sha256-QvOZJk64DBtICe1EYMoG6Y4zCasDw7rjhlPgsitaZOI=",
+        "lastModified": 1635683268,
+        "narHash": "sha256-yFHejwgixmfJ25vJQGdtAGwpp1mXeohQet3Tn3vQNiY=",
         "owner": "idris-community",
         "repo": "idris2-lsp",
-        "rev": "843e1dcd0855000292b16f604386b78459fb30fd",
+        "rev": "9627181cdd7618f4be3aa284973c6160364dff1f",
         "type": "github"
       },
       "original": {
@@ -177,11 +289,11 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1624969164,
-        "narHash": "sha256-2XK8hGrOi8tpuYncxXrzpCQoUkaZOaZDo8Fznb+sOkI=",
+        "lastModified": 1635567201,
+        "narHash": "sha256-xKHTZsJgX5bRLUJpbt2etIu3POSMuVSiZKHFjOwJrRs=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "86869ad7357f6bfcba6f09a67d8b94f07978abc8",
+        "rev": "c597868b85c85c707c5039cba01764364e01dc12",
         "type": "github"
       },
       "original": {
@@ -207,16 +319,23 @@
     },
     "root": {
       "inputs": {
+        "Prettier": "Prettier",
+        "collie": "collie",
         "comonad": "comonad",
         "dom": "dom",
+        "dot-parse": "dot-parse",
+        "effect": "effect",
         "elab-util": "elab-util",
         "flake-utils": "flake-utils",
         "frex": "frex",
+        "fvect": "fvect",
         "hedgehog": "hedgehog",
         "idrall": "idrall",
         "idris2": "idris2",
         "inigo": "inigo",
         "ipkg-to-json": "ipkg-to-json",
+        "json": "json",
+        "katla": "katla",
         "lsp": "lsp",
         "nixpkgs": "nixpkgs",
         "pretty-show": "pretty-show",
