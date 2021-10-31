@@ -59,8 +59,6 @@
 
         };
 
-      inp = srcs.comonad;
-      inpt = builtins.attrNames srcs.comonad;
       templates = import ./templates;
       defaultTemplate = templates.simple;
     } //
