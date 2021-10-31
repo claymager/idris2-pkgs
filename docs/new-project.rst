@@ -7,7 +7,7 @@ simple. In a clean directory, run the following commands:
 .. code:: sh
 
    # Set up the project
-   $ nix flake new -t github:claymager/idris2-pkgs#simple mypkg
+   $ nix flake new -t github:claymager/idris2-pkgs mypkg
    $ cd mypkg
 
    # Build the package, and run it
@@ -112,7 +112,7 @@ of this article. For now, let’s just focus on these lines in
        mypkg = idrisPackage ./. { };
        runTests = idrisPackage ./test { extraPkgs.mypkg = mypkg; };
 
-That’s calling the function `idrisPackage <idrisPackage.rst>`__ on the
+That’s calling the function `idrisPackage <builders.rst>`__ on the
 current directory, with an empty attrset (think JSON object) of
 configuration. It then assigns the result to the variable ``mypkg``.
 
@@ -202,5 +202,5 @@ passes them on to ``stdenv.mkDerivation``.
 Further Reading
 ---------------
 
--  `idrisPackage <idrisPackage.rst>`__
+-  `builders <builders.rst>`__
 -  `Publishing to ``idris2-pkgs`` <new-package.rst>`__

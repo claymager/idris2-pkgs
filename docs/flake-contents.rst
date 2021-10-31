@@ -22,7 +22,7 @@ to install the idris2-lsp.
 Within that ``pkgs.idris2-pkgs`` is the special attribute `_builders`_ and every package produced
 by this repository.
 
-.. _`_builders`: builders
+.. _`_builders`: builders.rst
 
 Package Structure
 -----------------

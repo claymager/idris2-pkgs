@@ -95,11 +95,17 @@ devEnv : Package -> Package
 ---------------------------
 
 ``devEnv`` takes an idris2 package ``p``, gets its library dependencies,
-and brings into scope: - an idris2 compiler with all packages needed to
-compile ``p`` - an idris2-lsp server with all packages and sources
-needed to work on ``p`` - `docs serve <docs-serve.rst>`__
+and brings into scope:
 
-Defined in `../builders/default/nix <../builders/default.nix.rst>`__ For
+- an idris2 compiler with all packages needed to
+compile ``p``
+
+- an idris2-lsp server with all packages and sources
+needed to work on ``p``
+
+- `docs serve <docs-serve.rst>`__
+
+Defined in `../builders/default.nix <../builders/default.nix>`__. For
 usage, see the `templates <../templates/simple/flake.nix>`__.
 
 useRuntimeLibs : Package -> Package
@@ -128,7 +134,7 @@ library.
 -  ``withSrcs``: infinite tree of packages ``withLibs``, but also
    provides the source of each ``ttc`` file.
 
-Defined in `../builders/default/nix <../builders/default.nix.rst>`__
+Defined in `../builders/default.nix <../builders/default.nix>`__
 
 compiler : Derivation
 ---------------------
