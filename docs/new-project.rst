@@ -114,10 +114,12 @@ A full introduction to flakes and the Nix language is beyond the scope
 of this article. For now, let’s just focus on these lines in
 ``flake.nix``:
 
-::
+.. code-block:: nix
 
+   {
        mypkg = idrisPackage ./. { };
        runTests = idrisPackage ./test { extraPkgs.mypkg = mypkg; };
+   }
 
 That’s calling the function `idrisPackage <builders.rst>`__ on the
 current directory, with an empty attrset (think JSON object) of
@@ -129,14 +131,16 @@ called ``runTests``.
 
 So what happens if we try doing that same thing?
 
-::
+.. code-block:: nix
 
+   {
        otherpackage = idrisPackage /home/user/otherpackage { };
        mypkg = idrisPackage ./. { extraPkgs.otherpackage = otherpackage; };
        runTests = idrisPackage ./test {
            extraPkgs.mypkg = mypkg;
            extraPkgs.otherpackage = otherpackage;
        };
+   }
 
 Try ``nix build`` again. If ``idrisPackage`` can figure out how to build
 that other package, then ``mypkg`` should build successfully. We can add
@@ -147,18 +151,18 @@ and see that even with two dependencies that are not in ``idris2-pkgs``,
 There are some potential pitfalls here, though.
 
 - Nix can be rather funny with paths. Make sure that all relative paths are contained within
-the flake.
+  the flake.
 
 - If a flake is a git repository, all imported files must be tracked by git.
 
 - The “otherpackage” key in ``extraPkgs.otherpackage``
-must match the name used by idris (``depends = otherpackage``)
-*precisely* to be correctly found.
+  must match the name used by idris (``depends = otherpackage``)
+  *precisely* to be correctly found.
 
 - There are the standard idris2 dependency rules, which we handled above. If
-``runTests`` depends on a module from ``mypkg`` which itself depends on
-``otherpackage``, we need to explicitly pass it to idris2 in
-``runTests.ipkg`` and to Nix in runTests’s ``extraPkgs``.
+  ``runTests`` depends on a module from ``mypkg`` which itself depends on
+  ``otherpackage``, we need to explicitly pass it to idris2 in
+  ``runTests.ipkg`` and to Nix in runTests’s ``extraPkgs``.
 
 Runtime libraries
 -----------------
@@ -180,9 +184,11 @@ course.
 
 Back in our ``flake.nix``, let’s look at this line:
 
-::
+.. code-block:: nix
 
+   {   
       inherit (pkgs.idris2-pkgs._builders) idrisPackage devEnv;
+   }
 
 That’s bringing the builder functions ``idrisPackage``, which we’ve
 seen, and ``devEnv``, the brains behind our ``nix develop``, into scope.
@@ -193,11 +199,13 @@ seen, and ``devEnv``, the brains behind our ``nix develop``, into scope.
 
 Let’s add bring it into scope, and use it on the ``mypkg`` executable:
 
-::
+.. code-block:: nix
 
+   {   
       inherit (pkgs.idris2-pkgs._builders) idrisPackage devEnv useRuntimeLibs;
       otherpackage = idrisPackage /home/user/otherpackage { };
       mypkg = useRuntimeLibs (idrisPackage ./. { extraPkgs.otherpackage = otherpackage; });
+   }
 
 Alternate build commands and non-idris dependencies
 ---------------------------------------------------
@@ -210,4 +218,6 @@ Further Reading
 ---------------
 
 -  `builders <builders.rst>`__
--  `Publishing to ``idris2-pkgs`` <new-package.rst>`__
+-  Publishing_ to idris2-pkgs
+
+.. _Publishing: new-package.rst
