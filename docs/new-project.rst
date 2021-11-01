@@ -14,12 +14,13 @@ simple. In a clean directory, run the following commands:
    $ nix shell --command runMyPkg
    "Hello world!"
 
-This creates a basic template with - ``default.nix`` : nix compatibility
-layer, for users without flakes enabled - ``flake.nix``, nix logic -
-``mypkg.ipkg``, an `idris2 package
-file <https://idris2.readthedocs.io/en/latest/reference/packages.html>`__
-- ``src/``, the idris2 source code - ``test/``, which we’ll ignore for
-now.
+This creates a basic template with
+
+- ``default.nix``, the nix compatibility layer, for users without flakes enabled
+- ``flake.nix``, nix logic
+- ``mypkg.ipkg``, an `idris2 package file`_
+- ``src/``, the idris2 source code
+- ``test/``, which we’ll ignore for now
 
 But we want to do more than just *run* our project. Let’s run another
 command.
@@ -30,12 +31,18 @@ command.
 
 This drops us into a new “development shell”, a bit like a virtualenv
 from python. In this shell, we now have three new executables in our
-path: \* ``idris2``: the compiler \* ``idris2-lsp``: a lsp server \*
-``docs-serve``: `a small webserver <docs-serve.rst>`__.
+path:
+
+- ``idris2``: the compiler
+- ``idris2-lsp``: a lsp server
+- ``docs-serve``: a `small webserver`_
 
 Each of these knows all of the libraries our new project depends on.
 Which, after checking ``mypkg.ipkg``, is practically nothing: just the
 default *prelude* and *base*.
+
+.. _`idris2 package file`: https://idris2.readthedocs.io/en/latest/reference/packages.html
+.. _`small webserver`: docs-serve.rst
 
 Adding dependencies
 -------------------
