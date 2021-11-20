@@ -26,7 +26,6 @@ let
     frex = { checkPhase = "make test"; doCheck = true; };
 
     inigo = {
-      codegen = "node";
       buildPhase = ''
         sed 's/: idrall/:/' -i Makefile
         make bootstrap

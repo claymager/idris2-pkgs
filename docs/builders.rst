@@ -74,8 +74,7 @@ All of the ``stdenv.mkDerivation`` options, plus:
 -  ``idrisTestLibraries`` : List of idris2 packages only used in
    checkPhase
 
--  ``codegen`` : String Which codegen to use when compiling executables.
-   Default “chez”.
+-  ``codegen`` : Optional String Which codegen to use when compiling executables.
 
 -  ``ipkgFile`` : String Same ``ipkgFile`` as in ``idrisPackage``, but
    it’s only used for the build/install commands. No dependency

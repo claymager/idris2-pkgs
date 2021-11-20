@@ -8,7 +8,7 @@
   # Idris-specific options
 , idrisLibraries ? [ ]
 , idrisTestLibraries ? [ ]
-, codegen ? "chez"
+, codegen ? null
 , ipkgFile ? "${name}.ipkg"
 , executable ? ""
 , runtimeLibs ? false
@@ -20,7 +20,8 @@
 let
   idris2 = idrisCompiler.compiler;
 
-  buildcommand = "${idris2.executable} --codegen ${codegen}";
+  buildcommand = "${idris2.executable}" +
+    (if codegen == null then "" else " --codegen ${codegen}");
 
   # Idris, and any packages needed to run tests
   testIdris = addLibraries idris2 (idrisLibraries ++ lib.optionals doCheck idrisTestLibraries);
