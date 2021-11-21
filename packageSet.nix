@@ -16,13 +16,14 @@ let
       preBuild = ''
         LONG_VERSION=$(idris2 --version)
         ARR=($(echo $LONG_VERSION | sed 's/-/ /g; s/\./,/g' ))
-        VERSION="((''${ARR[-2]}), \"${sources.idris2.shortRev}\")"
+        VERSION="((''${ARR[-2]}), \"${sources.idris2.shortRev or "dirty"}\")"
 
         echo 'module IdrisPaths' >> src/IdrisPaths.idr
         echo "export idrisVersion : ((Nat,Nat,Nat), String); idrisVersion = $VERSION" >> src/IdrisPaths.idr
         echo 'export yprefix : String; yprefix="~/.idris2"' >> src/IdrisPaths.idr
       '';
     };
+
     frex = { checkPhase = "make test"; doCheck = true; };
 
     inigo = {

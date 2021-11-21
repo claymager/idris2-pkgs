@@ -30,7 +30,7 @@ let
 
       prePatch = ''
         patchShebangs --build tests
-        sed 's/''$(GIT_SHA1)/${idris2-src.shortRev}/' -i Makefile
+        sed 's/''$(GIT_SHA1)/${idris2-src.shortRev or "dirty"}/' -i Makefile
       '';
 
       makeFlags = [ "PREFIX=$(out)" ];
