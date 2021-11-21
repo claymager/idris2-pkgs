@@ -14,7 +14,7 @@
 
 # Uses scheme to bootstrap the build of idris2
 let
-  compiler = stdenv.mkDerivation
+  compiler = lib.makeOverridable stdenv.mkDerivation
     rec {
       pname = "idris2";
       version = "0.5.1";

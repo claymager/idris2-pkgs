@@ -48,7 +48,7 @@
                 idris2 = (ipkgs._builders.useRuntimeLibs compiler.compiler) // {
                   inherit (ipkgs.idris2) asLib withSource docs;
                 };
-                _builders.build-idris2-pkgs = build-idris2-pkgs final.callPackage;
+                _builders.build-idris2-pkgs = build-idris2-pkgs final;
               };
         in
         {
@@ -67,10 +67,9 @@
       (system:
         let
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
-          packages = removeAttrs pkgs.idris2-pkgs [ "_builders" "_build-idris2-pkgs" ];
         in
         {
-          inherit packages;
+          packages = pkgs.idris2-pkgs;
 
           defaultPackage = pkgs.idris2-pkgs.idris2;
 

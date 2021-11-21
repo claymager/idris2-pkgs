@@ -2,7 +2,7 @@
 # Built with CI
 let
   flk = builtins.getFlake (builtins.toString ./.);
-  pkgs = flk.packages."${builtins.currentSystem}";
+  pkgs = builtins.removeAttrs flk.packages."${builtins.currentSystem}" [ "_builders" ];
   noLibs = [ "inigo" ];
   packageParts = name: drv: [ drv drv.docs ] ++
     (if (builtins.elem name noLibs)

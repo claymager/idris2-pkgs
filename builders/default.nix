@@ -29,8 +29,8 @@ let
     let
       # If we can use TTC files, we almost certainly need Prelude, etc.
       pkg = addLibraries
-        (pkg'.overrideAttrs (_: { runtimeLibs = true; })) [ ipkgs.prelude ipkgs.base ]
-      // { inherit (pkg') asLib withSource docs allDocs; };
+        (pkg'.override (_: { runtimeLibs = true; })) [ ipkgs.prelude ipkgs.base ]
+      // { inherit (pkg') asLib withSource docs allDocs executable; };
 
       # Corecursive mess, but it works
       # @p is package layer n
