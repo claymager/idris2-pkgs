@@ -32,6 +32,11 @@ let
         make bootstrap
       '';
       propagatedBuildInputs = [ pkgs.nodejs ];
+      postBinInstall = ''
+        # Inigo needs idris2 compiler at runtime
+        wrapProgram $out/bin/inigo \
+          --suffix PATH ':' ${idrisCompiler.compiler}/bin
+      '';
     };
 
   };
