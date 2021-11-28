@@ -8,6 +8,8 @@
 
     comonad = { url = "github:stefan-hoeck/idris2-comonad"; flake = false; };
     collie = { url = "github:ohad/collie"; flake = false; };
+    python = { url = "github:madman-bob/idris2-python"; flake = false; };
+    odf = { url = "github:madman-bob/idris2-odf"; flake = false; };
     katla = { url = "github:idris-community/katla"; flake = false; };
     dot-parse = { url = "github:CodingCellist/idris2-dot-parse"; flake = false; };
     dom = { url = "github:stefan-hoeck/idris2-dom"; flake = false; };

@@ -39,6 +39,8 @@ let
       '';
     };
 
+    python.ipkgFile = "python-bindings.ipkg";
+
   };
 
   /* Packages that are *not* directly named in the flake inputs go here. */
@@ -51,6 +53,20 @@ let
     contrib = idrisPackage (sources.idris2 + "/libs/contrib") { };
     network = idrisPackage (sources.idris2 + "/libs/network") { };
     test = idrisPackage (sources.idris2 + "/libs/test") { };
+
+    idris2-python = idrisPackage (sources.python) {
+      ipkgFile = "idris2-python.ipkg";
+      postBinInstall = ''
+        mkdir -p $out/lib
+        mv Idris2Python $out/lib
+        # Python relies on the RefC backend
+        wrapProgram $out/bin/idris2-python \
+          --suffix IDRIS2_LIBS ':' "$out/lib" \
+          --suffix LIBRARY_PATH ':' "${pkgs.gmp}/lib" \
+          --suffix C_INCLUDE_PATH ':' "${pkgs.gmp.dev}/include" \
+          --set-default CC "${pkgs.clang}/bin/cc"
+      '';
+    };
 
     /* The following derivations are provided as examples, but are not to be provided in the build
       outputs of the derivation or repository.
@@ -86,6 +102,7 @@ let
   needRuntimeLibs = [
     # "_idris2"
     "lsp"
+    "idris2-python"
   ];
 
   /* end of configuration section */
