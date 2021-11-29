@@ -14,7 +14,7 @@
     effect = { url = "github:russoul/idris2-effect"; flake = false; };
     hedgehog = { url = "github:stefan-hoeck/idris2-hedgehog"; flake = false; };
     fvect = { url = "github:mattpolzin/idris-fvect"; flake = false; };
-    idrall = { url = "github:alexhumphreys/idrall"; flake = false; };
+    idrall = { url = "github:alexhumphreys/idrall/13ef174"; flake = false; };
     ipkg-to-json = { url = "github:claymager/ipkg-to-json"; flake = false; };
     inigo = { url = "github:idris-community/Inigo"; flake = false; };
     lsp = { url = "github:idris-community/idris2-lsp"; flake = false; };
