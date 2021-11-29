@@ -35,11 +35,11 @@
     "comonad": {
       "flake": false,
       "locked": {
-        "lastModified": 1632376482,
-        "narHash": "sha256-Hq13g/Q/P6OfbUM78Ha4lkAwroS+Soc2SlRgwGrpqmg=",
+        "lastModified": 1638093386,
+        "narHash": "sha256-kxmN6XuszFLK2i76C6LSGHe5XxAURFu9NpzJbi3nodk=",
         "owner": "stefan-hoeck",
         "repo": "idris2-comonad",
-        "rev": "19f6f70af95377b0c05f20509417f43aac84f388",
+        "rev": "06d6b551db20f1f940eb24c1dae051c957de97ad",
         "type": "github"
       },
       "original": {
@@ -51,11 +51,11 @@
     "dom": {
       "flake": false,
       "locked": {
-        "lastModified": 1635588472,
-        "narHash": "sha256-vyRpi9d91YcYR1FqcSVqSTORqb6SdraU345jaQRNihY=",
+        "lastModified": 1637210631,
+        "narHash": "sha256-DjdoCHMYaOJ1CZh7wFGOeoWdSgzitJAqheGUApZKMyI=",
         "owner": "stefan-hoeck",
         "repo": "idris2-dom",
-        "rev": "2d9ff5d19f9e4f3e56eba273c8233c98830d61cc",
+        "rev": "143002a255837178d3299282651c64009f167432",
         "type": "github"
       },
       "original": {
@@ -67,11 +67,11 @@
     "dot-parse": {
       "flake": false,
       "locked": {
-        "lastModified": 1634139470,
-        "narHash": "sha256-97ybAdkHnw8nrRpxXL/Y0Efg2vpdMk/pz2za9vRKaM4=",
+        "lastModified": 1637747280,
+        "narHash": "sha256-4dCkJHDScWMevUI3SYkM47ON7K6GS4xHn6EwM9xzcZM=",
         "owner": "CodingCellist",
         "repo": "idris2-dot-parse",
-        "rev": "cb43167bcfb33f1606443af525e1aebffb35fcf8",
+        "rev": "134452d797e21e3328e776781b24f7027ff67fc2",
         "type": "github"
       },
       "original": {
@@ -83,11 +83,11 @@
     "effect": {
       "flake": false,
       "locked": {
-        "lastModified": 1630883224,
-        "narHash": "sha256-Uz3UybSOLetaa46kDKoh0SDxhPJOLX05orrlySEVNck=",
+        "lastModified": 1637477153,
+        "narHash": "sha256-Ta2Vogg/IiSBkfhhD57jjPTEf3S4DOiVRmof38hmwlM=",
         "owner": "russoul",
         "repo": "idris2-effect",
-        "rev": "8d0f5381454931e94c855ebc11253e0bcfd5b051",
+        "rev": "ea1daf53b2d7e52f9917409f5653adc557f0ee1a",
         "type": "github"
       },
       "original": {
@@ -99,11 +99,11 @@
     "elab-util": {
       "flake": false,
       "locked": {
-        "lastModified": 1634717609,
-        "narHash": "sha256-ueXpNX96K9/On+S0V1b5mQ9lERdGEUwMvEyvw5uQwDQ=",
+        "lastModified": 1637208008,
+        "narHash": "sha256-Ccl0DjDO3CkvITnCYK/enyI3016Memlk69iAAuidKcY=",
         "owner": "stefan-hoeck",
         "repo": "idris2-elab-util",
-        "rev": "d08ff851c5273e765888fd24b27e683c97c15050",
+        "rev": "b1765b71f4af9590d30561eaf4c1e29393972ccb",
         "type": "github"
       },
       "original": {
@@ -114,11 +114,11 @@
     },
     "flake-utils": {
       "locked": {
-        "lastModified": 1634851050,
-        "narHash": "sha256-N83GlSGPJJdcqhUxSCS/WwW5pksYf3VP1M13cDRTSVA=",
+        "lastModified": 1638122382,
+        "narHash": "sha256-sQzZzAbvKEqN9s0bzWuYmRaA03v40gaJ4+iL1LXjaeI=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "c91f3de5adaf1de973b797ef7485e441a65b8935",
+        "rev": "74f7e4319258e287b0f9cb95426c9853b282730b",
         "type": "github"
       },
       "original": {
@@ -130,11 +130,11 @@
     "frex": {
       "flake": false,
       "locked": {
-        "lastModified": 1634296088,
-        "narHash": "sha256-j+87XNHmviMaqhBZK6Po5xYQwInQ6HIjoCcMC+QXScM=",
+        "lastModified": 1637410704,
+        "narHash": "sha256-BthU1t++n0ZvS76p0fCHsE33QSoXYxf0hMUSKajDY8w=",
         "owner": "frex-project",
         "repo": "idris-frex",
-        "rev": "01a16be2c627f900b940dbc25cc4958dd3d567e2",
+        "rev": "22c480e879c757a5cebca7bb555ec3d21ae3ac28",
         "type": "github"
       },
       "original": {
@@ -162,11 +162,11 @@
     "hedgehog": {
       "flake": false,
       "locked": {
-        "lastModified": 1634786551,
-        "narHash": "sha256-GKZ+qGJTs54AzLZyg2NAmL8WYiUTT2O19zhMX9ejp6c=",
+        "lastModified": 1637208594,
+        "narHash": "sha256-uD8hWlNQto2I0adewIcS56CkK269fEwieN3PmD72R9o=",
         "owner": "stefan-hoeck",
         "repo": "idris2-hedgehog",
-        "rev": "65c722698b2677fa474a2e00fcfa22d9b6f6e977",
+        "rev": "71dd01032dde8dcd50e696ed2583cf96035ee5c1",
         "type": "github"
       },
       "original": {
@@ -178,15 +178,16 @@
     "idrall": {
       "flake": false,
       "locked": {
-        "lastModified": 1634234727,
-        "narHash": "sha256-fbGhrSqOAnyD/r1GvXXLajV8/QanE7+LpP5u+dgXzWQ=",
+        "lastModified": 1636495701,
+        "narHash": "sha256-aOdCRd4XsSxwqVGta1adlZBy8TVTxTwFDnJ1dyMZK8M=",
         "owner": "alexhumphreys",
         "repo": "idrall",
-        "rev": "8dfb3275948e85f0da9cfae46f94a652872c8126",
+        "rev": "13ef174290169d05c9e9abcd77c53412e3e0c944",
         "type": "github"
       },
       "original": {
         "owner": "alexhumphreys",
+        "ref": "13ef174",
         "repo": "idrall",
         "type": "github"
       }
@@ -194,11 +195,11 @@
     "idris2": {
       "flake": false,
       "locked": {
-        "lastModified": 1635634816,
-        "narHash": "sha256-/y1BqL2maaAzSuW/xp+HLl6FR1eqiQOuMWCi3DzY7/Q=",
+        "lastModified": 1637924117,
+        "narHash": "sha256-A/SWpfQzf4w9BJfiVQi4TnSCpQAZpsSDuzSvjyMyMmQ=",
         "owner": "idris-lang",
         "repo": "idris2",
-        "rev": "d531cc8dea878e43efa4a57f29de9a69f85235a4",
+        "rev": "10b9685e4b7862f20d16b670b3d716dd82029593",
         "type": "github"
       },
       "original": {
@@ -210,11 +211,11 @@
     "inigo": {
       "flake": false,
       "locked": {
-        "lastModified": 1633155834,
-        "narHash": "sha256-iCxOT7718LExN+9TD9VzLHbhTBxCPLMhHYnDzEWfczQ=",
+        "lastModified": 1637596767,
+        "narHash": "sha256-LNx30LO0YWDVSPTxRLWGTFL4f3d5ANG6c60WPdmiYdY=",
         "owner": "idris-community",
         "repo": "Inigo",
-        "rev": "64163d453a60df58a2d0be595ec97fb45aa638fd",
+        "rev": "57f5b5c051222d8c630010a0a3cf7d7138910127",
         "type": "github"
       },
       "original": {
@@ -242,11 +243,11 @@
     "json": {
       "flake": false,
       "locked": {
-        "lastModified": 1632203993,
-        "narHash": "sha256-fPG1mNqOM2xPJOaLFtTEz8c7lzbD3fszJypIuXUtrLk=",
+        "lastModified": 1637209740,
+        "narHash": "sha256-f+u8jut0bLRvjoC5TKpY2N0AzkBjFtHaOXZ7YyOOoao=",
         "owner": "stefan-hoeck",
         "repo": "idris2-json",
-        "rev": "04a65808386eb4217ae8e61a297a6baf0daece9b",
+        "rev": "beaa9d1cbb9cdeae618a87db1d17c840ae6b792c",
         "type": "github"
       },
       "original": {
@@ -258,11 +259,11 @@
     "katla": {
       "flake": false,
       "locked": {
-        "lastModified": 1634269657,
-        "narHash": "sha256-MmTn1Pw1Oy8xTE6Yv0OVgdFoWqyFQ5M5z7Z0jDaKm28=",
+        "lastModified": 1636542431,
+        "narHash": "sha256-X83NA/P3k1iPcBa8g5z8JldEmFEz/jxVeViJX0/FikY=",
         "owner": "idris-community",
         "repo": "katla",
-        "rev": "9d018b2828b6095d54db705170daba314d2da2b7",
+        "rev": "d841ec243f96b4762074211ee81033e28884c858",
         "type": "github"
       },
       "original": {
@@ -274,11 +275,11 @@
     "lsp": {
       "flake": false,
       "locked": {
-        "lastModified": 1635683268,
-        "narHash": "sha256-yFHejwgixmfJ25vJQGdtAGwpp1mXeohQet3Tn3vQNiY=",
+        "lastModified": 1637784127,
+        "narHash": "sha256-32bczo3FxrO7MW9KDwmyegAVIx8g0XqY0wgIFxZeLYI=",
         "owner": "idris-community",
         "repo": "idris2-lsp",
-        "rev": "9627181cdd7618f4be3aa284973c6160364dff1f",
+        "rev": "f84d0a4f96013ab2cf96ecaa4e70313837fd8997",
         "type": "github"
       },
       "original": {
@@ -304,11 +305,11 @@
     "pretty-show": {
       "flake": false,
       "locked": {
-        "lastModified": 1634216182,
-        "narHash": "sha256-ZXAPN4ueU19vK/zvEQIAsnY9Wdfz5qb4AKUtmw+fid8=",
+        "lastModified": 1637208606,
+        "narHash": "sha256-T4gPE2LFDkRWk2F6sXS0CcXYJfo+2uB1oIO3MJkeIek=",
         "owner": "stefan-hoeck",
         "repo": "idris2-pretty-show",
-        "rev": "3a63c50d1988f7b64f6955bde55cef88fb6c9e75",
+        "rev": "61e0f92fe42eb6a1b2afbbd1e94b30250d627b86",
         "type": "github"
       },
       "original": {
@@ -345,11 +346,11 @@
     "sop": {
       "flake": false,
       "locked": {
-        "lastModified": 1634786523,
-        "narHash": "sha256-t7b9hO+N5uy48cLIJcN3R8Et04lQ2kTQDHYg7opqlg0=",
+        "lastModified": 1637208122,
+        "narHash": "sha256-fdusCtnjMs6VTgxRLWizhgyxf4FZZG5PLhW/DgeAwuA=",
         "owner": "stefan-hoeck",
         "repo": "idris2-sop",
-        "rev": "fc7fff84b582bbc332107bef092e92ebabd3158c",
+        "rev": "fc64f6f089d6d4dc45d38290623d449fa1af17d3",
         "type": "github"
       },
       "original": {

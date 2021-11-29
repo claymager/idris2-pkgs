@@ -1,0 +1,10 @@
+package mypkg
+
+modules = Main
+main = Main
+
+depends = foo
+
+executable = mypkg
+
+sourcedir = "src"

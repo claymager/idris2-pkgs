@@ -1,0 +1,9 @@
+#! /usr/bin/env bash
+
+set -euo pipefail
+cd $(dirname $0)/target
+
+nix build \
+    --no-link --no-write-lock-file \
+    --override-input idris2-pkgs ../../..
+
