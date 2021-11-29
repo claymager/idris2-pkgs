@@ -13,5 +13,10 @@ jobs:
         install_options: '--tarball-url-prefix https://nixos-nix-install-tests.cachix.org/serve'
         extra_nix_config: |
           experimental-features = nix-command flakes
+          access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+    - uses: cachix/cachix-action@v10
+      with:
+        name: cm-idris2-pkgs
+        authToken : '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix-build
-    - run: nix-build all-drvs.nix
+    - run: tests/tests.sh
