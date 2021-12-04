@@ -40,6 +40,7 @@ let
 
       checkInputs = [ gambit nodejs ]; # racket ];
       checkFlags = [ "INTERACTIVE=" ];
+      outputs = [ "out" "support" ];
 
       postInstall = ''
         # Remove existing idris2 wrapper that sets incorrect LD_LIBRARY_PATH
@@ -50,6 +51,9 @@ let
         rm $out/bin/idris2_app/*
         rmdir $out/bin/idris2_app
 
+        mkdir -p $support
+        mv $out/${name}/ $support/
+
         # idris2 needs to find scheme at runtime to compile
         # idris2 installs packages with --install into the path given by
         #   IDRIS2_PREFIX. We set that to a default of ~/.idris2, to mirror the
@@ -57,10 +61,10 @@ let
         wrapProgram "$out/bin/idris2" \
           --set-default CHEZ "${chez}/bin/scheme" \
           --run 'export IDRIS2_PREFIX=''${IDRIS2_PREFIX-"$HOME/.idris2"}' \
-          --suffix IDRIS2_LIBS ':' "$out/${name}/lib" \
-          --suffix IDRIS2_DATA ':' "$out/${name}/support" \
-          --suffix IDRIS2_PACKAGE_PATH ':' "$out/${name}" \
-          --suffix LD_LIBRARY_PATH ':' "$out/${name}/lib"
+          --suffix IDRIS2_LIBS ':' "$support/${name}/lib" \
+          --suffix IDRIS2_DATA ':' "$support/${name}/support" \
+          --suffix IDRIS2_PACKAGE_PATH ':' "$support/${name}" \
+          --suffix LD_LIBRARY_PATH ':' "$support/${name}/lib"
       '';
 
       meta = {
@@ -75,14 +79,8 @@ let
       runtimeLibs = true;
     };
 
-  support = stdenv.mkDerivation {
-    inherit (compiler) version;
-    name = "idris2-support-${compiler.version}";
-    buildCommand = ''
-      mkdir -p $out/${compiler.name}
-      cp -r ${compiler}/${compiler.name}/lib $out/${compiler.name}
-      cp -r ${compiler}/${compiler.name}/support $out/${compiler.name}
-    '';
-  };
 in
-{ inherit compiler support; }
+  /* We need one layer of indirection because `useRuntimeLibs` requires our own `.override`,
+    not the one that comes from callPackage.
+  */
+{ c = compiler; }

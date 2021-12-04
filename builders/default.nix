@@ -1,15 +1,13 @@
-{ callPackage, lib, symlinkJoin, python3, idrisCompiler, ipkg-to-json }:
+{ callPackage, lib, symlinkJoin, python3, idris2, ipkg-to-json }:
 
 # IPkg is subtype of Derivation
 let
-  idris2 = idrisCompiler.compiler;
-
   # with-packages : (withSource : Bool) -> List IPkg -> Derivation
   inherit (callPackage ./with-packages.nix { inherit idris2; }) addSources addLibraries;
 
   # buildIdris : IdrisDec -> IPkg
   buildIdris = lib.makeOverridable (callPackage ./buildIdris.nix
-    { inherit idrisCompiler addLibraries; });
+    { inherit idris2 addLibraries; });
 
   # callPackage, but it also knows about buildIdris
   callNix = file: args: callPackage file (lib.recursiveUpdate { inherit buildIdris; } args);
