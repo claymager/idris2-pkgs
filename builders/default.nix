@@ -83,7 +83,6 @@ in
         (addSources ipkgs.lsp ps)
       ] ++ map (p: p.docs) ps;
       postBuild = ''
-        echo "#!/usr/bin/env sh" > $out/bin/docs-serve
         echo "${python3}/bin/python -m http.server --directory $out/share/doc \$argv" > $out/bin/docs-serve
         chmod 755 $out/bin/docs-serve
       '';

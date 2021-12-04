@@ -46,7 +46,7 @@
             in
             recursiveUpdate ipkgs
               {
-                idris2 = (ipkgs._builders.useRuntimeLibs compiler.compiler) // {
+                idris2 = ipkgs._builders.compiler // {
                   inherit (ipkgs.idris2) asLib withSource docs;
                 };
                 _builders.build-idris2-pkgs = build-idris2-pkgs final;
