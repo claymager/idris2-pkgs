@@ -4,6 +4,7 @@
   inputs = {
     idris2 = { url = "github:idris-lang/idris2"; flake = false; };
     flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-21.11-darwin";
 
     comonad = { url = "github:stefan-hoeck/idris2-comonad"; flake = false; };
     collie = { url = "github:ohad/collie"; flake = false; };
