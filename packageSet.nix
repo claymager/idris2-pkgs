@@ -1,4 +1,4 @@
-{ lib, sources }: pkgs: idrisCompiler:
+{ lib, sources }: pkgs: idris2:
 let
   /* Configuration for the primary packges of each flake input.
 
@@ -35,7 +35,7 @@ let
       postBinInstall = ''
         # Inigo needs idris2 compiler at runtime
         wrapProgram $out/bin/inigo \
-          --suffix PATH ':' ${idrisCompiler.compiler}/bin
+          --suffix PATH ':' ${idris2}/bin
       '';
     };
 
@@ -94,7 +94,7 @@ let
 
   builders = pkgs.callPackage ./builders
     {
-      inherit idrisCompiler;
+      inherit idris2;
       inherit (sources) ipkg-to-json;
     }
     allPackages;

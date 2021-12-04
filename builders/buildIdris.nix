@@ -1,4 +1,4 @@
-{ stdenv, lib, makeWrapper, symlinkJoin, idrisCompiler, addLibraries, zsh }:
+{ stdenv, lib, makeWrapper, symlinkJoin, idris2, addLibraries, zsh }:
 
 # # minimum requirements
 { name
@@ -18,8 +18,6 @@
 , ...
 } @ cfg:
 let
-  idris2 = idrisCompiler.compiler;
-
   buildcommand = "${idris2.executable}" +
     (if codegen == null then "" else " --codegen ${codegen}");
 
@@ -30,6 +28,9 @@ let
 
     Without this, each of `pkg`, `pkg.withSource`, `pkg.asLib`, and `pkg.docs` has to
     compile the project independently.
+
+    We're not using multi-output derivations because, depending on FFI, valid executables may
+    not be buildable as libraries.
   */
   ttc = stdenv.mkDerivation (cfg // {
 
@@ -88,9 +89,9 @@ let
           if runtimeLibs then ''
             wrapProgram $out/bin/${executable} \
               --set-default IDRIS2_PREFIX "~/.idris2" \
-              --suffix LD_LIBRARY_PATH ':' "${idrisCompiler.support}/${idris2.name}/lib" \
-              --suffix IDRIS2_LIBS ':' "${idrisCompiler.support}/${idris2.name}/lib" \
-              --suffix IDRIS2_DATA ':' "${idrisCompiler.support}/${idris2.name}/support" \
+              --suffix LD_LIBRARY_PATH ':' "${idris2.support}/${idris2.name}/lib" \
+              --suffix IDRIS2_LIBS ':' "${idris2.support}/${idris2.name}/lib" \
+              --suffix IDRIS2_DATA ':' "${idris2.support}/${idris2.name}/support" \
           '' else "";
       in
         cfg.installPhase or ''

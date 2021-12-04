@@ -141,21 +141,15 @@ compiler : Derivation
 This is the derivation for the ``idris2`` binary used to compile all of
 the idris code in ``idirs2-pkgs``. Not overly interesting by itself.
 
-``build-idris2-pkgs`` : Compiler -> Attrset Package
+build-idris2-pkgs : Compiler -> Attrset Package
 ---------------------------------------------------
 
 In theory, there are multiple executables capable of interpretting and
 compiling idris2 code. To rebuild everything in idris2-pkgs with some
 other idris2 compiler, pass ``_build-idris2-pkgs`` that compiler.
 
-Here, ``Compiler`` is a an attrset of the form:
-
-.. code:: nix
-
-   {
-     compiler = pkgs.idris2; # derivation capable of compiling idris2 code
-     support = <support>; # derivation with support libs of default idris package
-   }
+Here, ``Compiler`` is a an idris2 derivation with a `support` output, where `support`
+contains the `lib` and `support` dirs used by the various backends.
 
 buildTOMLSource, callNix, callTOML
 ----------------------------------

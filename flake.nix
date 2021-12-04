@@ -39,7 +39,7 @@
     rec {
       overlay = final: prev:
         let
-          compiler = final.callPackage ./compiler.nix { idris2-src = idris2; };
+          compiler = (final.callPackage ./compiler.nix { idris2-src = idris2; }).c;
 
           idris2-pkgs =
             let ipkgs = build-idris2-pkgs final compiler;
