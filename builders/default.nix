@@ -70,7 +70,8 @@ in
     callTOML#        # (toml : Path) -> IPkg
     buildTOMLSource; # (root : Path) -> (toml : Path) -> Ipkg
 
-  compiler = useRuntimeLibs idris2;
+  # The compiler used to build all packages in idris2-pkgs
+  compiler = idris2;
   devEnv = pkg:
     let ps = (pkg.idrisAttrs.idrisLibraries or [ ]) ++ (pkg.idrisAttrs.idrisTestLibraries or [ ]);
     in

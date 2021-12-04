@@ -1,4 +1,4 @@
-{ lib, sources }: pkgs: idris2:
+{ lib, sources, pkgs, idris2 }:
 let
   /* Configuration for the primary packges of each flake input.
 
@@ -112,4 +112,7 @@ in
 mapAttrs
   (name: pkg:
     if (elem name needRuntimeLibs) then (useRuntimeLibs pkg) else pkg)
-  allPackages // { _builders = builders; }
+  (lib.recursiveUpdate allPackages {
+    _builders = builders;
+    idris2 = useRuntimeLibs (lib.recursiveUpdate allPackages.idris2 idris2);
+  })
