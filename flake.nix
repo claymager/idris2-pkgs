@@ -30,37 +30,29 @@
   outputs = { self, nixpkgs, idris2, flake-utils, ... }@srcs:
     let
       inherit (builtins) removeAttrs mapAttrs;
-      inherit (nixpkgs.lib) recursiveUpdate;
-      build-idris2-pkgs = import ./packageSet.nix {
-        sources = removeAttrs srcs [ "self" "nixpkgs" "flake-utils" ];
-        lib = recursiveUpdate nixpkgs.lib (import ./lib);
-      };
+      inherit (nixpkgs.lib) recursiveUpdate makeOverridable;
+      templates = import ./templates;
+      lib = import ./lib;
     in
-    rec {
+    {
       overlay = final: prev:
         let
           compiler = (final.callPackage ./compiler.nix { idris2-src = idris2; }).c;
 
-          idris2-pkgs =
-            let ipkgs = build-idris2-pkgs final compiler;
-            in
-            recursiveUpdate ipkgs
-              {
-                idris2 = ipkgs._builders.compiler // {
-                  inherit (ipkgs.idris2) asLib withSource docs;
-                };
-                _builders.build-idris2-pkgs = build-idris2-pkgs final;
-              };
+          idris2-pkgs = makeOverridable (import ./packageSet.nix) {
+            sources = removeAttrs srcs [ "self" "nixpkgs" "flake-utils" ];
+            lib = recursiveUpdate nixpkgs.lib lib;
+            pkgs = final;
+            idris2 = compiler;
+          };
         in
         {
           inherit idris2-pkgs;
           idris2 = idris2-pkgs.idris2;
-
           lib = recursiveUpdate prev.lib (import ./lib);
-
         };
 
-      templates = import ./templates;
+      inherit templates lib;
       defaultTemplate = templates.simple;
     } //
 
@@ -68,11 +60,12 @@
       (system:
         let
           pkgs = import nixpkgs { inherit system; overlays = [ self.overlay ]; };
+          ipkgs = removeAttrs pkgs.idris2-pkgs [ "override" "overrideDerivation" ];
         in
         {
-          packages = pkgs.idris2-pkgs;
+          packages = ipkgs;
 
-          defaultPackage = pkgs.idris2-pkgs.idris2;
+          defaultPackage = ipkgs.idris2;
 
           devShell = pkgs.mkShell {
             buildInputs = [ pkgs.nixpkgs-fmt ];
