@@ -64,6 +64,7 @@ let
           --suffix IDRIS2_LIBS ':' "$support/${name}/lib" \
           --suffix IDRIS2_DATA ':' "$support/${name}/support" \
           --suffix IDRIS2_PACKAGE_PATH ':' "$support/${name}" \
+          --suffix DYLD_LIBRARY_PATH ':' "$support/${name}/lib" \
           --suffix LD_LIBRARY_PATH ':' "$support/${name}/lib"
       '';
 
