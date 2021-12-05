@@ -192,6 +192,22 @@
         "type": "github"
       }
     },
+    "idris-server": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634507315,
+        "narHash": "sha256-ulo23yLJXsvImoMB/1C6yRRTqmn/Odo+aUaVi+tUhJo=",
+        "owner": "avidela",
+        "repo": "idris-server",
+        "rev": "661a4ecf0fadaa2bd79c8e922c2d4f79b0b7a445",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "avidela",
+        "repo": "idris-server",
+        "type": "gitlab"
+      }
+    },
     "idris2": {
       "flake": false,
       "locked": {
@@ -205,6 +221,22 @@
       "original": {
         "owner": "idris-lang",
         "repo": "idris2",
+        "type": "github"
+      }
+    },
+    "indexed": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1638685238,
+        "narHash": "sha256-FceB7o88yKYzjTfRC6yfhOL6oDPMmCQAsJZu/pjE2uA=",
+        "owner": "mattpolzin",
+        "repo": "idris-indexed",
+        "rev": "ff3ba99b0063da6a74c96178e7f3c58a4ac1693e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpolzin",
+        "repo": "idris-indexed",
         "type": "github"
       }
     },
@@ -320,6 +352,38 @@
         "type": "github"
       }
     },
+    "rhone": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1637210621,
+        "narHash": "sha256-3y3sTTwFmAf1Aj22OaTRDVIjMv+RJ8fBHibmkTr0v20=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-rhone",
+        "rev": "0e486c32f79a43debcdf1bb6f2f7253401f860dd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-rhone",
+        "type": "github"
+      }
+    },
+    "rhone-js": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1637211132,
+        "narHash": "sha256-9yJnaK0tMbuAAcUZYOO1TckfbUOv42+jUhllRa843P4=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-rhone-js",
+        "rev": "f1af1fe064a4c103176585d1ad9405007c3dd555",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-rhone-js",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "Prettier": "Prettier",
@@ -334,7 +398,9 @@
         "fvect": "fvect",
         "hedgehog": "hedgehog",
         "idrall": "idrall",
+        "idris-server": "idris-server",
         "idris2": "idris2",
+        "indexed": "indexed",
         "inigo": "inigo",
         "ipkg-to-json": "ipkg-to-json",
         "json": "json",
@@ -342,7 +408,11 @@
         "lsp": "lsp",
         "nixpkgs": "nixpkgs",
         "pretty-show": "pretty-show",
-        "sop": "sop"
+        "rhone": "rhone",
+        "rhone-js": "rhone-js",
+        "sop": "sop",
+        "tailrec": "tailrec",
+        "xml": "xml"
       }
     },
     "sop": {
@@ -358,6 +428,38 @@
       "original": {
         "owner": "stefan-hoeck",
         "repo": "idris2-sop",
+        "type": "github"
+      }
+    },
+    "tailrec": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1637146655,
+        "narHash": "sha256-0yi7MQIrISPvAwkgDC1M5PHDEeVyIaISF0HjKDaT0Rw=",
+        "owner": "stefan-hoeck",
+        "repo": "idris2-tailrec",
+        "rev": "dd0bc6381b3a2e69aa37f9a8c1b165d4b1516ad7",
+        "type": "github"
+      },
+      "original": {
+        "owner": "stefan-hoeck",
+        "repo": "idris2-tailrec",
+        "type": "github"
+      }
+    },
+    "xml": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1637939752,
+        "narHash": "sha256-yYJBhPfwYoi7amlHmeNGrVCOAc3BjZpKTCd9wDs3XEM=",
+        "owner": "madman-bob",
+        "repo": "idris2-xml",
+        "rev": "1292ccfcd58c551089ef699e4560343d5c473d64",
+        "type": "github"
+      },
+      "original": {
+        "owner": "madman-bob",
+        "repo": "idris2-xml",
         "type": "github"
       }
     }
