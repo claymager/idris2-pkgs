@@ -30,6 +30,7 @@
     idris-server = { url = "gitlab:avidela/idris-server"; flake = false; };
     xml = { url = "github:madman-bob/idris2-xml"; flake = false; };
     indexed = { url = "github:mattpolzin/idris-indexed"; flake = false; };
+    hashable = { url = "github:z-snails/idris2-hashable"; flake = false; };
 
   };
 
