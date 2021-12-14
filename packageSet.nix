@@ -39,6 +39,10 @@ let
       '';
     };
 
+    lsp.patchPhase = ''
+      make src/Server/Generated.idr VERSION_TAG=${sources.lsp.shortRev or "dirty"}
+    '';
+
     python.ipkgFile = "python-bindings.ipkg";
 
   };
