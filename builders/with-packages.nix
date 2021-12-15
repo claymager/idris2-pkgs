@@ -18,6 +18,16 @@ let
           --suffix IDRIS2_PACKAGE_PATH ':' "$out/${idris2.name}"
       '';
 
+      # nix run determines the binary to run first looking for meta.mainProgram
+      # and falling back to the package name. with-packages changes the name, breaking
+      # the heuristic that worked for the original package. We fix this by setting
+      # meta.mainProgram (if not set already)
+      meta =
+        base.meta //
+        lib.attrsets.optionalAttrs (base.meta ? mainProgram || base ? executable) {
+          mainProgram = base.meta.mainProgram or base.executable;
+        };
+
     });
 in
 {
