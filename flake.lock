@@ -461,9 +461,26 @@
         "python": "python",
         "rhone": "rhone",
         "rhone-js": "rhone-js",
+        "snocvect": "snocvect",
         "sop": "sop",
         "tailrec": "tailrec",
         "xml": "xml"
+      }
+    },
+    "snocvect": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1641633224,
+        "narHash": "sha256-6zTU4sDzd/R/dFCTNZaX41H4L3/USGLFghMS0Oc9liY=",
+        "owner": "mattpolzin",
+        "repo": "idris-snocvect",
+        "rev": "ff1e7afba360a62f7e522e9bbb856096a79702c4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "mattpolzin",
+        "repo": "idris-snocvect",
+        "type": "github"
       }
     },
     "sop": {
