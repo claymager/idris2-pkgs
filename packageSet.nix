@@ -45,6 +45,8 @@ let
 
     python.ipkgFile = "python-bindings.ipkg";
 
+    recombine.ipkgFile = "recombine.ipkg";
+
   };
 
   /* Packages that are *not* directly named in the flake inputs go here. */
