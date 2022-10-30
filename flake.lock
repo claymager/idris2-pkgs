@@ -16,6 +16,22 @@
         "type": "github"
       }
     },
+    "algae": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1663891753,
+        "narHash": "sha256-J8tJDJ5xeIMBnTH1Otk/K/ZJJroG8GYUpUMRi0FWuJ8=",
+        "owner": "avidela",
+        "repo": "algebraic-data",
+        "rev": "9b998adc729c4521a3744aa7ba6b1d698d89f588",
+        "type": "gitlab"
+      },
+      "original": {
+        "owner": "avidela",
+        "repo": "algebraic-data",
+        "type": "gitlab"
+      }
+    },
     "collie": {
       "flake": false,
       "locked": {
@@ -434,6 +450,7 @@
     "root": {
       "inputs": {
         "Prettier": "Prettier",
+        "algae": "algae",
         "collie": "collie",
         "comonad": "comonad",
         "dom": "dom",

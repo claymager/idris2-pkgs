@@ -34,6 +34,7 @@
     indexed = { url = "github:mattpolzin/idris-indexed"; flake = false; };
     hashable = { url = "github:z-snails/idris2-hashable"; flake = false; };
     snocvect = { url = "github:mattpolzin/idris-snocvect"; flake = false; };
+    algae = { url = "gitlab:avidela/algebraic-data"; flake = false; };
 
   };
 
