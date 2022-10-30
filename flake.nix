@@ -19,7 +19,8 @@
     fvect = { url = "github:mattpolzin/idris-fvect"; flake = false; };
     idrall = { url = "github:alexhumphreys/idrall"; flake = false; };
     ipkg-to-json = { url = "github:claymager/ipkg-to-json"; flake = false; };
-    inigo = { url = "github:idris-community/Inigo"; flake = false; };
+    # inigo = { url = "github:idris-community/Inigo"; flake = false; };
+    inigo = { url = "github:lizard-business/Inigo?ref=idrall-update"; flake = false; };
     lsp = { url = "github:idris-community/idris2-lsp"; flake = false; };
     frex = { url = "github:frex-project/idris-frex"; flake = false; };
     json = { url = "github:stefan-hoeck/idris2-json"; flake = false; };

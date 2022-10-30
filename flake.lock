@@ -258,15 +258,16 @@
     "inigo": {
       "flake": false,
       "locked": {
-        "lastModified": 1637596767,
-        "narHash": "sha256-LNx30LO0YWDVSPTxRLWGTFL4f3d5ANG6c60WPdmiYdY=",
-        "owner": "idris-community",
+        "lastModified": 1667143799,
+        "narHash": "sha256-50AGHZ5B2tNaOGjNPt+32khudJxTxkGQ0/Vq4MCwsqE=",
+        "owner": "lizard-business",
         "repo": "Inigo",
-        "rev": "57f5b5c051222d8c630010a0a3cf7d7138910127",
+        "rev": "8bae2a0c02cd88e6e27b98ea10953c86a383033f",
         "type": "github"
       },
       "original": {
-        "owner": "idris-community",
+        "owner": "lizard-business",
+        "ref": "idrall-update",
         "repo": "Inigo",
         "type": "github"
       }
